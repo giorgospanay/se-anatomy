@@ -78,7 +78,7 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			print(f"{filename} skipped.")
 			continue
 
-		if layer_year>2018: 
+		if layer_year>2018 or layer_year<2000: 
 			print(f"{filename} skipped.")
 			continue
 
@@ -149,7 +149,6 @@ if mode=="family":
 	hist=nx.degree_histogram(fam_all)
 	with open(f"{log_path}/histogram_fam_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-
 	with open(f"{obj_path}/fam_all.nx","wb") as n_out:
 		pickle.dump(fam_all,n_out)
 
@@ -161,7 +160,6 @@ elif mode=="neighbourhood":
 	hist=nx.degree_histogram(nbr_all)
 	with open(f"{log_path}/histogram_nbr_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-
 	with open(f"{obj_path}/nbr_all.nx","wb") as n_out:
 		pickle.dump(nbr_all,n_out)
 
@@ -174,7 +172,6 @@ elif mode=="education":
 	hist=nx.degree_histogram(edu_all)
 	with open(f"{log_path}/histogram_edu_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-
 	with open(f"{obj_path}/edu_all.nx","wb") as n_out:
 		pickle.dump(edu_all,n_out)
 
@@ -186,7 +183,6 @@ elif mode=="work":
 	hist=nx.degree_histogram(work_all)
 	with open(f"{log_path}/histogram_work_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-
 	with open(f"{obj_path}/work_all.nx","wb") as n_out:
 		pickle.dump(work_all,n_out)
 
@@ -210,7 +206,7 @@ if mode=="flat":
 	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(work_all)
+	hist=nx.degree_histogram(flat_all)
 	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
 
