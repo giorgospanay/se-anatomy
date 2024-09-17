@@ -76,53 +76,39 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 
 		# If not family layer csv: read edgelist
 		if layer_type!="family":
-			# Read and strip all lines.
-			edge_lines = [line.rstrip() for line in f]
-			# Parse from edgelist. Skip header line
-			net_year=nx.parse_adjlist(edge_lines[1:],delimiter=",")
+			# Read csv
+			df=pd.read_csv(f)
+			net_year=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+
+			df=None
+
 		# Otherwise for family: 
 		else:
-
 			# Use pd and helper functions from simplify_family
 			fam_raw=pd.read_csv(f)
 			fam_df=read_in_network(fam_raw,"PersonNr")
 			fam_edgelist = make_entire_edge_list(fam_df)
 			# @TODO: Save to csv here if necessary
 
+			fam_raw=None
+			fam_df=None
+
 			# Create network from edgelist
 			net_year=nx.from_pandas_edgelist(fam_edgelist,source="PersonNr",target="PersonNr2",edge_attr="connection")
 
-
-			# # Tokenize lines, set edges on all params set.
-			# # Fmt:: node,parent,child,partners,siblings,grandparents,grandchildren,aunts_uncles,niece_nephews,cousins,family_household
-			# for ln in edge_lines[1:]:
-			# 	# Find empty lines and ignore
-			# 	if ln=="": continue
-			# 	# Tokenize line
-			# 	tok=ln.split(",")
-			# 	n1=tok[0]
-			# 	# Add node to avoid missed checks on edges
-			# 	net_year.add_node(n1)
-			# 	for i in range(1,len(tok)):
-			# 		# Find empty tokens and ignore
-			# 		if tok[i]=="": continue
-			# 		# Evaluate set values. Remove any quotes from literal set print
-			# 		tok_s=eval(tok[i].strip(" \""))
-			# 		# For eveny n2, add (n1,n2) if does not exist in net_year:
-			# 		for n2 in tok_s:
-			# 			if n2 not in net_year[n1]:
-			# 				net_year.add_edge(n1,n2)
-
+			fam_edgelist=None
 
 		# Calculate degrees & deg. histogram and save to a file
 		degs=net_year.degree()
 		with open(f"{log_path}/degrees_{layer_type}{layer_year}.txt","w") as d_wf:
 			for n,d in degs:
 				d_wf.write(f"{n} {d}")
+		degs=None
 
 		deg_hist=nx.degree_histogram(net_year)
 		with open(f"{log_path}/histogram_{layer_type}{layer_year}.txt","w") as h_wf:
 			h_wf.write(f"{deg_hist}")
+		deg_hist=None
 
 
 		# Flatten net_year with overall
@@ -135,6 +121,8 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 		elif layer_type=="neighbourhood":
 			nbr_all=flatten_layers(nbr_all,net_year)
 		else: continue
+
+		net_year=None
 
 
 # Calculate degree & histogram for x_all networks and save file
