@@ -33,11 +33,12 @@ def flatten_layers(l1,l2):
 	# Flattening on nx can be done using compose:
 	flat=nx.compose(l1,l2)
 
-	# Attributes of l2 will take precedence. Workaround to sum weights on flattened:
-	edge_data = {
-	    e: l1.edges[e]["weight"] + l2.edges[e]["weight"] for e in l1.edges & l2.edges
-	}
-	nx.set_edge_attributes(flat, edge_data, "weight")
+	# # Attributes of l2 will take precedence. Workaround to sum weights on flattened:
+	# edge_data = {
+	#     e: l1.edges[e]["weight"] + l2.edges[e]["weight"] for e in l1.edges & l2.edges
+	# }
+	# nx.set_edge_attributes(flat, edge_data, "weight")
+
 	return flat
 
 
