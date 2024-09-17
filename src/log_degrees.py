@@ -57,6 +57,7 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			layer_year=int(parse.parse(csv_path+"/final_network{}.csv",filename)[0])
 		elif "work" in filename:
 			layer_type="work"
+			print(csv_path+"/work{}.csv")
 			layer_year=int(parse.parse(csv_path+"/work{}.csv",filename)[0])
 		elif "neighbourhood" in filename:
 			layer_type="neighbourhood"
