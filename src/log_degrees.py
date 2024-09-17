@@ -1,4 +1,4 @@
-import os, glob, parse, pickle
+import os, glob, parse, pickle, sys
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -41,6 +41,13 @@ def flatten_layers(l1,l2):
 	return flat
 
 
+args=sys.argv[1:]
+mode=""
+
+if len(args)>1:
+	mode=args[1]
+
+
 # Open all csv files in path
 for filename in glob.glob(f"{csv_path}/*.csv"):
 	with open(filename,"r") as f:
@@ -66,10 +73,17 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 
 
 		# Set here flags to ignore years / layer types etc.
+		if layer_type!=mode:
+			print(f"{filename} skipped.")
+			continue
+
 		if layer_year>2018: 
 			print(f"{filename} skipped.")
 			continue
 
+		if layer_type=="family" and layer_year<2018:
+			print(f"{filename} skipped.")
+			continue
 
 
 		net_year=None
@@ -126,48 +140,85 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 
 
 # Calculate degree & histogram for x_all networks and save file
-degs=fam_all.degree()
-with open(f"{log_path}/degrees_fam_all.txt","w") as d_wf:
-	for n,d in degs:
-		d_wf.write(f"{n} {d}")
-hist=nx.degree_histogram(fam_all)
-with open(f"{log_path}/histogram_fam_all.txt","w") as h_wf:
-	h_wf.write(f"{hist}")
+if mode=="family":
+	degs=fam_all.degree()
+	with open(f"{log_path}/degrees_fam_all.txt","w") as d_wf:
+		for n,d in degs:
+			d_wf.write(f"{n} {d}")
+	hist=nx.degree_histogram(fam_all)
+	with open(f"{log_path}/histogram_fam_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
 
-degs=nbr_all.degree()
-with open(f"{log_path}/degrees_nbr_all.txt","w") as d_wf:
-	for n,d in degs:
-		d_wf.write(f"{n} {d}")
-hist=nx.degree_histogram(nbr_all)
-with open(f"{log_path}/histogram_nbr_all.txt","w") as h_wf:
-	h_wf.write(f"{hist}")
+	with open(f"{obj_path}/fam_all.nx","wb") as n_out:
+		pickle.dump(fam_all,n_out)
 
-degs=edu_all.degree()
-with open(f"{log_path}/degrees_edu_all.txt","w") as d_wf:
-	for n,d in degs:
-		d_wf.write(f"{n} {d}")
-hist=nx.degree_histogram(edu_all)
-with open(f"{log_path}/histogram_edu_all.txt","w") as h_wf:
-	h_wf.write(f"{hist}")
+elif mode=="neighbourhood":
+	degs=nbr_all.degree()
+	with open(f"{log_path}/degrees_nbr_all.txt","w") as d_wf:
+		for n,d in degs:
+			d_wf.write(f"{n} {d}")
+	hist=nx.degree_histogram(nbr_all)
+	with open(f"{log_path}/histogram_nbr_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
 
-degs=work_all.degree()
-with open(f"{log_path}/degrees_work_all.txt","w") as d_wf:
-	for n,d in degs:
-		d_wf.write(f"{n} {d}")
-hist=nx.degree_histogram(work_all)
-with open(f"{log_path}/histogram_work_all.txt","w") as h_wf:
-	h_wf.write(f"{hist}")
+	with open(f"{obj_path}/nbr_all.nx","wb") as n_out:
+		pickle.dump(nbr_all,n_out)
 
 
-# Save x_all networks as pickle
-with open(f"{obj_path}/fam_all.nx","wb") as n_out:
-	pickle.dump(fam_all,n_out)
-with open(f"{obj_path}/nbr_all.nx","wb") as n_out:
-	pickle.dump(nbr_all,n_out)
-with open(f"{obj_path}/edu_all.nx","wb") as n_out:
-	pickle.dump(edu_all,n_out)
-with open(f"{obj_path}/work_all.nx","wb") as n_out:
-	pickle.dump(work_all,n_out)
+elif mode=="education":
+	degs=edu_all.degree()
+	with open(f"{log_path}/degrees_edu_all.txt","w") as d_wf:
+		for n,d in degs:
+			d_wf.write(f"{n} {d}")
+	hist=nx.degree_histogram(edu_all)
+	with open(f"{log_path}/histogram_edu_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
+
+	with open(f"{obj_path}/edu_all.nx","wb") as n_out:
+		pickle.dump(edu_all,n_out)
+
+elif mode=="work":
+	degs=work_all.degree()
+	with open(f"{log_path}/degrees_work_all.txt","w") as d_wf:
+		for n,d in degs:
+			d_wf.write(f"{n} {d}")
+	hist=nx.degree_histogram(work_all)
+	with open(f"{log_path}/histogram_work_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
+
+	with open(f"{obj_path}/work_all.nx","wb") as n_out:
+		pickle.dump(work_all,n_out)
+
+
+# If mode=flat: flatten all (flattened) networks one-by-one and produce degs
+if mode=="flat":
+	flat_all=None
+	with open(f"{obj_path}/work_all.nx","rb") as n_out:
+		flat_all=pickle.load(n_out)
+	with open(f"{obj_path}/edu_all.nx","rb") as n_out:
+		l2=pickle.load(n_out)
+		flat_all=flatten_layers(flat_all,l2)
+	with open(f"{obj_path}/nbr_all.nx","rb") as n_out:
+		l2=pickle.load(n_out)
+		flat_all=flatten_layers(flat_all,l2)
+	with open(f"{obj_path}/fam_all.nx","rb") as n_out:
+		l2=pickle.load(n_out)
+		flat_all=flatten_layers(flat_all,l2)
+
+	degs=flat_all.degree()
+	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
+		for n,d in degs:
+			d_wf.write(f"{n} {d}")
+	hist=nx.degree_histogram(work_all)
+	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
+
+	# Save to pickle
+	with open(f"{obj_path}/flat_all.nx","wb") as n_out:
+		pickle.dump(flat_all,n_out)
+
+
+
 
 
 
