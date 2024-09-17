@@ -44,7 +44,7 @@ def flatten_layers(l1,l2):
 args=sys.argv[1:]
 mode=""
 
-if len(args)>1:
+if len(args)>=1:
 	mode=args[1]
 
 
@@ -216,9 +216,4 @@ if mode=="flat":
 	# Save to pickle
 	with open(f"{obj_path}/flat_all.nx","wb") as n_out:
 		pickle.dump(flat_all,n_out)
-
-
-
-
-
 
