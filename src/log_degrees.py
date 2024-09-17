@@ -17,8 +17,8 @@ from simplify_family import read_in_network, simplify_family_layer, make_entire_
 
 #### Uncomment for server data
 #
-csv_path="../results2/"
-log_path="../result_logs/"
+csv_path="../results2"
+log_path="../result_logs"
 obj_path=csv_path
 
 
@@ -65,7 +65,7 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 
 
 		# Set here flags to ignore years / layer types etc.
-		#if layer_year>2018: continue
+		if layer_year>2018: continue
 
 
 
