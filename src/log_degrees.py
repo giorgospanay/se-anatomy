@@ -45,7 +45,7 @@ args=sys.argv[1:]
 mode=""
 
 if len(args)>=1:
-	mode=args[1]
+	mode=args[0]
 
 
 # Open all csv files in path
