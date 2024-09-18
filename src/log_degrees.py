@@ -85,14 +85,29 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			#print(f"{filename} skipped.")
 			continue
 
+		# Flags for top/bot
 		if half=="top" and layer_year>=2010:
 			#print(f"{filename} skipped.")
 			continue
-
 		if half=="bot" and layer_year<2010:
 			#print(f"{filename} skipped.")
 			continue
 
+		# Flags for quarters
+		if half=="1" and (layer_year<2000 or layer_year>2004):
+			#print(f"{filename} skipped.")
+			continue
+		if half=="2" and (layer_year<2005 or layer_year>2009):
+			#print(f"{filename} skipped.")
+			continue
+		if half=="3" and (layer_year<2010 or layer_year>2014):
+			#print(f"{filename} skipped.")
+			continue
+		if half=="4" and layer_year<2014:
+			#print(f"{filename} skipped.")
+			continue
+
+		# All year-flags
 		if layer_year>2018 or layer_year<2000: 
 			#print(f"{filename} skipped.")
 			continue
@@ -213,12 +228,10 @@ if mode=="family-flat":
 
 elif mode=="neighbourhood-flat":
 	# Read top/bot from csv
-	nbr_top=pd.read_csv(f"{csv_path}/nbr_top.csv")
-	nbr_bot=pd.read_csv(f"{csv_path}/nbr_bot.csv")
-	nbr_all=pd_flatten_layers(nbr_top,nbr_bot)
+	nbr_all=pd_flatten_layers(pd.read_csv(f"{csv_path}/nbr_1.csv"),pd.read_csv(f"{csv_path}/nbr_2.csv"))
+	nbr_all=pd_flatten_layers(nbr_all,pd.read_csv(f"{csv_path}/nbr_3.csv"))
+	nbr_all=pd_flatten_layers(nbr_all,pd.read_csv(f"{csv_path}/nbr_4.csv"))
 
-	nbr_top=None
-	nbr_bot=None
 	gc.collect()
 
 	# Save to csv
@@ -258,16 +271,13 @@ elif mode=="education-flat":
 
 elif mode=="work-flat":
 	# Read top/bot from csv
-	work_top=pd.read_csv(f"{csv_path}/work_top.csv")
-	work_bot=pd.read_csv(f"{csv_path}/work_bot.csv")
-	work_all=pd_flatten_layers(work_top,work_bot)
-
-	work_top=None
-	work_bot=None
-	gc.collect()
+	work_all=pd_flatten_layers(pd.read_csv(f"{csv_path}/work_1.csv"),pd.read_csv(f"{csv_path}/work_2.csv"))
+	work_all=pd_flatten_layers(work_all,pd.read_csv(f"{csv_path}/work_3.csv"))
+	work_all=pd_flatten_layers(work_all,pd.read_csv(f"{csv_path}/work_4.csv"))
 
 	# Save to csv
 	work_all.to_csv(f"{csv_path}/work_all.csv")
+
 	# Calc degs
 	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
 	degs=net_all.degree()
