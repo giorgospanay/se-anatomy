@@ -22,10 +22,10 @@ log_path="../result_logs"
 obj_path=csv_path
 
 
-work_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
-fam_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
-nbr_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
-edu_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
+work_all=pd.DataFrame({"PersonNr":[], "PersonNr2":[]})
+fam_all=pd.DataFrame({"PersonNr":[], "PersonNr2":[]})
+nbr_all=pd.DataFrame({"PersonNr":[], "PersonNr2":[]})
+edu_all=pd.DataFrame({"PersonNr":[], "PersonNr2":[]})
 
 
 # Flatten nx layers
@@ -213,7 +213,7 @@ elif mode=="work":
 
 # If mode=flat: flatten all (flattened) networks one-by-one and produce degs
 if mode=="flat":
-	flat_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
+	flat_all=pd.DataFrame({"PersonNr":[], "PersonNr2":[]})
 
 	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/fam_all.csv"))
 	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/edu_all.csv"))
