@@ -71,6 +71,8 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			layer_type="family"
 			layer_year=int(parse.parse(csv_path+"/final_network{}.csv",filename)[0])
 		elif "work" in filename:
+			if "work_" in filename:
+				continue
 			layer_type="work"
 			#print(csv_path+"/work{}.csv")
 			layer_year=int(parse.parse(csv_path+"/work{}.csv",filename)[0])
@@ -94,7 +96,7 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			continue
 
 		# Flags for quarters
-		if half=="1" and (layer_year<2000 or layer_year>2004):
+		if half=="1" and layer_year>2004:
 			#print(f"{filename} skipped.")
 			continue
 		if half=="2" and (layer_year<2005 or layer_year>2009):
@@ -112,6 +114,7 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			#print(f"{filename} skipped.")
 			continue
 
+		# Family flag
 		if layer_type=="family" and layer_year<2018:
 			#print(f"{filename} skipped.")
 			continue
