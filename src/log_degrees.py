@@ -190,8 +190,8 @@ elif mode=="work":
 # Mode for flattening halves:
 if mode=="family-flat":
 	# Read top/bot from csv
-	fam_top=pd.from_csv(f"{csv_path}/fam_top.csv")
-	fam_bot=pd.from_csv(f"{csv_path}/fam_bot.csv")
+	fam_top=pd.read_csv(f"{csv_path}/fam_top.csv")
+	fam_bot=pd.read_csv(f"{csv_path}/fam_bot.csv")
 	fam_all=pd_flatten_layers(fam_top,fam_bot)
 	# Save to csv
 	fam_all.to_csv(f"{csv_path}/fam_all.csv")
@@ -208,8 +208,8 @@ if mode=="family-flat":
 
 elif mode=="neighbourhood-flat":
 	# Read top/bot from csv
-	nbr_top=pd.from_csv(f"{csv_path}/nbr_top.csv")
-	nbr_bot=pd.from_csv(f"{csv_path}/nbr_bot.csv")
+	nbr_top=pd.read_csv(f"{csv_path}/nbr_top.csv")
+	nbr_bot=pd.read_csv(f"{csv_path}/nbr_bot.csv")
 	nbr_all=pd_flatten_layers(nbr_top,nbr_bot)
 	# Save to csv
 	nbr_all.to_csv(f"{csv_path}/nbr_all.csv")
@@ -226,8 +226,8 @@ elif mode=="neighbourhood-flat":
 
 elif mode=="education-flat":
 	# Read top/bot from csv
-	edu_top=pd.from_csv(f"{csv_path}/edu_top.csv")
-	edu_bot=pd.from_csv(f"{csv_path}/edu_bot.csv")
+	edu_top=pd.read_csv(f"{csv_path}/edu_top.csv")
+	edu_bot=pd.read_csv(f"{csv_path}/edu_bot.csv")
 	edu_all=pd_flatten_layers(edu_top,edu_bot)
 	# Save to csv
 	edu_all.to_csv(f"{csv_path}/edu_all.csv")
@@ -243,8 +243,8 @@ elif mode=="education-flat":
 
 elif mode=="work-flat":
 	# Read top/bot from csv
-	work_top=pd.from_csv(f"{csv_path}/work_top.csv")
-	work_bot=pd.from_csv(f"{csv_path}/work_bot.csv")
+	work_top=pd.read_csv(f"{csv_path}/work_top.csv")
+	work_bot=pd.read_csv(f"{csv_path}/work_bot.csv")
 	work_all=pd_flatten_layers(work_top,work_bot)
 
 	# Save to csv
@@ -264,10 +264,10 @@ elif mode=="work-flat":
 if mode=="flat":
 	flat_all=pd.DataFrame({"PersonNr":[], "PersonNr2":[]})
 
-	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/fam_all.csv"))
-	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/edu_all.csv"))
-	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/nbr_all.csv"))
-	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/work_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/fam_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/edu_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/nbr_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/work_all.csv"))
 
 	# Save to csv
 	flat_all.to_csv(f"{csv_path}/flat_all.csv")
