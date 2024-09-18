@@ -22,10 +22,10 @@ log_path="../result_logs"
 obj_path=csv_path
 
 
-work_all=nx.Graph()
-fam_all=nx.Graph()
-nbr_all=nx.Graph()
-edu_all=nx.Graph()
+work_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
+fam_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
+nbr_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
+edu_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
 
 
 # Flatten nx layers
@@ -40,6 +40,11 @@ def flatten_layers(l1,l2):
 	# nx.set_edge_attributes(flat, edge_data, "weight")
 
 	return flat
+
+# Flatten layers using pandas
+def pd_flatten_layers(l1,l2):
+	return pd.concat([l1,l2],copy=False).drop_duplicates().reset_index(drop=True)
+
 
 
 args=sys.argv[1:]
@@ -87,35 +92,35 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			continue
 
 
-		net_year=None
+
+		df=None
 
 		# If not family layer csv: read edgelist
 		if layer_type!="family":
 			# Read csv
 			df=pd.read_csv(f)
-			net_year=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
-
-			df=None
+			# Convert to nx?
+			#net_year=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
 		# Otherwise for family: 
 		else:
 			# Use pd and helper functions from simplify_family
-			fam_raw=pd.read_csv(f)
-			fam_df=read_in_network(fam_raw,"PersonNr")
-			fam_edgelist = make_entire_edge_list(fam_df)
+			fam_df=read_in_network(pd.read_csv(f),"PersonNr")
+			df = make_entire_edge_list(fam_df)["PersonNr","PersonNr2"]
 			# @TODO: Save to csv here if necessary
 
-			fam_raw=None
 			fam_df=None
+			fam_edgelist=None
 
 			# Create network from edgelist
-			net_year=nx.from_pandas_edgelist(fam_edgelist,source="PersonNr",target="PersonNr2",edge_attr="connection")
-
-			fam_edgelist=None
+			#net_year=nx.from_pandas_edgelist(fam_edgelist,source="PersonNr",target="PersonNr2",edge_attr="connection")
+			
 
 
 		# Get the garbage!
 		gc.collect()
+
+		net_year=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
 		# Calculate degrees & deg. histogram and save to a file
 		degs=net_year.degree()
@@ -129,94 +134,120 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			h_wf.write(f"{deg_hist}")
 		deg_hist=None
 
-		# Get more garbage!
+		
+		# Get the garbage!
+		net_year=None
 		gc.collect()
 
 		# Flatten net_year with overall
 		if layer_type=="education":
-			edu_all=flatten_layers(edu_all,net_year)
+			edu_all=pd_flatten_layers(edu_all,df)
 		elif layer_type=="work":
-			work_all=flatten_layers(work_all,net_year)
+			work_all=pd_flatten_layers(work_all,df)
 		elif layer_type=="family":
-			fam_all=flatten_layers(fam_all,net_year)
+			fam_all=pd_flatten_layers(fam_all,df)
 		elif layer_type=="neighbourhood":
-			nbr_all=flatten_layers(nbr_all,net_year)
+			nbr_all=pd_flatten_layers(nbr_all,df)
 		else: continue
 
-		net_year=None
+		# Get the garbage!
+		df=None
+		gc.collect()
 
 
 # Calculate degree & histogram for x_all networks and save file
 if mode=="family":
-	degs=fam_all.degree()
+	# Save to csv
+	fam_all.to_csv(f"{csv_path}/fam_all.csv")
+	# Calc degs
+	net_all=nx.from_pandas_edgelist(fam_all,source="PersonNr",target="PersonNr2")
+	degs=net_all.degree()
 	with open(f"{log_path}/degrees_fam_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(fam_all)
+	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_fam_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-	with open(f"{obj_path}/fam_all.nx","wb") as n_out:
-		pickle.dump(fam_all,n_out)
+		
 
 elif mode=="neighbourhood":
-	degs=nbr_all.degree()
+	# Save to csv
+	nbr_all.to_csv(f"{csv_path}/nbr_all.csv")
+	# Calc degs
+	net_all=nx.from_pandas_edgelist(nbr_all,source="PersonNr",target="PersonNr2")
+	degs=net_all.degree()
 	with open(f"{log_path}/degrees_nbr_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(nbr_all)
+	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_nbr_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-	with open(f"{obj_path}/nbr_all.nx","wb") as n_out:
-		pickle.dump(nbr_all,n_out)
 
 
 elif mode=="education":
-	degs=edu_all.degree()
+	# Save to csv
+	edu_all.to_csv(f"{csv_path}/edu_all.csv")
+	# Calc degs
+	net_all=nx.from_pandas_edgelist(edu_all,source="PersonNr",target="PersonNr2")
+	degs=net_all.degree()
 	with open(f"{log_path}/degrees_edu_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(edu_all)
+	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_edu_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-	with open(f"{obj_path}/edu_all.nx","wb") as n_out:
-		pickle.dump(edu_all,n_out)
 
 elif mode=="work":
-	degs=work_all.degree()
+	# Save to csv
+	work_all.to_csv(f"{csv_path}/work_all.csv")
+	# Calc degs
+	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
+	degs=net_all.degree()
 	with open(f"{log_path}/degrees_work_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(work_all)
+	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_work_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
-	with open(f"{obj_path}/work_all.nx","wb") as n_out:
-		pickle.dump(work_all,n_out)
 
 
 # If mode=flat: flatten all (flattened) networks one-by-one and produce degs
 if mode=="flat":
-	flat_all=None
-	with open(f"{obj_path}/work_all.nx","rb") as n_out:
-		flat_all=pickle.load(n_out)
-	with open(f"{obj_path}/edu_all.nx","rb") as n_out:
-		l2=pickle.load(n_out)
-		flat_all=flatten_layers(flat_all,l2)
-	with open(f"{obj_path}/nbr_all.nx","rb") as n_out:
-		l2=pickle.load(n_out)
-		flat_all=flatten_layers(flat_all,l2)
-	with open(f"{obj_path}/fam_all.nx","rb") as n_out:
-		l2=pickle.load(n_out)
-		flat_all=flatten_layers(flat_all,l2)
+	flat_all=pd.Dataframe({"PersonNr":[], "PersonNr2":[]})
 
-	degs=flat_all.degree()
+	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/fam_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/edu_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/nbr_all.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.from_csv(f"{csv_path}/work_all.csv"))
+
+	# Save to csv
+	flat_all.to_csv(f"{csv_path}/flat_all.csv")
+
+
+	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
+
+
+	# with open(f"{obj_path}/work_all.nx","rb") as n_out:
+	# 	flat_all=pickle.load(n_out)
+	# with open(f"{obj_path}/edu_all.nx","rb") as n_out:
+	# 	l2=pickle.load(n_out)
+	# 	flat_all=flatten_layers(flat_all,l2)
+	# with open(f"{obj_path}/nbr_all.nx","rb") as n_out:
+	# 	l2=pickle.load(n_out)
+	# 	flat_all=flatten_layers(flat_all,l2)
+	# with open(f"{obj_path}/fam_all.nx","rb") as n_out:
+	# 	l2=pickle.load(n_out)
+	# 	flat_all=flatten_layers(flat_all,l2)
+
+	degs=net_all.degree()
 	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(flat_all)
+	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
 
-	# Save to pickle
-	with open(f"{obj_path}/flat_all.nx","wb") as n_out:
-		pickle.dump(flat_all,n_out)
+	# # Save to pickle
+	# with open(f"{obj_path}/flat_all.nx","wb") as n_out:
+	# 	pickle.dump(flat_all,n_out)
 

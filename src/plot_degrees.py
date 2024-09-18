@@ -17,7 +17,7 @@ degs_flat=None, hist_flat=None, degs_work=None, hist_work=None, degs_edu=None, h
 
 
 with open(f"{log_path}/degrees_flat_all.txt","r") as d_wf:
-
+	
 
 with open(f"{log_path}/histogram_flat_all.txt","r") as h_wf:
 
