@@ -16,10 +16,28 @@ import matplotlib.pyplot as plt
 degs_flat=None, hist_flat=None, degs_work=None, hist_work=None, degs_edu=None, hist_edu=None, degs_nbr=None, hist_nbr=None, degs_fam=None, hist_fam=None
 
 
-with open(f"{log_path}/degrees_flat_all.txt","r") as d_wf:
-	
+# Get hists
+with open(f"{log_path}/histogram_fam_all.txt","r") as h_wf:
+	hist_fam = [line.rstrip() for line in h_wf]
+with open(f"{log_path}/histogram_edu_all.txt","r") as h_wf:
+	hist_edu = [line.rstrip() for line in h_wf]
+with open(f"{log_path}/histogram_nbr_all.txt","r") as h_wf:
+	hist_nbr= [line.rstrip() for line in h_wf]
+with open(f"{log_path}/histogram_work_all.txt","r") as h_wf:
+	hist_work = [line.rstrip() for line in h_wf]
 
 with open(f"{log_path}/histogram_flat_all.txt","r") as h_wf:
+	hist_flat = [line.rstrip() for line in h_wf]
+
+
+
+
+
+# Get degrees if necessary	
+
+with open(f"{log_path}/degrees_flat_all.txt","r") as d_wf:
+	degs_flat = [line.rstrip() for line in d_wf]
+
 
 
 

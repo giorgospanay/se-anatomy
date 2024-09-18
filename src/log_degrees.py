@@ -49,9 +49,12 @@ def pd_flatten_layers(l1,l2):
 
 args=sys.argv[1:]
 mode=""
+half=""
 
 if len(args)>=1:
 	mode=args[0]
+	if len(args)>=2:
+		half=args[1]
 
 
 # Open all csv files in path
@@ -60,7 +63,6 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 		# Parse filename to determine type and year of layer
 		layer_type=None
 		layer_year=0
-		print(filename)
 		if "education" in filename:
 			layer_type="education"
 			layer_year=int(parse.parse(csv_path+"/education{}.csv",filename)[0])
@@ -80,17 +82,18 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 
 		# Set here flags to ignore years / layer types etc.
 		if layer_type!=mode:
-			print(f"{filename} skipped.")
+			#print(f"{filename} skipped.")
 			continue
 
 		if layer_year>2018 or layer_year<2000: 
-			print(f"{filename} skipped.")
+			#print(f"{filename} skipped.")
 			continue
 
 		if layer_type=="family" and layer_year<2018:
-			print(f"{filename} skipped.")
+			#print(f"{filename} skipped.")
 			continue
 
+		print(f"Processing {filename}.")
 
 
 		df=None
@@ -155,8 +158,33 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 		gc.collect()
 
 
-# Calculate degree & histogram for x_all networks and save file
+# Save half networks
 if mode=="family":
+	# Save to csv
+	fam_all.to_csv(f"{csv_path}/fam_{half}.csv")
+			
+elif mode=="neighbourhood":
+	# Save to csv
+	nbr_all.to_csv(f"{csv_path}/nbr_{half}.csv")
+	
+elif mode=="education":
+	# Save to csv
+	edu_all.to_csv(f"{csv_path}/edu_{half}.csv")
+
+elif mode=="work":
+	# Save to csv
+	work_all.to_csv(f"{csv_path}/work_{half}.csv")
+	
+
+
+
+
+# Mode for flattening halves:
+if mode=="family-flat":
+	# Read top/bot from csv
+	fam_top=pd.from_csv(f"{csv_path}/fam_top.csv")
+	fam_bot=pd.from_csv(f"{csv_path}/fam_bot.csv")
+	fam_all=pd_flatten_layers(fam_top,fam_bot)
 	# Save to csv
 	fam_all.to_csv(f"{csv_path}/fam_all.csv")
 	# Calc degs
@@ -170,7 +198,11 @@ if mode=="family":
 		h_wf.write(f"{hist}")
 		
 
-elif mode=="neighbourhood":
+elif mode=="neighbourhood-flat":
+	# Read top/bot from csv
+	nbr_top=pd.from_csv(f"{csv_path}/nbr_top.csv")
+	nbr_bot=pd.from_csv(f"{csv_path}/nbr_bot.csv")
+	nbr_all=pd_flatten_layers(nbr_top,nbr_bot)
 	# Save to csv
 	nbr_all.to_csv(f"{csv_path}/nbr_all.csv")
 	# Calc degs
@@ -184,7 +216,11 @@ elif mode=="neighbourhood":
 		h_wf.write(f"{hist}")
 
 
-elif mode=="education":
+elif mode=="education-flat":
+	# Read top/bot from csv
+	edu_top=pd.from_csv(f"{csv_path}/edu_top.csv")
+	edu_bot=pd.from_csv(f"{csv_path}/edu_bot.csv")
+	edu_all=pd_flatten_layers(edu_top,edu_bot)
 	# Save to csv
 	edu_all.to_csv(f"{csv_path}/edu_all.csv")
 	# Calc degs
@@ -197,7 +233,12 @@ elif mode=="education":
 	with open(f"{log_path}/histogram_edu_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
 
-elif mode=="work":
+elif mode=="work-flat":
+	# Read top/bot from csv
+	work_top=pd.from_csv(f"{csv_path}/work_top.csv")
+	work_bot=pd.from_csv(f"{csv_path}/work_bot.csv")
+	work_all=pd_flatten_layers(work_top,work_bot)
+
 	# Save to csv
 	work_all.to_csv(f"{csv_path}/work_all.csv")
 	# Calc degs
