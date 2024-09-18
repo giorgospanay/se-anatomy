@@ -1,4 +1,4 @@
-import os, glob, parse, pickle, sys
+import os, glob, parse, pickle, sys, gc
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -113,6 +113,10 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 
 			fam_edgelist=None
 
+
+		# Get the garbage!
+		gc.collect()
+
 		# Calculate degrees & deg. histogram and save to a file
 		degs=net_year.degree()
 		with open(f"{log_path}/degrees_{layer_type}{layer_year}.txt","w") as d_wf:
@@ -125,6 +129,8 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			h_wf.write(f"{deg_hist}")
 		deg_hist=None
 
+		# Get more garbage!
+		gc.collect()
 
 		# Flatten net_year with overall
 		if layer_type=="education":
