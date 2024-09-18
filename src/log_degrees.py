@@ -85,6 +85,14 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			#print(f"{filename} skipped.")
 			continue
 
+		if half=="top" and layer_year>=2010:
+			#print(f"{filename} skipped.")
+			continue
+
+		if half=="bot" and layer_year<2010:
+			#print(f"{filename} skipped.")
+			continue
+
 		if layer_year>2018 or layer_year<2000: 
 			#print(f"{filename} skipped.")
 			continue
