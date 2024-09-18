@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 
 degs_flat=None, hist_flat=None, degs_work=None, hist_work=None, degs_edu=None, hist_edu=None, degs_nbr=None, hist_nbr=None, degs_fam=None, hist_fam=None
 
+# Set subplot figures (1A, 1C)
+fig1, (ax1a, ax1c) = plt.subplots(1,2)
 
 # Get hists
 with open(f"{log_path}/histogram_fam_all.txt","r") as h_wf:
@@ -25,9 +27,30 @@ with open(f"{log_path}/histogram_nbr_all.txt","r") as h_wf:
 	hist_nbr= [line.rstrip() for line in h_wf]
 with open(f"{log_path}/histogram_work_all.txt","r") as h_wf:
 	hist_work = [line.rstrip() for line in h_wf]
-
 with open(f"{log_path}/histogram_flat_all.txt","r") as h_wf:
 	hist_flat = [line.rstrip() for line in h_wf]
+
+# Fig. 1A: Plot each histogram (individual layers) as line
+ax1a.legend(["Family","Education","Neighbourhood","Work"],loc="upper center")
+ax1a.set_ylabel("Frequency")
+ax1a.set_xlabel("Degree")
+ax1a.set_yscale("log")
+ax1a.set_xscale("log")
+
+ax1a.plot(hist_fam,color="tab:blue",marker=".",linestyle="dashdot")
+ax1a.plot(hist_edu,color="tab:orange",marker=".",linestyle="dashdot")
+ax1a.plot(hist_nbr,color="tab:green",marker=".",linestyle="dashdot")
+ax1a.plot(hist_work,color="tab:red",marker=".",linestyle="dashdot")
+
+# Fig. 1C: Plot histogram (flattened opp. network) as line
+ax1c.legend(["Total degree"],loc="upper center")
+ax1c.set_ylabel("Frequency")
+ax1c.set_xlabel("Degree")
+ax1c.set_yscale("log")
+ax1c.set_xscale("log")
+
+ax1c.plot(hist_flat,color="black",marker=".",linestyle="dashdot")
+
 
 
 

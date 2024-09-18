@@ -193,6 +193,11 @@ if mode=="family-flat":
 	fam_top=pd.read_csv(f"{csv_path}/fam_top.csv")
 	fam_bot=pd.read_csv(f"{csv_path}/fam_bot.csv")
 	fam_all=pd_flatten_layers(fam_top,fam_bot)
+
+	fam_top=None
+	fam_bot=None
+	gc.collect()
+
 	# Save to csv
 	fam_all.to_csv(f"{csv_path}/fam_all.csv")
 	# Calc degs
@@ -211,6 +216,11 @@ elif mode=="neighbourhood-flat":
 	nbr_top=pd.read_csv(f"{csv_path}/nbr_top.csv")
 	nbr_bot=pd.read_csv(f"{csv_path}/nbr_bot.csv")
 	nbr_all=pd_flatten_layers(nbr_top,nbr_bot)
+
+	nbr_top=None
+	nbr_bot=None
+	gc.collect()
+
 	# Save to csv
 	nbr_all.to_csv(f"{csv_path}/nbr_all.csv")
 	# Calc degs
@@ -229,6 +239,11 @@ elif mode=="education-flat":
 	edu_top=pd.read_csv(f"{csv_path}/edu_top.csv")
 	edu_bot=pd.read_csv(f"{csv_path}/edu_bot.csv")
 	edu_all=pd_flatten_layers(edu_top,edu_bot)
+
+	edu_top=None
+	edu_bot=None
+	gc.collect()
+
 	# Save to csv
 	edu_all.to_csv(f"{csv_path}/edu_all.csv")
 	# Calc degs
@@ -246,6 +261,10 @@ elif mode=="work-flat":
 	work_top=pd.read_csv(f"{csv_path}/work_top.csv")
 	work_bot=pd.read_csv(f"{csv_path}/work_bot.csv")
 	work_all=pd_flatten_layers(work_top,work_bot)
+
+	work_top=None
+	work_bot=None
+	gc.collect()
 
 	# Save to csv
 	work_all.to_csv(f"{csv_path}/work_all.csv")
