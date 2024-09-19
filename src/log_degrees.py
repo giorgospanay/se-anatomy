@@ -305,7 +305,7 @@ if mode=="flat-2017":
 	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/work_2017.csv"))
 
 	# Save to csv
-	flat_all.to_csv(f"{csv_path}/flat_all.csv")
+	flat_all.to_csv(f"{csv_path}/flat_2017.csv")
 
 
 	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
