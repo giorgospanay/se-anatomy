@@ -18,16 +18,29 @@ degs_flat=None, hist_flat=None, degs_work=None, hist_work=None, degs_edu=None, h
 # Set subplot figures (1A, 1C)
 fig1, (ax1a, ax1c) = plt.subplots(1,2)
 
-# Get hists
-with open(f"{log_path}/histogram_fam_all.txt","r") as h_wf:
+# # Get hists. When all is available, uncomment:
+# with open(f"{log_path}/histogram_fam_all.txt","r") as h_wf:
+# 	hist_fam = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/histogram_edu_all.txt","r") as h_wf:
+# 	hist_edu = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/histogram_nbr_all.txt","r") as h_wf:
+# 	hist_nbr= [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/histogram_work_all.txt","r") as h_wf:
+# 	hist_work = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/histogram_flat_all.txt","r") as h_wf:
+# 	hist_flat = [line.rstrip() for line in h_wf]
+
+
+# Get hists. Now showing year=2017:
+with open(f"{log_path}/histogram_fam_2017.txt","r") as h_wf:
 	hist_fam = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/histogram_edu_all.txt","r") as h_wf:
+with open(f"{log_path}/histogram_edu_2017.txt","r") as h_wf:
 	hist_edu = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/histogram_nbr_all.txt","r") as h_wf:
+with open(f"{log_path}/histogram_nbr_2017.txt","r") as h_wf:
 	hist_nbr= [line.rstrip() for line in h_wf]
-with open(f"{log_path}/histogram_work_all.txt","r") as h_wf:
+with open(f"{log_path}/histogram_work_2017.txt","r") as h_wf:
 	hist_work = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/histogram_flat_all.txt","r") as h_wf:
+with open(f"{log_path}/histogram_flat_2017.txt","r") as h_wf:
 	hist_flat = [line.rstrip() for line in h_wf]
 
 # Fig. 1A: Plot each histogram (individual layers) as line

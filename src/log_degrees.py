@@ -88,10 +88,10 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			continue
 
 		# Flags for top/bot
-		if half=="top" and layer_year>=2010:
+		if half=="top" and layer_year>=2009:
 			#print(f"{filename} skipped.")
 			continue
-		if half=="bot" and layer_year<2010:
+		if half=="bot" and layer_year<=2010:
 			#print(f"{filename} skipped.")
 			continue
 
@@ -99,23 +99,23 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 		if half=="1" and layer_year>2004:
 			#print(f"{filename} skipped.")
 			continue
-		if half=="2" and (layer_year<2005 or layer_year>2009):
+		if half=="2" and (layer_year<=2004 or layer_year>2008):
 			#print(f"{filename} skipped.")
 			continue
-		if half=="3" and (layer_year<2010 or layer_year>2014):
+		if half=="3" and (layer_year<=2008 or layer_year>2012):
 			#print(f"{filename} skipped.")
 			continue
-		if half=="4" and layer_year<2015:
+		if half=="4" and layer_year<=2012:
 			#print(f"{filename} skipped.")
 			continue
 
 		# All year-flags
-		if layer_year>2018 or layer_year<2000: 
+		if layer_year>2017 or layer_year<2000: 
 			#print(f"{filename} skipped.")
 			continue
 
 		# Family flag
-		if layer_type=="family" and layer_year<2018:
+		if layer_type=="family" and layer_year<2017:
 			#print(f"{filename} skipped.")
 			continue
 
@@ -203,8 +203,6 @@ elif mode=="work":
 	
 
 
-
-
 # Mode for flattening halves:
 if mode=="family-flat":
 	# Read top/bot from csv
@@ -235,12 +233,16 @@ elif mode=="neighbourhood-flat":
 	nbr_all=pd_flatten_layers(nbr_all,pd.read_csv(f"{csv_path}/nbr_3.csv"))
 	nbr_all=pd_flatten_layers(nbr_all,pd.read_csv(f"{csv_path}/nbr_4.csv"))
 
-	gc.collect()
 
 	# Save to csv
 	nbr_all.to_csv(f"{csv_path}/nbr_all.csv")
-	# Calc degs
+	
 	net_all=nx.from_pandas_edgelist(nbr_all,source="PersonNr",target="PersonNr2")
+
+	nbr_all=None
+	gc.collect()
+
+	# Calc degs
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_nbr_all.txt","w") as d_wf:
 		for n,d in degs:
@@ -289,6 +291,44 @@ elif mode=="work-flat":
 			d_wf.write(f"{n} {d}")
 	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_work_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
+
+
+# If mode=flat-2017: flatten all networks for the 2017 year, produce degs
+if mode=="flat-2017":
+
+	fam_df=read_in_network(pd.read_csv(f),"PersonNr")
+	df = make_entire_edge_list(fam_df)["PersonNr","PersonNr2"]
+
+	flat_all=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/education2017.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/nbr_2017.csv"))
+	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/work_2017.csv"))
+
+	# Save to csv
+	flat_all.to_csv(f"{csv_path}/flat_all.csv")
+
+
+	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
+
+
+	# with open(f"{obj_path}/work_all.nx","rb") as n_out:
+	# 	flat_all=pickle.load(n_out)
+	# with open(f"{obj_path}/edu_all.nx","rb") as n_out:
+	# 	l2=pickle.load(n_out)
+	# 	flat_all=flatten_layers(flat_all,l2)
+	# with open(f"{obj_path}/nbr_all.nx","rb") as n_out:
+	# 	l2=pickle.load(n_out)
+	# 	flat_all=flatten_layers(flat_all,l2)
+	# with open(f"{obj_path}/fam_all.nx","rb") as n_out:
+	# 	l2=pickle.load(n_out)
+	# 	flat_all=flatten_layers(flat_all,l2)
+
+	degs=net_all.degree()
+	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
+		for n,d in degs:
+			d_wf.write(f"{n} {d}")
+	hist=nx.degree_histogram(net_all)
+	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
 
 
