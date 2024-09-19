@@ -297,7 +297,7 @@ elif mode=="work-flat":
 # If mode=flat-2017: flatten all networks for the 2017 year, produce degs
 if mode=="flat-2017":
 
-	fam_df=read_in_network(pd.read_csv(f),"PersonNr")
+	fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
 	df = make_entire_edge_list(fam_df)["PersonNr","PersonNr2"]
 
 	flat_all=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/education2017.csv"))
