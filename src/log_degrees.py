@@ -299,6 +299,7 @@ if mode=="flat-2017":
 
 	fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
 	df = make_entire_edge_list(fam_df)
+	print(df)
 	df=df["PersonNr","PersonNr2"]
 
 	flat_all=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/education2017.csv"))
@@ -309,7 +310,7 @@ if mode=="flat-2017":
 	flat_all.to_csv(f"{csv_path}/flat_2017.csv")
 
 
-	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
+	net_all=nx.from_pandas_edgelist(flat_all,source="PersonNr",target="PersonNr2")
 
 
 	# with open(f"{obj_path}/work_all.nx","rb") as n_out:
