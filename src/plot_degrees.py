@@ -67,7 +67,7 @@ hist_work=ast.literal_eval(hist_work[0])
 hist_flat=ast.literal_eval(hist_flat[0])
 
 # Fig. 1A: Plot each histogram (individual layers) as line
-fig1a.legend(["Family","Education","Neighbourhood","Work"],loc="upper center")
+fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center")
 ax1a.set_ylabel("Frequency")
 ax1a.set_xlabel("Degree")
 ax1a.set_yscale("log")
@@ -88,7 +88,7 @@ fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300, transparent=
 # Fig. 1C: Plot histogram (flattened opp. network) as line
 fig1c, ax1c = plt.subplots()
 
-fig1c.legend(["Total degree"],loc="upper center")
+fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center")
 #ax1c.set_ylabel("Frequency")
 ax1c.set_xlabel("Degree")
 ax1c.set_yscale("log")
