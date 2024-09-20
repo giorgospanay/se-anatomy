@@ -59,6 +59,12 @@ with open(f"{log_path}/histogram_work2017.txt","r") as h_wf:
 with open(f"{log_path}/histogram_flat2017.txt","r") as h_wf:
 	hist_flat = [line.rstrip() for line in h_wf]
 
+print(hist_fam)
+print(hist_edu)
+print(hist_nbr)
+print(hist_work)
+print(hist_flat)
+
 # Fig. 1A: Plot each histogram (individual layers) as line
 ax1a.legend(["Family","Education","Neighbourhood","Work"],loc="upper center")
 ax1a.set_ylabel("Frequency")
