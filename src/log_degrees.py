@@ -316,7 +316,7 @@ if mode=="flat-2017":
 
 
 if mode=="degs-2017":
-	net_all=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+	net_all=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_2017.csv"),source="PersonNr",target="PersonNr2")
 
 	print("Histogram / degs produced:")
 	hist=nx.degree_histogram(net_all)
