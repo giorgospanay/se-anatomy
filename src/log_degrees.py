@@ -135,7 +135,7 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 		else:
 			# Use pd and helper functions from simplify_family
 			fam_df=read_in_network(pd.read_csv(f),"PersonNr")
-			df = make_entire_edge_list(fam_df)["PersonNr","PersonNr2"]
+			df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
 			# @TODO: Save to csv here if necessary
 
 			fam_df=None
@@ -300,7 +300,7 @@ if mode=="flat-2017":
 	fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
 	df = make_entire_edge_list(fam_df)
 	print(df)
-	df=df["PersonNr","PersonNr2"]
+	df=df[["PersonNr","PersonNr2"]]
 
 	flat_all=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/education2017.csv"))
 	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/neighbourhood2017.csv"))
