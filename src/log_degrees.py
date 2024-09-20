@@ -318,13 +318,18 @@ if mode=="flat-2017":
 if mode=="degs-2017":
 	net_all=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
+	print("Histogram / degs produced:")
+	hist=nx.degree_histogram(net_all)
+	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
+		h_wf.write(f"{hist}")
+	hist=None
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
 		for n,d in degs:
 			d_wf.write(f"{n} {d}")
-	hist=nx.degree_histogram(net_all)
-	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
-		h_wf.write(f"{hist}")
+	degs=None
+
+	
 
 
 # If mode=flat: flatten all (flattened) networks one-by-one and produce degs
