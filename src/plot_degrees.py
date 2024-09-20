@@ -67,7 +67,6 @@ hist_work=ast.literal_eval(hist_work[0])
 hist_flat=ast.literal_eval(hist_flat[0])
 
 # Fig. 1A: Plot each histogram (individual layers) as line
-fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center")
 ax1a.set_ylabel("Frequency")
 ax1a.set_xlabel("Degree")
 ax1a.set_yscale("log")
@@ -81,6 +80,7 @@ ax1a.plot(hist_nbr,color="tab:green",marker=",",linestyle="dashdot")
 ax1a.plot(hist_work,color="tab:red",marker=",",linestyle="dashdot")
 
 # Save
+fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center")
 fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300, transparent=True)
 
 
@@ -88,7 +88,7 @@ fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300, transparent=
 # Fig. 1C: Plot histogram (flattened opp. network) as line
 fig1c, ax1c = plt.subplots()
 
-fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center")
+
 #ax1c.set_ylabel("Frequency")
 ax1c.set_xlabel("Degree")
 ax1c.set_yscale("log")
@@ -99,6 +99,7 @@ ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K"
 ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
 
 # Save
+fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center")
 fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300, transparent=True)
 
 
