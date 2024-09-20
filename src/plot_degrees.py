@@ -72,10 +72,10 @@ ax1a.set_xlabel("Degree")
 ax1a.set_yscale("log")
 ax1a.set_xscale("log")
 
-ax1a.plot(hist_fam,color="tab:blue",marker=".",linestyle="dashdot")
-ax1a.plot(hist_edu,color="tab:orange",marker=".",linestyle="dashdot")
-ax1a.plot(hist_nbr,color="tab:green",marker=".",linestyle="dashdot")
-ax1a.plot(hist_work,color="tab:red",marker=".",linestyle="dashdot")
+ax1a.plot(hist_fam[0],color="tab:blue",marker=".",linestyle="dashdot")
+ax1a.plot(hist_edu[0],color="tab:orange",marker=".",linestyle="dashdot")
+ax1a.plot(hist_nbr[0],color="tab:green",marker=".",linestyle="dashdot")
+ax1a.plot(hist_work[0],color="tab:red",marker=".",linestyle="dashdot")
 
 # Fig. 1C: Plot histogram (flattened opp. network) as line
 ax1c.legend(["Total degree"],loc="upper center")
