@@ -5,6 +5,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+## GLOBALS
+csv_path="../results2"
+log_path="../result_logs"
+obj_path=csv_path
+
+
 
 # For (all) networks:
 # 	(a) check degrees on each layer
