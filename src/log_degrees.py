@@ -297,33 +297,26 @@ elif mode=="work-flat":
 # If mode=flat-2017: flatten all networks for the 2017 year, produce degs
 if mode=="flat-2017":
 
+	print("Reading in Family 2017")
 	fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
-	df = make_entire_edge_list(fam_df)
-	print(df)
-	df=df[["PersonNr","PersonNr2"]]
+	df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
+	fam_df=None
+	gc.collect()
 
-	flat_all=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/education2017.csv"))
-	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/neighbourhood2017.csv"))
-	flat_all=pd_flatten_layers(flat_all,pd.read_csv(f"{csv_path}/work2017.csv"))
+	print("Reading in Education 2017")
+	df=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/education2017.csv"))
+	print("Reading in Neighbourhood 2017")
+	df=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/neighbourhood2017.csv"))
+	print("Reading in Work 2017")
+	df=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/work2017.csv"))
 
 	# Save to csv
-	flat_all.to_csv(f"{csv_path}/flat_2017.csv")
+	df.to_csv(f"{csv_path}/flat_2017.csv")
 
 
-	net_all=nx.from_pandas_edgelist(flat_all,source="PersonNr",target="PersonNr2")
 
-
-	# with open(f"{obj_path}/work_all.nx","rb") as n_out:
-	# 	flat_all=pickle.load(n_out)
-	# with open(f"{obj_path}/edu_all.nx","rb") as n_out:
-	# 	l2=pickle.load(n_out)
-	# 	flat_all=flatten_layers(flat_all,l2)
-	# with open(f"{obj_path}/nbr_all.nx","rb") as n_out:
-	# 	l2=pickle.load(n_out)
-	# 	flat_all=flatten_layers(flat_all,l2)
-	# with open(f"{obj_path}/fam_all.nx","rb") as n_out:
-	# 	l2=pickle.load(n_out)
-	# 	flat_all=flatten_layers(flat_all,l2)
+if mode=="degs-2017":
+	net_all=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
@@ -349,19 +342,6 @@ if mode=="flat":
 
 	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
 
-
-	# with open(f"{obj_path}/work_all.nx","rb") as n_out:
-	# 	flat_all=pickle.load(n_out)
-	# with open(f"{obj_path}/edu_all.nx","rb") as n_out:
-	# 	l2=pickle.load(n_out)
-	# 	flat_all=flatten_layers(flat_all,l2)
-	# with open(f"{obj_path}/nbr_all.nx","rb") as n_out:
-	# 	l2=pickle.load(n_out)
-	# 	flat_all=flatten_layers(flat_all,l2)
-	# with open(f"{obj_path}/fam_all.nx","rb") as n_out:
-	# 	l2=pickle.load(n_out)
-	# 	flat_all=flatten_layers(flat_all,l2)
-
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
 		for n,d in degs:
@@ -370,7 +350,4 @@ if mode=="flat":
 	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
 
-	# # Save to pickle
-	# with open(f"{obj_path}/flat_all.nx","wb") as n_out:
-	# 	pickle.dump(flat_all,n_out)
 
