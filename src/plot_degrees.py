@@ -65,14 +65,14 @@ ax1c.set_xscale("log")
 ax1c.plot(hist_flat,color="black",marker=".",linestyle="dashdot")
 
 
-
+plt.show()
 
 
 
 # Get degrees if necessary	
 
-with open(f"{log_path}/degrees_flat_all.txt","r") as d_wf:
-	degs_flat = [line.rstrip() for line in d_wf]
+# with open(f"{log_path}/degrees_flat_all.txt","r") as d_wf:
+# 	degs_flat = [line.rstrip() for line in d_wf]
 
 
 
