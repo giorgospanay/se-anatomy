@@ -3,6 +3,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import ast
 
 
 ## GLOBALS
@@ -59,11 +60,11 @@ with open(f"{log_path}/histogram_work2017.txt","r") as h_wf:
 with open(f"{log_path}/histogram_flat2017.txt","r") as h_wf:
 	hist_flat = [line.rstrip() for line in h_wf]
 
-print(hist_fam)
-print(hist_edu)
-print(hist_nbr)
-print(hist_work)
-print(hist_flat)
+hist_fam=ast.literal_eval(hist_fam[0])
+hist_edu=ast.literal_eval(hist_edu[0])
+hist_nbr=ast.literal_eval(hist_nbr[0])
+hist_work=ast.literal_eval(hist_work[0])
+hist_flat=ast.literal_eval(hist_flat[0])
 
 # Fig. 1A: Plot each histogram (individual layers) as line
 ax1a.legend(["Family","Education","Neighbourhood","Work"],loc="upper center")
@@ -72,10 +73,10 @@ ax1a.set_xlabel("Degree")
 ax1a.set_yscale("log")
 ax1a.set_xscale("log")
 
-ax1a.plot(hist_fam[0],color="tab:blue",marker=".",linestyle="dashdot")
-ax1a.plot(hist_edu[0],color="tab:orange",marker=".",linestyle="dashdot")
-ax1a.plot(hist_nbr[0],color="tab:green",marker=".",linestyle="dashdot")
-ax1a.plot(hist_work[0],color="tab:red",marker=".",linestyle="dashdot")
+ax1a.plot(hist_fam,color="tab:blue",marker=".",linestyle="dashdot")
+ax1a.plot(hist_edu,color="tab:orange",marker=".",linestyle="dashdot")
+ax1a.plot(hist_nbr,color="tab:green",marker=".",linestyle="dashdot")
+ax1a.plot(hist_work,color="tab:red",marker=".",linestyle="dashdot")
 
 # Fig. 1C: Plot histogram (flattened opp. network) as line
 ax1c.legend(["Total degree"],loc="upper center")
