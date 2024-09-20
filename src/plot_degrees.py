@@ -72,20 +72,26 @@ ax1a.set_ylabel("Frequency")
 ax1a.set_xlabel("Degree")
 ax1a.set_yscale("log")
 ax1a.set_xscale("log")
+ax1a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+ax1a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
-ax1a.plot(hist_fam,color="tab:blue",marker=".",linestyle="dashdot")
-ax1a.plot(hist_edu,color="tab:orange",marker=".",linestyle="dashdot")
-ax1a.plot(hist_nbr,color="tab:green",marker=".",linestyle="dashdot")
-ax1a.plot(hist_work,color="tab:red",marker=".",linestyle="dashdot")
+
+ax1a.plot(hist_fam,color="tab:blue",marker=",",linestyle="dashdot")
+ax1a.plot(hist_edu,color="tab:orange",marker=",",linestyle="dashdot")
+ax1a.plot(hist_nbr,color="tab:green",marker=",",linestyle="dashdot")
+ax1a.plot(hist_work,color="tab:red",marker=",",linestyle="dashdot")
 
 # Fig. 1C: Plot histogram (flattened opp. network) as line
 ax1c.legend(["Total degree"],loc="upper center")
-ax1c.set_ylabel("Frequency")
+#ax1c.set_ylabel("Frequency")
 ax1c.set_xlabel("Degree")
 ax1c.set_yscale("log")
 ax1c.set_xscale("log")
+ax1c.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
-ax1c.plot(hist_flat,color="black",marker=".",linestyle="dashdot")
+
+ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
 
 # Save figures 1A & 1C
 fig1.savefig(f"{plot_path}/fig1.png",bbox_inches='tight',dpi=300, transparent=True)
