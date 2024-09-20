@@ -80,8 +80,8 @@ ax1a.plot(hist_nbr,color="tab:green",marker=",",linestyle="dashdot")
 ax1a.plot(hist_work,color="tab:red",marker=",",linestyle="dashdot")
 
 # Save
-fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center")
-fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300, transparent=True)
+fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center",mode="expand",ncols=2)
+fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 
 
@@ -99,8 +99,8 @@ ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K"
 ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
 
 # Save
-fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center")
-fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300, transparent=True)
+fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center",mode="expand",ncols=2)
+fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 
 # ---------------------------------------------------------------------------
