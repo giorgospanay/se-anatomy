@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 ## GLOBALS
 csv_path="../results2"
 log_path="../result_logs"
+plot_path="../result_plots"
 obj_path=csv_path
 
 
@@ -79,21 +80,72 @@ ax1c.set_xscale("log")
 
 ax1c.plot(hist_flat,color="black",marker=".",linestyle="dashdot")
 
-
-plt.show()
-
-
-
-# Get degrees if necessary	
-
-# with open(f"{log_path}/degrees_flat_all.txt","r") as d_wf:
-# 	degs_flat = [line.rstrip() for line in d_wf]
+# Save figures 1A & 1C
+fig1.savefig(f"{plot_path}/fig1.png",bbox_inches='tight',dpi=300, transparent=True)
 
 
+# ---------------------------------------------------------------------------
+
+# # Load degree files
+
+# with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
+# 	degs_fam = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
+# 	degs_edu = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
+# 	degs_nbr= [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
+# 	degs_work = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/degrees_flat2017.txt","r") as h_wf:
+# 	degs_flat = [line.rstrip() for line in h_wf]
 
 
-# (A) Plot histogram per layer
+
+# # Fig. 1B: Plot disconnected nodes in each layer
+# zero_fam=0
+# zero_edu=0
+# zero_nbr=0
+# zero_work=0
+
+# for ln in degs_fam:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_fam=len(toks)-1
+# for ln in degs_edu:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_edu=len(toks)-1
+# for ln in degs_nbr:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_nbr=len(toks)-1
+# for ln in degs_work:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_work=len(toks)-1
 
 
 
-# (B) Plot 
+
+
+# # Fig. 1D: Plot # layers in which a node has non-zero degree
+# node_dict=dict()
+
+# for ln in degs_fam:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_fam=len(toks)-1
+# for ln in degs_edu:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_edu=len(toks)-1
+# for ln in degs_nbr:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_nbr=len(toks)-1
+# for ln in degs_work:
+# 	toks=ln.split(" ")
+# 	if int(toks[len(toks)-1])!=0: continue
+# 	zero_work=len(toks)-1
+
+
