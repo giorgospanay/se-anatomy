@@ -87,6 +87,10 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 			#print(f"{filename} skipped.")
 			continue
 
+		# 2017 degs flag
+		if layer_year!=2017: continue
+
+
 		# Flags for top/bot
 		if half=="top" and layer_year>=2009:
 			#print(f"{filename} skipped.")
@@ -154,8 +158,8 @@ for filename in glob.glob(f"{csv_path}/*.csv"):
 		# Calculate degrees & deg. histogram and save to a file
 		degs=net_year.degree()
 		with open(f"{log_path}/degrees_{layer_type}{layer_year}.txt","w") as d_wf:
-			for n,d in degs:
-				d_wf.write(f"{n} {d}")
+			for line in degs:
+				d_wf.write(f"{line}\n")
 		degs=None
 
 		deg_hist=nx.degree_histogram(net_year)
@@ -220,8 +224,8 @@ if mode=="family-flat":
 	net_all=nx.from_pandas_edgelist(fam_all,source="PersonNr",target="PersonNr2")
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_fam_all.txt","w") as d_wf:
-		for n,d in degs:
-			d_wf.write(f"{n} {d}")
+		for line in degs:
+			d_wf.write(f"{line}\n")
 	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_fam_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
@@ -245,8 +249,8 @@ elif mode=="neighbourhood-flat":
 	# Calc degs
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_nbr_all.txt","w") as d_wf:
-		for n,d in degs:
-			d_wf.write(f"{n} {d}")
+		for line in degs:
+			d_wf.write(f"{line}\n")
 	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_nbr_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
@@ -268,8 +272,8 @@ elif mode=="education-flat":
 	net_all=nx.from_pandas_edgelist(edu_all,source="PersonNr",target="PersonNr2")
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_edu_all.txt","w") as d_wf:
-		for n,d in degs:
-			d_wf.write(f"{n} {d}")
+		for line in degs:
+			d_wf.write(f"{line}\n")
 	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_edu_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
@@ -287,8 +291,8 @@ elif mode=="work-flat":
 	net_all=nx.from_pandas_edgelist(work_all,source="PersonNr",target="PersonNr2")
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_work_all.txt","w") as d_wf:
-		for n,d in degs:
-			d_wf.write(f"{n} {d}")
+		for line in degs:
+			d_wf.write(f"{line}\n")
 	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_work_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
@@ -325,8 +329,8 @@ if mode=="degs-2017":
 	hist=None
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_flat2017.txt","w") as d_wf:
-		for n,d in degs:
-			d_wf.write(f"{n} {d}")
+		for line in degs:
+			d_wf.write(f"{line}\n")
 	degs=None
 
 	
@@ -349,8 +353,8 @@ if mode=="flat":
 
 	degs=net_all.degree()
 	with open(f"{log_path}/degrees_flat_all.txt","w") as d_wf:
-		for n,d in degs:
-			d_wf.write(f"{n} {d}")
+		for line in degs:
+			d_wf.write(f"{line}\n")
 	hist=nx.degree_histogram(net_all)
 	with open(f"{log_path}/histogram_flat_all.txt","w") as h_wf:
 		h_wf.write(f"{hist}")
