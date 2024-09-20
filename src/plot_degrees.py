@@ -13,7 +13,16 @@ import matplotlib.pyplot as plt
 # 	(d) see on how many of the layers deg<>0 for every node
 
 
-degs_flat=None, hist_flat=None, degs_work=None, hist_work=None, degs_edu=None, hist_edu=None, degs_nbr=None, hist_nbr=None, degs_fam=None, hist_fam=None
+degs_flat=None
+hist_flat=None
+degs_work=None
+hist_work=None
+degs_edu=None
+hist_edu=None
+degs_nbr=None
+hist_nbr=None
+degs_fam=None
+hist_fam=None
 
 # Set subplot figures (1A, 1C)
 fig1, (ax1a, ax1c) = plt.subplots(1,2)
