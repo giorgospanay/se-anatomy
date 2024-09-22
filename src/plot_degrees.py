@@ -102,69 +102,94 @@ ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
 fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
 fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
+# ---------------------------------------------------------------------------
+
+# # Load degree files into dataframe
+node_df=None
+with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
+	node_df = pd.DataFrame(
+		[ast.literal_eval(line.rstrip()) for line in h_wf],
+		columns=["PersonNr","deg_fam"]
+	)
+	node_df.set_index("PersonNr")
+with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
+	node_df.join(pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_edu"]
+		), on="PersonNr", how="outer"
+	)
+with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
+	node_df.join(pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_nbr"]
+		), on="PersonNr", how="outer"
+	)
+with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
+	node_df.join(pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_work"]
+		), on="PersonNr", how="outer"
+	)
+node_df.fillna(0)
 
 # ---------------------------------------------------------------------------
 
-# # Load degree files
+# Fig. 1B: Plot disconnected nodes in each layer
+fig1b, ax1b = plt.subplots()
+zero_fam=node_df[node_df["deg_fam"]==0].count()
+zero_edu=node_df[node_df["deg_edu"]==0].count()
+zero_nbr=node_df[node_df["deg_nbr"]==0].count()
+zero_work=node_df[node_df["deg_work"]==0].count()
 
-# with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
-# 	degs_fam = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
-# 	degs_edu = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
-# 	degs_nbr= [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
-# 	degs_work = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/degrees_flat2017.txt","r") as h_wf:
-# 	degs_flat = [line.rstrip() for line in h_wf]
+ax1b.bar(range(4),[zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
 
+ax1b.set_xlabel("No connections")
+ax1b.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
+ax1b.tick_params(axis="x",labelbottom=False)
 
-
-# # Fig. 1B: Plot disconnected nodes in each layer
-# zero_fam=0
-# zero_edu=0
-# zero_nbr=0
-# zero_work=0
-
-# for ln in degs_fam:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_fam=len(toks)-1
-# for ln in degs_edu:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_edu=len(toks)-1
-# for ln in degs_nbr:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_nbr=len(toks)-1
-# for ln in degs_work:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_work=len(toks)-1
+# Save
+fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 
 
+# ---------------------------------------------------------------------------
 
+# Fig. 1D: Plot #layers for which a node is disconnected
+fig1d, ax1d = plt.subplots()
+node_df["nz_layers"]=np.count_nonzero(node_df,axis=1)
+#node_df.sort_values("nz_layers",inplace=True)
 
+ax1d.hist(node_df["nz_layers"],color="black")
 
-# # Fig. 1D: Plot # layers in which a node has non-zero degree
-# node_dict=dict()
+# Save
+fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
 
-# for ln in degs_fam:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_fam=len(toks)-1
-# for ln in degs_edu:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_edu=len(toks)-1
-# for ln in degs_nbr:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_nbr=len(toks)-1
-# for ln in degs_work:
-# 	toks=ln.split(" ")
-# 	if int(toks[len(toks)-1])!=0: continue
-# 	zero_work=len(toks)-1
+# ---------------------------------------------------------------------------
 
+# Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
+fig2a, ax2a = plt.subplots()
+
+ax2a.hist(node_df["deg_fam"],cumulative=True,color="tab:blue",log=True,histtype="step")
+ax2a.hist(node_df["deg_edu"],cumulative=True,color="tab:orange",log=True,histtype="step")
+ax2a.hist(node_df["deg_nbr"],cumulative=True,color="tab:green",log=True,histtype="step")
+ax2a.hist(node_df["deg_work"],cumulative=True,color="tab:red",log=True,histtype="step")
+
+# Save
+fig2a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center",ncols=2)
+fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
+
+# ---------------------------------------------------------------------------
+
+# Fig. 2B: Inverse cumulative degree distribution on flat
+fig2b, ax2b = plt.subplots()
+with open(f"{log_path}/degrees_flat2017.txt","r") as h_wf:
+	node_df.join(pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_flat"]
+		), on="PersonNr", how="outer"
+	)
+
+ax2b.hist(node_df["deg_flat"],cumulative=True,color="black",log=True,histtype="step")
+
+fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
+fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
 
