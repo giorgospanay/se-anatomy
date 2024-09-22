@@ -106,30 +106,53 @@ fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 # # Load degree files into dataframe
 node_df=None
+fam_df=None
+edu_df=None
+nbr_df=None
+work_df=None
+
+
 with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
-	node_df = pd.DataFrame(
+	fam_df = pd.DataFrame(
 		[ast.literal_eval(line.rstrip()) for line in h_wf],
 		columns=["PersonNr","deg_fam"]
 	)
-	node_df.set_index("PersonNr")
+	fam_df.set_index("PersonNr")
 with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
-	node_df.join(pd.DataFrame(
-			[ast.literal_eval(line.rstrip()) for line in h_wf],
-			columns=["PersonNr","deg_edu"]
-		), on="PersonNr", how="outer"
+	edu_df = pd.DataFrame(
+		[ast.literal_eval(line.rstrip()) for line in h_wf],
+		columns=["PersonNr","deg_edu"]
 	)
+	edu_df.set_index("PersonNr")
+	# node_df.join(pd.DataFrame(
+	# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+	# 		columns=["PersonNr","deg_edu"]
+	# 	), on="PersonNr", how="outer"
+	# )
 with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
-	node_df.join(pd.DataFrame(
-			[ast.literal_eval(line.rstrip()) for line in h_wf],
-			columns=["PersonNr","deg_nbr"]
-		), on="PersonNr", how="outer"
+	nbr_df = pd.DataFrame(
+		[ast.literal_eval(line.rstrip()) for line in h_wf],
+		columns=["PersonNr","deg_nbr"]
 	)
+	nbr_df.set_index("PersonNr")
+	# node_df.join(pd.DataFrame(
+	# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+	# 		columns=["PersonNr","deg_nbr"]
+	# 	), on="PersonNr", how="outer"
+	# )
 with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
-	node_df.join(pd.DataFrame(
-			[ast.literal_eval(line.rstrip()) for line in h_wf],
-			columns=["PersonNr","deg_work"]
-		), on="PersonNr", how="outer"
+	work_df = pd.DataFrame(
+		[ast.literal_eval(line.rstrip()) for line in h_wf],
+		columns=["PersonNr","deg_work"]
 	)
+	work_df.set_index("PersonNr")
+	# node_df.join(pd.DataFrame(
+	# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+	# 		columns=["PersonNr","deg_work"]
+	# 	), on="PersonNr", how="outer"
+	# )
+# Concat all on node_df
+node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
 node_df.fillna(0)
 
 # ---------------------------------------------------------------------------
@@ -181,14 +204,14 @@ fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
 # Fig. 2B: Inverse cumulative degree distribution on flat
 fig2b, ax2b = plt.subplots()
+flat_df=None
 with open(f"{log_path}/degrees_flat2017.txt","r") as h_wf:
-	node_df.join(pd.DataFrame(
-			[ast.literal_eval(line.rstrip()) for line in h_wf],
-			columns=["PersonNr","deg_flat"]
-		), on="PersonNr", how="outer"
+	flat_df=pd.DataFrame(
+		[ast.literal_eval(line.rstrip()) for line in h_wf],
+		columns=["PersonNr","deg_flat"]
 	)
 
-ax2b.hist(node_df["deg_flat"],cumulative=True,color="black",log=True,histtype="step")
+ax2b.hist(flat_df["deg_flat"],cumulative=True,color="black",log=True,histtype="step")
 
 fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
 fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
