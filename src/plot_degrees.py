@@ -164,7 +164,7 @@ zero_edu=node_df[node_df["deg_edu"]==0].count()
 zero_nbr=node_df[node_df["deg_nbr"]==0].count()
 zero_work=node_df[node_df["deg_work"]==0].count()
 
-ax1b.bar(range(4),[zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
+ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
 
 ax1b.set_xlabel("No connections")
 ax1b.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
@@ -182,6 +182,10 @@ node_df["nz_layers"]=np.count_nonzero(node_df,axis=1)
 #node_df.sort_values("nz_layers",inplace=True)
 
 ax1d.hist(node_df["nz_layers"],color="black")
+
+ax1d.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
+ax1d.set_xticks([0,2,4])
+#ax1d.tick_params(axis="x",labelbottom=False)
 
 # Save
 fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
