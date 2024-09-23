@@ -32,21 +32,9 @@ hist_nbr=None
 degs_fam=None
 hist_fam=None
 
-# Set subplot figures (1A, 1C)
+# Fig 1A: Plot degree histogram per layer
+print("Figure 1A")
 fig1a, ax1a = plt.subplots()
-
-# # Get hists. When all is available, uncomment:
-# with open(f"{log_path}/histogram_fam_all.txt","r") as h_wf:
-# 	hist_fam = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/histogram_edu_all.txt","r") as h_wf:
-# 	hist_edu = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/histogram_nbr_all.txt","r") as h_wf:
-# 	hist_nbr= [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/histogram_work_all.txt","r") as h_wf:
-# 	hist_work = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/histogram_flat_all.txt","r") as h_wf:
-# 	hist_flat = [line.rstrip() for line in h_wf]
-
 
 # Get hists. Now showing year=2017:
 with open(f"{log_path}/histogram_family2017.txt","r") as h_wf:
@@ -86,8 +74,8 @@ fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 # ---------------------------------------------------------------------------
 
 # Fig. 1C: Plot histogram (flattened opp. network) as line
+print("Figure 1C")
 fig1c, ax1c = plt.subplots()
-
 
 #ax1c.set_ylabel("Frequency")
 ax1c.set_xlabel("Degree")
@@ -143,6 +131,7 @@ node_df.fillna(0)
 # ---------------------------------------------------------------------------
 
 # Fig. 1B: Plot disconnected nodes in each layer
+print("Figure 1B")
 fig1b, ax1b = plt.subplots()
 zero_fam=(node_df["deg_fam"]==0).sum()
 zero_edu=(node_df["deg_edu"]==0).sum()
@@ -168,6 +157,7 @@ fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 # ---------------------------------------------------------------------------
 
 # Fig. 1D: Plot #layers for which a node is disconnected
+print("Figure 1D")
 fig1d, ax1d = plt.subplots()
 node_df["nz_layers"]=np.count_nonzero(node_df==0,axis=1)
 #node_df.sort_values("nz_layers",inplace=True)
@@ -184,22 +174,21 @@ fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
 # ---------------------------------------------------------------------------
 
 # Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
+print("Figure 2A")
 fig2a, ax2a = plt.subplots()
 
-sort_fam=hist_fam.sort(reverse,True,key=lambda x: x[1])
+sort_fam=hist_fam.sort(reverse=True,key=lambda x: x[1])
 cnt_fam,deg_fam=zip(*hist_fam)
 cs_fam=np.cumsum(cnt_fam)
-sort_edu=hist_edu.sort(reverse,True,key=lambda x: x[1])
+sort_edu=hist_edu.sort(reverse=True,key=lambda x: x[1])
 cnt_edu,deg_edu=zip(*hist_edu)
 cs_edu=np.cumsum(cnt_edu)
-sort_nbr=hist_nbr.sort(reverse,True,key=lambda x: x[1])
+sort_nbr=hist_nbr.sort(reverse=True,key=lambda x: x[1])
 cnt_nbr,deg_nbr=zip(*hist_nbr)
 cs_nbr=np.cumsum(cnt_nbr)
-sort_work=hist_work.sort(reverse,True,key=lambda x: x[1])
+sort_work=hist_work.sort(reverse=True,key=lambda x: x[1])
 cnt_work,deg_work=zip(*hist_work)
 cs_work=np.cumsum(cnt_work)
-
-
 
 ax2a.plot(cs_fam,color="tab:blue",marker=",",linestyle="dashdot")
 ax2a.plot(cs_edu,color="tab:orange",marker=",",linestyle="dashdot")
@@ -218,17 +207,18 @@ fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 # ---------------------------------------------------------------------------
 
 # Fig. 2B: Inverse cumulative degree distribution on flat
+print("Figure 2B")
 fig2b, ax2b = plt.subplots()
 
-sort_flat=hist_flat.sort(reverse,True,key=lambda x: x[1])
+sort_flat=hist_flat.sort(reverse=True,key=lambda x: x[1])
 cnt_flat,deg_flat=zip(*hist_flat)
 cs_flat=np.cumsum(cnt_flat)
 
 ax2b.plot(cs_flat,color="black",marker=",",linestyle="dashdot")
 
-ax2a.set_xlabel("Degree")
-ax2a.set_yscale("log")
-ax2a.set_xscale("log") 
+ax2b.set_xlabel("Degree")
+ax2b.set_yscale("log")
+ax2b.set_xscale("log") 
 
 
 fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
