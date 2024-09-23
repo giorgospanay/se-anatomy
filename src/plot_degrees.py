@@ -83,7 +83,7 @@ ax1a.plot(hist_work,color="tab:red",marker=",",linestyle="dashdot")
 fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center",ncols=2)
 fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
-
+# ---------------------------------------------------------------------------
 
 # Fig. 1C: Plot histogram (flattened opp. network) as line
 fig1c, ax1c = plt.subplots()
@@ -124,33 +124,18 @@ with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
 		columns=["PersonNr","deg_edu"]
 	)
 	edu_df.set_index("PersonNr")
-	# node_df.join(pd.DataFrame(
-	# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-	# 		columns=["PersonNr","deg_edu"]
-	# 	), on="PersonNr", how="outer"
-	# )
 with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
 	nbr_df = pd.DataFrame(
 		[ast.literal_eval(line.rstrip()) for line in h_wf],
 		columns=["PersonNr","deg_nbr"]
 	)
 	nbr_df.set_index("PersonNr")
-	# node_df.join(pd.DataFrame(
-	# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-	# 		columns=["PersonNr","deg_nbr"]
-	# 	), on="PersonNr", how="outer"
-	# )
 with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
 	work_df = pd.DataFrame(
 		[ast.literal_eval(line.rstrip()) for line in h_wf],
 		columns=["PersonNr","deg_work"]
 	)
 	work_df.set_index("PersonNr")
-	# node_df.join(pd.DataFrame(
-	# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-	# 		columns=["PersonNr","deg_work"]
-	# 	), on="PersonNr", how="outer"
-	# )
 # Concat all on node_df
 node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
 node_df.fillna(0)
@@ -159,10 +144,10 @@ node_df.fillna(0)
 
 # Fig. 1B: Plot disconnected nodes in each layer
 fig1b, ax1b = plt.subplots()
-zero_fam=node_df[node_df["deg_fam"]==0].count()
-zero_edu=node_df[node_df["deg_edu"]==0].count()
-zero_nbr=node_df[node_df["deg_nbr"]==0].count()
-zero_work=node_df[node_df["deg_work"]==0].count()
+zero_fam=(node_df["deg_fam"]==0).sum()
+zero_edu=(node_df["deg_edu"]==0).sum()
+zero_nbr=(node_df["deg_nbr"]==0).sum()
+zero_work=(node_df["deg_work"]==0).sum()
 
 ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
 
@@ -178,7 +163,7 @@ fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 
 # Fig. 1D: Plot #layers for which a node is disconnected
 fig1d, ax1d = plt.subplots()
-node_df["nz_layers"]=np.count_nonzero(node_df,axis=1)
+node_df["nz_layers"]=np.count_nonzero(node_df==0,axis=1)
 #node_df.sort_values("nz_layers",inplace=True)
 
 ax1d.hist(node_df["nz_layers"],color="black")
@@ -195,10 +180,30 @@ fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
 # Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
 fig2a, ax2a = plt.subplots()
 
-ax2a.hist(node_df["deg_fam"],cumulative=True,color="tab:blue",log=True,histtype="step")
-ax2a.hist(node_df["deg_edu"],cumulative=True,color="tab:orange",log=True,histtype="step")
-ax2a.hist(node_df["deg_nbr"],cumulative=True,color="tab:green",log=True,histtype="step")
-ax2a.hist(node_df["deg_work"],cumulative=True,color="tab:red",log=True,histtype="step")
+sort_fam=hist_fam.sort(reverse,True,key=lambda x: x[1])
+cnt_fam,deg_fam=zip(*hist_fam)
+cs_fam=np.cumsum(cnt_fam)
+sort_edu=hist_edu.sort(reverse,True,key=lambda x: x[1])
+cnt_edu,deg_edu=zip(*hist_edu)
+cs_edu=np.cumsum(cnt_edu)
+sort_nbr=hist_nbr.sort(reverse,True,key=lambda x: x[1])
+cnt_nbr,deg_nbr=zip(*hist_nbr)
+cs_nbr=np.cumsum(cnt_nbr)
+sort_work=hist_work.sort(reverse,True,key=lambda x: x[1])
+cnt_work,deg_work=zip(*hist_work)
+cs_work=np.cumsum(cnt_work)
+
+
+
+ax2a.plot(cs_fam,color="tab:blue",marker=",",linestyle="dashdot")
+ax2a.plot(cs_edu,color="tab:orange",marker=",",linestyle="dashdot")
+ax2a.plot(cs_nbr,color="tab:green",marker=",",linestyle="dashdot")
+ax2a.plot(cs_work,color="tab:red",marker=",",linestyle="dashdot")
+
+ax2a.set_xlabel("Degree")
+ax2a.set_yscale("log")
+ax2a.set_xscale("log") 
+
 
 # Save
 fig2a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center",ncols=2)
@@ -208,14 +213,17 @@ fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
 # Fig. 2B: Inverse cumulative degree distribution on flat
 fig2b, ax2b = plt.subplots()
-flat_df=None
-with open(f"{log_path}/degrees_flat2017.txt","r") as h_wf:
-	flat_df=pd.DataFrame(
-		[ast.literal_eval(line.rstrip()) for line in h_wf],
-		columns=["PersonNr","deg_flat"]
-	)
 
-ax2b.hist(flat_df["deg_flat"],cumulative=True,color="black",log=True,histtype="step")
+sort_flat=hist_flat.sort(reverse,True,key=lambda x: x[1])
+cnt_flat,deg_flat=zip(*hist_flat)
+cs_flat=np.cumsum(cnt_flat)
+
+ax2b.plot(cs_flat,color="black",marker=",",linestyle="dashdot")
+
+ax2a.set_xlabel("Degree")
+ax2a.set_yscale("log")
+ax2a.set_xscale("log") 
+
 
 fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
 fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
