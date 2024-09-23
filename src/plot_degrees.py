@@ -1,4 +1,4 @@
-import os, sys, glob, parse, pickle
+import os, sys, glob, parse, pickle, gc
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -247,9 +247,9 @@ fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
 
 # Table 1A: Pearson correlation between degree in layers
 print("Table 1A")
-corr_table = node_df.corr(method="pearson")
+table_1a=node_df.corr(method="pearson")
 # Save correlation table to csv
-corr_table.to_csv(f"{plot_path}/layer_corr.csv")
+table_1a.to_csv(f"{plot_path}/table_1a.csv")
 
 # --------------------------------------------------------------------------
 
@@ -317,17 +317,17 @@ inter_work.append(1.0)
 
 
 # Create dataframe
-inter_df=pd.DataFrame(columns=["F","E","N","W"])
+table_1b=pd.DataFrame(columns=["F","E","N","W"])
 f_df=pd.DataFrame(inter_fam)
-inter_df=pd.concat([inter_df,f_df],axis=0,ignore_index=True)
+table_1b=pd.concat([table_1b,f_df],axis=0,ignore_index=True)
 e_df=pd.DataFrame(inter_edu)
-inter_df=pd.concat([inter_df,e_df],axis=0,ignore_index=True)
+table_1b=pd.concat([table_1b,e_df],axis=0,ignore_index=True)
 n_df=pd.DataFrame(inter_nbr)
-inter_df=pd.concat([inter_df,n_df],axis=0,ignore_index=True)
+table_1b=pd.concat([table_1b,n_df],axis=0,ignore_index=True)
 w_df=pd.DataFrame(inter_work)
-inter_df=pd.concat([inter_df,w_df],axis=0,ignore_index=True)
+table_1b=pd.concat([table_1b,w_df],axis=0,ignore_index=True)
 
 
 # Save dataframe
-inter_df.to_csv(f"{plot_path}/layer_overlap.csv")
+table_1b.to_csv(f"{plot_path}/table_1b.csv")
 
