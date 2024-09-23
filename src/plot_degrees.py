@@ -5,6 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import ast
 
+# Local imports
+from simplify_family import read_in_network, simplify_family_layer, make_entire_edge_list
+
 
 ## GLOBALS
 csv_path="../results2"
