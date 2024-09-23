@@ -13,12 +13,11 @@ plot_path="../result_plots"
 obj_path=csv_path
 
 
-
-# For (all) networks:
-# 	(a) check degrees on each layer
-# 	(b) check for each layer how many nodes have deg=0
-# 	(c) flatten all layers and check overall degrees
-# 	(d) see on how many of the layers deg<>0 for every node
+# Read cmd args
+args=sys.argv[1:]
+mode=""
+if len(args)>=1:
+	mode=args[0]
 
 
 degs_flat=None
@@ -92,46 +91,54 @@ fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
 
+node_df=None
+
+# If mode=calc: make df
+if mode=="calc":
+	print("Loading all degree files into pandas")
+	# # Load degree files into dataframe
+	fam_df=None
+	edu_df=None
+	nbr_df=None
+	work_df=None
+
+	with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
+		fam_df = pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_fam"]
+		)
+		fam_df.set_index("PersonNr")
+	with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
+		edu_df = pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_edu"]
+		)
+		edu_df.set_index("PersonNr")
+	with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
+		nbr_df = pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_nbr"]
+		)
+		nbr_df.set_index("PersonNr")
+	with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
+		work_df = pd.DataFrame(
+			[ast.literal_eval(line.rstrip()) for line in h_wf],
+			columns=["PersonNr","deg_work"]
+		)
+		work_df.set_index("PersonNr")
+	# Concat all on node_df
+	node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
+	node_df.fillna(0)
+
+	# Save to csv for comparison
+	node_df.to_csv(f"{log_path}/node_2017.csv")
+
+# If no mode set, read file from csv
+else:
+	node_df=pd.read_csv(f"{log_path}/node_2017.csv",index_col="PersonNr",header=0)
+
+
 #### Uncomment for disconnected nodes. Curr no node is disconnected in the network
-
-# print("Loading all degree files")
-# # # Load degree files into dataframe
-# node_df=None
-# fam_df=None
-# edu_df=None
-# nbr_df=None
-# work_df=None
-
-
-# with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
-# 	fam_df = pd.DataFrame(
-# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-# 		columns=["PersonNr","deg_fam"]
-# 	)
-# 	fam_df.set_index("PersonNr")
-# with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
-# 	edu_df = pd.DataFrame(
-# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-# 		columns=["PersonNr","deg_edu"]
-# 	)
-# 	edu_df.set_index("PersonNr")
-# with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
-# 	nbr_df = pd.DataFrame(
-# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-# 		columns=["PersonNr","deg_nbr"]
-# 	)
-# 	nbr_df.set_index("PersonNr")
-# with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
-# 	work_df = pd.DataFrame(
-# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
-# 		columns=["PersonNr","deg_work"]
-# 	)
-# 	work_df.set_index("PersonNr")
-# # Concat all on node_df
-# node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
-# node_df.fillna(0)
-
-
 # # ---------------------------------------------------------------------------
 
 # # Fig. 1B: Plot disconnected nodes in each layer
@@ -203,6 +210,7 @@ ax2a.plot(deg_nbr,cs_nbr,color="tab:green",marker=",",linestyle="dashdot")
 ax2a.plot(deg_work,cs_work,color="tab:red",marker=",",linestyle="dashdot")
 
 ax2a.set_xlabel("Degree")
+ax2a.set_ylabel("Sample with k > Degree")
 ax2a.set_yscale("log")
 ax2a.set_xscale("log") 
 
@@ -230,4 +238,93 @@ ax2b.set_xscale("log")
 
 fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
 fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
+
+
+# --------------------------------------------------------------------------
+
+# Table 1A: Pearson correlation between degree in layers
+print("Table 1A")
+corr_table = node_df.corr(method="pearson")
+# Save correlation table to csv
+corr_table.to_csv(f"{plot_path}/layer_corr.csv")
+
+# --------------------------------------------------------------------------
+
+# Table 1B: Layer overlap percentage
+print("Table 1B")
+# Load each layer. Calculate intersection of each pair of distinct layers
+#   as percentage:: L1.intersect(L2).edges / L1.edges.
+
+inter_fam=[]
+inter_edu=[]
+inter_nbr=[]
+inter_work=[]
+
+# Family 2017:
+fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
+df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
+net_fam=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+fam_df=None
+gc.collect()
+# Education 2017:
+df=pd.read_csv(f"{csv_path}/education2017.csv")
+net_edu=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+# Neighbourhood 2017:
+df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
+net_nbr=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+# Work 2017:
+df=pd.read_csv(f"{csv_path}/work2017.csv")
+net_work=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+
+# Intersection Family / Family
+inter_fam.append(1.0)
+# Intersection Family / Education
+inter_fe=nx.intersection(net_fam,net_edu)
+inter_fam.append(inter_fe.number_of_edges()/net_fam.number_of_edges())
+inter_edu.append(inter_fe.number_of_edges()/net_edu.number_of_edges())
+# Intersection Family / Neighbourhood
+inter_fn=nx.intersection(net_fam,net_nbr)
+inter_fam.append(inter_fn.number_of_edges()/net_fam.number_of_edges())
+inter_nbr.append(inter_fe.number_of_edges()/net_nbr.number_of_edges())
+# Intersection Family / Work
+inter_fw=nx.intersection(net_fam,net_work)
+inter_fam.append(inter_fw.number_of_edges()/net_fam.number_of_edges())
+inter_work.append(inter_fw.number_of_edges()/net_work.number_of_edges())
+
+# Intersection Education / Education
+inter_edu.append(1.0)
+# Intersection Education / Neighbourhood
+inter_en=nx.intersection(net_edu,net_nbr)
+inter_edu.append(inter_en.number_of_edges()/net_edu.number_of_edges())
+inter_nbr.append(inter_en.number_of_edges()/net_nbr.number_of_edges())
+# Intersection Education / Work
+inter_ew=nx.intersection(net_edu,net_work)
+inter_edu.append(inter_ew.number_of_edges()/net_edu.number_of_edges())
+inter_work.append(inter_ew.number_of_edges()/net_work.number_of_edges())
+
+# Intersection Neighbourhood / Neighbourhood
+inter_nbr.append(1.0)
+# Intersection Neighbourhood / Work
+inter_nw=nx.intersection(net_nbr,net_work)
+inter_nbr.append(inter_nw.number_of_edges()/net_nbr.number_of_edges())
+inter_work.append(inter_nw.number_of_edges()/net_work.number_of_edges())
+
+# Intersection Work / Work
+inter_work.append(1.0)
+
+
+# Create dataframe
+inter_df=pd.DataFrame(columns=["F","E","N","W"])
+f_df=pd.DataFrame(inter_fam)
+inter_df=pd.concat([inter_df,f_df],axis=0,ignore_index=True)
+e_df=pd.DataFrame(inter_edu)
+inter_df=pd.concat([inter_df,e_df],axis=0,ignore_index=True)
+n_df=pd.DataFrame(inter_nbr)
+inter_df=pd.concat([inter_df,n_df],axis=0,ignore_index=True)
+w_df=pd.DataFrame(inter_work)
+inter_df=pd.concat([inter_df,w_df],axis=0,ignore_index=True)
+
+
+# Save dataframe
+inter_df.to_csv(f"{plot_path}/layer_overlap.csv")
 
