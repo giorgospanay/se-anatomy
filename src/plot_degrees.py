@@ -182,19 +182,19 @@ print("Figure 2A")
 fig2a, ax2a = plt.subplots()
 
 hist_fam.reverse()
-deg_fam=reversed(range(len(hist_fam)))
+deg_fam=list(reversed(range(len(hist_fam))))
 cs_fam=np.cumsum(hist_fam)
 
 hist_edu.reverse()
-deg_edu=reversed(range(len(hist_edu)))
+deg_edu=list(reversed(range(len(hist_edu))))
 cs_edu=np.cumsum(hist_edu)
 
 hist_nbr.reverse()
-deg_nbr=reversed(range(len(hist_nbr)))
+deg_nbr=list(reversed(range(len(hist_nbr))))
 cs_nbr=np.cumsum(hist_nbr)
 
 hist_work.reverse()
-deg_work=reversed(range(len(hist_work)))
+deg_work=list(reversed(range(len(hist_work))))
 cs_work=np.cumsum(hist_work)
 
 ax2a.plot(deg_fam,cs_fam,color="tab:blue",marker=",",linestyle="dashdot")
@@ -218,7 +218,7 @@ print("Figure 2B")
 fig2b, ax2b = plt.subplots()
 
 hist_flat.reverse()
-deg_flat=reversed(range(len(hist_flat)))
+deg_flat=list(reversed(range(len(hist_flat))))
 cs_flat=np.cumsum(hist_flat)
 
 ax2b.plot(deg_flat,cs_flat,color="black",marker=",",linestyle="dashdot")
