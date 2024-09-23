@@ -110,25 +110,25 @@ if mode=="calc":
 			[ast.literal_eval(line.rstrip()) for line in h_wf],
 			columns=["PersonNr","deg_fam"]
 		)
-		fam_df.set_index("PersonNr")
+		fam_df.set_index("PersonNr",inplace=True)
 	with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
 		edu_df = pd.DataFrame(
 			[ast.literal_eval(line.rstrip()) for line in h_wf],
 			columns=["PersonNr","deg_edu"]
 		)
-		edu_df.set_index("PersonNr")
+		edu_df.set_index("PersonNr",inplace=True)
 	with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
 		nbr_df = pd.DataFrame(
 			[ast.literal_eval(line.rstrip()) for line in h_wf],
 			columns=["PersonNr","deg_nbr"]
 		)
-		nbr_df.set_index("PersonNr")
+		nbr_df.set_index("PersonNr",inplace=True)
 	with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
 		work_df = pd.DataFrame(
 			[ast.literal_eval(line.rstrip()) for line in h_wf],
 			columns=["PersonNr","deg_work"]
 		)
-		work_df.set_index("PersonNr")
+		work_df.set_index("PersonNr",inplace=True)
 	# Concat all on node_df
 	node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
 	node_df.fillna(0)
