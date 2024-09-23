@@ -92,6 +92,7 @@ fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
 
+print("Loading all degree files")
 # # Load degree files into dataframe
 node_df=None
 fam_df=None
@@ -128,72 +129,73 @@ with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
 node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
 node_df.fillna(0)
 
-# ---------------------------------------------------------------------------
+#### Uncomment for disconnected nodes. Curr no node is disconnected in the network
+# # ---------------------------------------------------------------------------
 
-# Fig. 1B: Plot disconnected nodes in each layer
-print("Figure 1B")
-fig1b, ax1b = plt.subplots()
-zero_fam=(node_df["deg_fam"]==0).sum()
-zero_edu=(node_df["deg_edu"]==0).sum()
-zero_nbr=(node_df["deg_nbr"]==0).sum()
-zero_work=(node_df["deg_work"]==0).sum()
+# # Fig. 1B: Plot disconnected nodes in each layer
+# print("Figure 1B")
+# fig1b, ax1b = plt.subplots()
+# zero_fam=(node_df["deg_fam"]==0).sum()
+# zero_edu=(node_df["deg_edu"]==0).sum()
+# zero_nbr=(node_df["deg_nbr"]==0).sum()
+# zero_work=(node_df["deg_work"]==0).sum()
 
-N, bins, patches = ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work])
+# N, bins, patches = ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work])
 
-patches[0].set_facecolor("tab:blue")
-patches[1].set_facecolor("tab:orange")
-patches[2].set_facecolor("tab:green")
-patches[3].set_facecolor("tab:red")
-
-
-ax1b.set_xlabel("No connections")
-ax1b.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
-ax1b.tick_params(axis="x",labelbottom=False)
-
-# Save
-fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
+# patches[0].set_facecolor("tab:blue")
+# patches[1].set_facecolor("tab:orange")
+# patches[2].set_facecolor("tab:green")
+# patches[3].set_facecolor("tab:red")
 
 
-# ---------------------------------------------------------------------------
+# ax1b.set_xlabel("No connections")
+# ax1b.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
+# ax1b.tick_params(axis="x",labelbottom=False)
 
-# Fig. 1D: Plot #layers for which a node is disconnected
-print("Figure 1D")
-fig1d, ax1d = plt.subplots()
-node_df["nz_layers"]=np.count_nonzero(node_df==0,axis=1)
-#node_df.sort_values("nz_layers",inplace=True)
+# # Save
+# fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 
-ax1d.hist(node_df["nz_layers"],color="black")
 
-ax1d.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
-ax1d.set_xticks([0,2,4])
-#ax1d.tick_params(axis="x",labelbottom=False)
+# # ---------------------------------------------------------------------------
 
-# Save
-fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
+# # Fig. 1D: Plot #layers for which a node is disconnected
+# print("Figure 1D")
+# fig1d, ax1d = plt.subplots()
+# node_df["nz_layers"]=np.count_nonzero(node_df==0,axis=1)
+# #node_df.sort_values("nz_layers",inplace=True)
 
-# ---------------------------------------------------------------------------
+# ax1d.hist(node_df["nz_layers"],color="black")
+
+# ax1d.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
+# ax1d.set_xticks([0,2,4])
+# #ax1d.tick_params(axis="x",labelbottom=False)
+
+# # Save
+# fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
+
+# # ---------------------------------------------------------------------------
 
 # Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
 print("Figure 2A")
 fig2a, ax2a = plt.subplots()
 
-sort_fam=hist_fam.sort(reverse=True,key=lambda x: x[1])
-cnt_fam,deg_fam=zip(*hist_fam)
+cnt_fam=hist_fam.reverse()
+deg_fam=reversed(range(len(cnt_fam)))
 cs_fam=np.cumsum(cnt_fam)
-sort_edu=hist_edu.sort(reverse=True,key=lambda x: x[1])
-cnt_edu,deg_edu=zip(*hist_edu)
+cnt_edu=hist_edu.reverse()
+deg_edu=reversed(range(len(cnt_edu)))
 cs_edu=np.cumsum(cnt_edu)
-sort_nbr=hist_nbr.sort(reverse=True,key=lambda x: x[1])
-cnt_nbr,deg_nbr=zip(*hist_nbr)
+cnt_nbr=hist_nbr.reverse()
+deg_nbr=reversed(range(len(cnt_nbr)))
 cs_nbr=np.cumsum(cnt_nbr)
-sort_work=hist_work.sort(reverse=True,key=lambda x: x[1])
-cnt_work,deg_work=zip(*hist_work)
+cnt_work=hist_work.reverse()
+deg_work=reversed(range(len(cnt_work)))
 cs_work=np.cumsum(cnt_work)
 
-ax2a.plot(cs_fam,color="tab:blue",marker=",",linestyle="dashdot")
-ax2a.plot(cs_edu,color="tab:orange",marker=",",linestyle="dashdot")
-ax2a.plot(cs_nbr,color="tab:green",marker=",",linestyle="dashdot")
-ax2a.plot(cs_work,color="tab:red",marker=",",linestyle="dashdot")
+ax2a.plot(deg_fam,cs_fam,color="tab:blue",marker=",",linestyle="dashdot")
+ax2a.plot(deg_edu,cs_edu,color="tab:orange",marker=",",linestyle="dashdot")
+ax2a.plot(deg_nbr,cs_nbr,color="tab:green",marker=",",linestyle="dashdot")
+ax2a.plot(deg_work,cs_work,color="tab:red",marker=",",linestyle="dashdot")
 
 ax2a.set_xlabel("Degree")
 ax2a.set_yscale("log")
@@ -210,11 +212,11 @@ fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 print("Figure 2B")
 fig2b, ax2b = plt.subplots()
 
-sort_flat=hist_flat.sort(reverse=True,key=lambda x: x[1])
-cnt_flat,deg_flat=zip(*hist_flat)
+cnt_flat=hist_flat.reverse()
+deg_flat=reversed(range(len(cnt_flat)))
 cs_flat=np.cumsum(cnt_flat)
 
-ax2b.plot(cs_flat,color="black",marker=",",linestyle="dashdot")
+ax2b.plot(deg_flat,cs_flat,color="black",marker=",",linestyle="dashdot")
 
 ax2b.set_xlabel("Degree")
 ax2b.set_yscale("log")
