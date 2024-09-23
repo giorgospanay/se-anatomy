@@ -92,44 +92,46 @@ fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
 
-print("Loading all degree files")
-# # Load degree files into dataframe
-node_df=None
-fam_df=None
-edu_df=None
-nbr_df=None
-work_df=None
-
-
-with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
-	fam_df = pd.DataFrame(
-		[ast.literal_eval(line.rstrip()) for line in h_wf],
-		columns=["PersonNr","deg_fam"]
-	)
-	fam_df.set_index("PersonNr")
-with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
-	edu_df = pd.DataFrame(
-		[ast.literal_eval(line.rstrip()) for line in h_wf],
-		columns=["PersonNr","deg_edu"]
-	)
-	edu_df.set_index("PersonNr")
-with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
-	nbr_df = pd.DataFrame(
-		[ast.literal_eval(line.rstrip()) for line in h_wf],
-		columns=["PersonNr","deg_nbr"]
-	)
-	nbr_df.set_index("PersonNr")
-with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
-	work_df = pd.DataFrame(
-		[ast.literal_eval(line.rstrip()) for line in h_wf],
-		columns=["PersonNr","deg_work"]
-	)
-	work_df.set_index("PersonNr")
-# Concat all on node_df
-node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
-node_df.fillna(0)
-
 #### Uncomment for disconnected nodes. Curr no node is disconnected in the network
+
+# print("Loading all degree files")
+# # # Load degree files into dataframe
+# node_df=None
+# fam_df=None
+# edu_df=None
+# nbr_df=None
+# work_df=None
+
+
+# with open(f"{log_path}/degrees_family2017.txt","r") as h_wf:
+# 	fam_df = pd.DataFrame(
+# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+# 		columns=["PersonNr","deg_fam"]
+# 	)
+# 	fam_df.set_index("PersonNr")
+# with open(f"{log_path}/degrees_education2017.txt","r") as h_wf:
+# 	edu_df = pd.DataFrame(
+# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+# 		columns=["PersonNr","deg_edu"]
+# 	)
+# 	edu_df.set_index("PersonNr")
+# with open(f"{log_path}/degrees_neighbourhood2017.txt","r") as h_wf:
+# 	nbr_df = pd.DataFrame(
+# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+# 		columns=["PersonNr","deg_nbr"]
+# 	)
+# 	nbr_df.set_index("PersonNr")
+# with open(f"{log_path}/degrees_work2017.txt","r") as h_wf:
+# 	work_df = pd.DataFrame(
+# 		[ast.literal_eval(line.rstrip()) for line in h_wf],
+# 		columns=["PersonNr","deg_work"]
+# 	)
+# 	work_df.set_index("PersonNr")
+# # Concat all on node_df
+# node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
+# node_df.fillna(0)
+
+
 # # ---------------------------------------------------------------------------
 
 # # Fig. 1B: Plot disconnected nodes in each layer
