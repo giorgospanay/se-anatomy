@@ -131,7 +131,7 @@ if mode=="calc":
 		work_df.set_index("PersonNr",inplace=True)
 	# Concat all on node_df
 	node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
-	node_df.fillna(0)
+	node_df.fillna(0.0,inplace=True)
 
 	# Save to csv for comparison
 	node_df.to_csv(f"{log_path}/node_2017.csv")
