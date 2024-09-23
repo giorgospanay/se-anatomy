@@ -149,7 +149,13 @@ zero_edu=(node_df["deg_edu"]==0).sum()
 zero_nbr=(node_df["deg_nbr"]==0).sum()
 zero_work=(node_df["deg_work"]==0).sum()
 
-ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
+N, bins, patches = ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work])
+
+patches[0].set_facecolor("tab:blue")
+patches[1].set_facecolor("tab:orange")
+patches[2].set_facecolor("tab:green")
+patches[3].set_facecolor("tab:red")
+
 
 ax1b.set_xlabel("No connections")
 ax1b.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
