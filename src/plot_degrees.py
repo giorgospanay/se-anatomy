@@ -330,15 +330,17 @@ work_df=None
 gc.collect()
 
 # Create dataframe
-table_1b=pd.DataFrame(columns=["F","E","N","W"])
-f_df=pd.DataFrame(inter_fam,columns=["F","E","N","W"])
+table_1b=pd.DataFrame()
+f_df=pd.DataFrame(inter_fam)
 table_1b=pd.concat([table_1b,f_df],axis=0)
-e_df=pd.DataFrame(inter_edu,columns=["F","E","N","W"])
+e_df=pd.DataFrame(inter_edu)
 table_1b=pd.concat([table_1b,e_df],axis=0)
-n_df=pd.DataFrame(inter_nbr,columns=["F","E","N","W"])
+n_df=pd.DataFrame(inter_nbr)
 table_1b=pd.concat([table_1b,n_df],axis=0)
-w_df=pd.DataFrame(inter_work,columns=["F","E","N","W"])
+w_df=pd.DataFrame(inter_work)
 table_1b=pd.concat([table_1b,w_df],axis=0)
+
+table_1b.columns=["F","E","N","W"]
 
 
 # Save dataframe
