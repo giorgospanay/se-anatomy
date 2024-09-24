@@ -12,6 +12,7 @@ deso_path="../../mat_lev_deso_2017.csv"
 
 #read in data 
 data = pd.read_csv(lisa_path, usecols=["LopNr", "Alder", "Sun2000niva", "Raks_SummaInk"])
+print(f"Lisa length: {len(data.index)}")
 data_deso = pd.read_csv(deso_path)
 
 dict_columns = {"LopNr": "PersonNr", "Alder": "age"}
