@@ -331,13 +331,13 @@ gc.collect()
 
 # Create dataframe
 table_1b=pd.DataFrame(columns=["F","E","N","W"])
-f_df=pd.DataFrame({"F":inter_fam[0],"E":inter_fam[1],"N":inter_fam[2],"W":inter_fam[3]})
+f_df=pd.DataFrame({"F":[inter_fam[0]],"E":[inter_fam[1]],"N":[inter_fam[2]],"W":[inter_fam[3]]})
 table_1b=pd.concat([table_1b,f_df],axis=0)
-e_df=pd.DataFrame({"F":inter_edu[0],"E":inter_edu[1],"N":inter_edu[2],"W":inter_edu[3]})
+e_df=pd.DataFrame({"F":[inter_edu[0]],"E":[inter_edu[1]],"N":[inter_edu[2]],"W":[inter_edu[3]]})
 table_1b=pd.concat([table_1b,e_df],axis=0)
-n_df=pd.DataFrame({"F":inter_nbr[0],"E":inter_nbr[1],"N":inter_nbr[2],"W":inter_nbr[3]})
+n_df=pd.DataFrame({"F":[inter_nbr[0]],"E":[inter_nbr[1]],"N":[inter_nbr[2]],"W":[inter_nbr[3]]})
 table_1b=pd.concat([table_1b,n_df],axis=0)
-w_df=pd.DataFrame({"F":inter_work[0],"E":inter_work[1],"N":inter_work[2],"W":inter_work[3]})
+w_df=pd.DataFrame({"F":[inter_work[0]],"E":[inter_work[1]],"N":[inter_work[2]],"W":[inter_work[3]]})
 table_1b=pd.concat([table_1b,w_df],axis=0)
 
 
