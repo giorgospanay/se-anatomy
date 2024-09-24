@@ -267,7 +267,7 @@ inter_work=[]
 
 # Family 2017:
 df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
-fam_df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
+fam_df = make_entire_edge_list(df)[["PersonNr","PersonNr2"]]
 df=None
 gc.collect()
 # Education 2017:
