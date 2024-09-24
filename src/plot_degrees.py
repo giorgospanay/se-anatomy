@@ -147,10 +147,12 @@ else:
 # Fig. 1B: Plot disconnected nodes in each layer
 print("Figure 1B")
 fig1b, ax1b = plt.subplots()
-zero_fam=(node_df["deg_fam"]==0).sum()
-zero_edu=(node_df["deg_edu"]==0).sum()
-zero_nbr=(node_df["deg_nbr"]==0).sum()
-zero_work=(node_df["deg_work"]==0).sum()
+zero_fam=(node_df["deg_fam"]==0.0).sum()
+zero_edu=(node_df["deg_edu"]==0.0).sum()
+zero_nbr=(node_df["deg_nbr"]==0.0).sum()
+zero_work=(node_df["deg_work"]==0.0).sum()
+
+print(f"f:{zero_fam}, e:{zero_edu}, f:{zero_nbr}, f:{zero_work}")
 
 N, bins, patches = ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work])
 
@@ -173,13 +175,14 @@ fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 # Fig. 1D: Plot #layers for which a node is disconnected
 print("Figure 1D")
 fig1d, ax1d = plt.subplots()
-node_df["nz_layers"]=np.count_nonzero(node_df==0,axis=1)
+node_df["z_layers"]=np.count_nonzero(node_df==0.0,axis=1)
+node_df["nz_layers"]=4-node_df["z_layers"]
 #node_df.sort_values("nz_layers",inplace=True)
 
 ax1d.hist(node_df["nz_layers"],color="black")
 
 ax1d.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
-ax1d.set_xticks([0,2,4])
+ax1d.set_xticks([0,1,2,3,4])
 #ax1d.tick_params(axis="x",labelbottom=False)
 
 # Save
@@ -262,8 +265,6 @@ inter_fam=[]
 inter_edu=[]
 inter_nbr=[]
 inter_work=[]
-
-############## @TODO: do intersection on dfs
 
 # Family 2017:
 df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
