@@ -152,18 +152,13 @@ zero_edu=(node_df["deg_edu"]==0.0).sum()
 zero_nbr=(node_df["deg_nbr"]==0.0).sum()
 zero_work=(node_df["deg_work"]==0.0).sum()
 
-print(f"f:{zero_fam}, e:{zero_edu}, f:{zero_nbr}, f:{zero_work}")
+# # Debug
+# print(f"f:{zero_fam}, e:{zero_edu}, n:{zero_nbr}, w:{zero_work}")
 
-N, bins, patches = ax1b.hist([zero_fam,zero_edu,zero_nbr,zero_work])
-
-patches[0].set_facecolor("tab:blue")
-patches[1].set_facecolor("tab:orange")
-patches[2].set_facecolor("tab:green")
-patches[3].set_facecolor("tab:red")
-
+ax1b.bar(range(4),[zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
 
 ax1b.set_xlabel("No connections")
-ax1b.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
+ax1b.set_yticks([0,2000000,4000000,6000000,8000000],labels=["0","2M","4M","6M","8M"])
 ax1b.tick_params(axis="x",labelbottom=False)
 
 # Save
@@ -175,9 +170,7 @@ fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 # Fig. 1D: Plot #layers for which a node is disconnected
 print("Figure 1D")
 fig1d, ax1d = plt.subplots()
-node_df["z_layers"]=np.count_nonzero(node_df==0.0,axis=1)
-node_df["nz_layers"]=4-node_df["z_layers"]
-#node_df.sort_values("nz_layers",inplace=True)
+node_df["nz_layers"]=4-np.count_nonzero(node_df==0.0,axis=1)
 
 ax1d.hist(node_df["nz_layers"],color="black")
 
@@ -187,6 +180,9 @@ ax1d.set_xticks([0,1,2,3,4])
 
 # Save
 fig1d.savefig(f"{plot_path}/fig1d.png",bbox_inches='tight',dpi=300)
+
+# Drop col here for rest
+node_df.drop(labels=["nz_layers"],axis=1,inplace=True)
 
 # ---------------------------------------------------------------------------
 
@@ -335,16 +331,16 @@ gc.collect()
 
 # Create dataframe
 table_1b=pd.DataFrame(columns=["F","E","N","W"])
-f_df=pd.DataFrame(inter_fam)
-table_1b=pd.concat([table_1b,f_df],axis=0,ignore_index=True)
-e_df=pd.DataFrame(inter_edu)
-table_1b=pd.concat([table_1b,e_df],axis=0,ignore_index=True)
-n_df=pd.DataFrame(inter_nbr)
-table_1b=pd.concat([table_1b,n_df],axis=0,ignore_index=True)
-w_df=pd.DataFrame(inter_work)
-table_1b=pd.concat([table_1b,w_df],axis=0,ignore_index=True)
+f_df=pd.DataFrame(inter_fam,columns=["F","E","N","W"])
+table_1b=pd.concat([table_1b,f_df],axis=0)
+e_df=pd.DataFrame(inter_edu,columns=["F","E","N","W"])
+table_1b=pd.concat([table_1b,e_df],axis=0)
+n_df=pd.DataFrame(inter_nbr,columns=["F","E","N","W"])
+table_1b=pd.concat([table_1b,n_df],axis=0)
+w_df=pd.DataFrame(inter_work,columns=["F","E","N","W"])
+table_1b=pd.concat([table_1b,w_df],axis=0)
 
 
 # Save dataframe
-table_1b.to_csv(f"{plot_path}/table_1b.csv")
+table_1b.to_csv(f"{plot_path}/table_1b.csv",index=False)
 
