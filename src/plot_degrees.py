@@ -263,58 +263,74 @@ inter_edu=[]
 inter_nbr=[]
 inter_work=[]
 
+############## @TODO: do intersection on dfs
+
 # Family 2017:
-fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
-df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
-net_fam=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
-fam_df=None
+df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
+fam_df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
+df=None
 gc.collect()
 # Education 2017:
-df=pd.read_csv(f"{csv_path}/education2017.csv")
-net_edu=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+edu_df=pd.read_csv(f"{csv_path}/education2017.csv")
 # Neighbourhood 2017:
-df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
-net_nbr=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+nbr_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
 # Work 2017:
-df=pd.read_csv(f"{csv_path}/work2017.csv")
-net_work=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+work_df=pd.read_csv(f"{csv_path}/work2017.csv")
+
 
 # Intersection Family / Family
 inter_fam.append(1.0)
 # Intersection Family / Education
-inter_fe=nx.intersection(net_fam,net_edu)
-inter_fam.append(inter_fe.number_of_edges()/net_fam.number_of_edges())
-inter_edu.append(inter_fe.number_of_edges()/net_edu.number_of_edges())
+inter_fe=pd.merge(fam_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
+inter_fam.append(len(inter_fe.index)/len(fam_df.index))
+inter_edu.append(len(inter_fe.index)/len(edu_df.index))
 # Intersection Family / Neighbourhood
-inter_fn=nx.intersection(net_fam,net_nbr)
-inter_fam.append(inter_fn.number_of_edges()/net_fam.number_of_edges())
-inter_nbr.append(inter_fe.number_of_edges()/net_nbr.number_of_edges())
+inter_fn=pd.merge(fam_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
+inter_fam.append(len(inter_fn.index)/len(fam_df.index))
+inter_nbr.append(len(inter_fn.index)/len(nbr_df.index))
 # Intersection Family / Work
-inter_fw=nx.intersection(net_fam,net_work)
-inter_fam.append(inter_fw.number_of_edges()/net_fam.number_of_edges())
-inter_work.append(inter_fw.number_of_edges()/net_work.number_of_edges())
+inter_fw=pd.merge(fam_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+inter_fam.append(len(inter_fw.index)/len(fam_df.index))
+inter_work.append(len(inter_fw.index)/len(work_df.index))
+
+fam_df=None
+inter_fe=None
+inter_fn=None
+inter_fw=None
+gc.collect()
 
 # Intersection Education / Education
 inter_edu.append(1.0)
 # Intersection Education / Neighbourhood
-inter_en=nx.intersection(net_edu,net_nbr)
-inter_edu.append(inter_en.number_of_edges()/net_edu.number_of_edges())
-inter_nbr.append(inter_en.number_of_edges()/net_nbr.number_of_edges())
+inter_en=pd.merge(edu_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
+inter_edu.append(len(inter_en.index)/len(edu_df.index))
+inter_nbr.append(len(inter_en.index)/len(nbr_df.index))
 # Intersection Education / Work
-inter_ew=nx.intersection(net_edu,net_work)
-inter_edu.append(inter_ew.number_of_edges()/net_edu.number_of_edges())
-inter_work.append(inter_ew.number_of_edges()/net_work.number_of_edges())
+inter_ew=pd.merge(edu_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+inter_edu.append(len(inter_ew.index)/len(edu_df.index))
+inter_work.append(len(inter_ew.index)/len(work_df.index))
+
+edu_df=None
+inter_en=None
+inter_ew=None
+gc.collect()
 
 # Intersection Neighbourhood / Neighbourhood
 inter_nbr.append(1.0)
 # Intersection Neighbourhood / Work
-inter_nw=nx.intersection(net_nbr,net_work)
-inter_nbr.append(inter_nw.number_of_edges()/net_nbr.number_of_edges())
-inter_work.append(inter_nw.number_of_edges()/net_work.number_of_edges())
+inter_nw=pd.merge(nbr_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+inter_nbr.append(len(inter_nw.index)/len(nbr_df.index))
+inter_work.append(len(inter_nw.index)/len(work_df.index))
+
+nbr_df=None
+inter_nw=None
+gc.collect()
 
 # Intersection Work / Work
 inter_work.append(1.0)
 
+work_df=None
+gc.collect()
 
 # Create dataframe
 table_1b=pd.DataFrame(columns=["F","E","N","W"])
