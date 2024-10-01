@@ -237,7 +237,6 @@ ax2b.set_xlabel("Degree")
 ax2b.set_yscale("log")
 ax2b.set_xscale("log") 
 
-
 fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
 fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
 
