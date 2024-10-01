@@ -113,10 +113,10 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 	GC=G.subgraph(components[0])
 
 	# D -- diameter of GC:
-	diam_len=GC.diameter()
+	diam_len=nx.diameter(GC)
 
 	# d -- estimated average shortest path of GC:
-	d_len=GC.average_shortest_path_length()
+	d_len=nx.average_shortest_path_length(GC)
 
 	# Collect garbage
 	G=None
