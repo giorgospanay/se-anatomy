@@ -36,7 +36,7 @@ def pd_concat_layers(l1,l2,l1_id,l2_id):
 
 
 # Find approximate avg shortest path length by sampling
-def find_avg_shortest_path(G, n_samples=100000):
+def find_avg_shortest_path(G,n_samples=10000):
 	nodes=list(G.nodes())
 	lengths=[]
 	for _ in range(n_samples):
@@ -144,7 +144,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 	print("Finding approximate GC shortest path")
 	# d -- (estimated) average shortest path of GC:
-	d_len=find_avg_shortest_path(GC,n_samples=100000)
+	d_len=find_avg_shortest_path(GC,n_samples=20000)
 
 	# Collect garbage
 	G=None
