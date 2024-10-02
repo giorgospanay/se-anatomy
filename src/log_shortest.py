@@ -2,6 +2,11 @@ import os, glob, parse, pickle, sys, gc
 import networkx as nx
 import numpy as np
 import pandas as pd
+import random
+
+# Import approximate diameter function
+import networkx.algorithms.approximation
+from statistics import mean
 
 # Local imports
 from simplify_family import read_in_network, simplify_family_layer, make_entire_edge_list
@@ -29,6 +34,16 @@ def pd_flatten_layers(l1,l2):
 def pd_concat_layers(l1,l2,l1_id,l2_id):
 	return
 
+
+# Find approximate avg shortest path length by sampling
+def find_avg_shortest_path(G, n_samples=100000):
+	nodes=list(G.nodes())
+	lengths=[]
+	for _ in range(n_samples):
+		u,v=random.choices(nodes,k=2)
+		lengths.append(nx.shortest_path_length(G,source=u,target=v))
+
+	return mean(lengths)
 
 
 # Modes: prepare flat and log (reading from flat)
@@ -112,11 +127,11 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 	gc_pct=len(components[0])/n
 	GC=G.subgraph(components[0])
 
-	# D -- diameter of GC:
-	diam_len=nx.diameter(GC)
+	# D -- approx diameter of GC:
+	diam_len=nx.approximation.diameter(GC)
 
-	# d -- estimated average shortest path of GC:
-	d_len=nx.average_shortest_path_length(GC)
+	# d -- (estimated) average shortest path of GC:
+	d_len=find_avg_shortest_path(GC,n_samples=1000000)
 
 	# Collect garbage
 	G=None
