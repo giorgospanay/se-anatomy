@@ -67,6 +67,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		gc.collect()
 
 		# Also calculate node triangles here
+		print("Get triangles.")
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 		node_df["tri_fam"]=pd.Series(nx.triangles(G))
 
@@ -76,8 +77,10 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		# Read alone for triangles
 		n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
 		G=nx.from_pandas_edgelist(n_df,source="PersonNr",target="PersonNr2")
+		print("Get triangles.")
 		node_df["tri_nbr"]=pd.Series(nx.triangles(G))
 
+		print("Flatten.")
 		df=pd_flatten_layers(df,n_df)
 		n_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
@@ -88,8 +91,10 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		# Read alone for triangles
 		e_df=pd.read_csv(f"{csv_path}/education2017.csv")
 		G=nx.from_pandas_edgelist(e_df,source="PersonNr",target="PersonNr2")
+		print("Get triangles.")
 		node_df["tri_edu"]=pd.Series(nx.triangles(G))
 
+		print("Flatten.")
 		df=pd_flatten_layers(df,e_df)
 		e_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
@@ -99,16 +104,20 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 		# Read work alone for triangles
 		w_df=pd.read_csv(f"{csv_path}/work2017.csv")
+		print("Get triangles (work).")
 		G=nx.from_pandas_edgelist(w_df,source="PersonNr",target="PersonNr2")
 		node_df["tri_work"]=pd.Series(nx.triangles(G))
 
+		print("Flatten.")
 		df=pd_flatten_layers(df,w_df)
 		w_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
 		# Calculate flat: closeness centrality
+		print("Get closeness centrality (flat).")
 		node_df["closeness_centrality"]=pd.Series(nx.closeness_centrality(G))
 		# flat: clustering coefficient
+		print("Get local clustering coefficient (flat).")
 		node_df["lcc"]=pd.Series(nx.clustering(G))
 
 
@@ -135,7 +144,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 	print("Finding approximate GC shortest path")
 	# d -- (estimated) average shortest path of GC:
-	d_len=find_avg_shortest_path(GC,n_samples=1000000)
+	d_len=find_avg_shortest_path(GC,n_samples=100000)
 
 	# Collect garbage
 	G=None
