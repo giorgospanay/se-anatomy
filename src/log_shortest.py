@@ -119,17 +119,21 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 	# M -- number of edges:
 	m=G.number_of_edges()
 
+	print("Finding components.")
 	# n_comps -- number of components:
 	components=sorted(nx.connected_components(G), key=len, reverse=True)
 	n_comps=len(components)
 
+	print("Finding GC.")
 	# GC -- relative size of giant component:
 	gc_pct=len(components[0])/n
 	GC=G.subgraph(components[0])
 
+	print("Finding approximate GC diameter.")
 	# D -- approx diameter of GC:
 	diam_len=nx.approximation.diameter(GC)
 
+	print("Finding approximate GC shortest path")
 	# d -- (estimated) average shortest path of GC:
 	d_len=find_avg_shortest_path(GC,n_samples=1000000)
 
