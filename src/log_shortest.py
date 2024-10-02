@@ -47,6 +47,27 @@ def find_avg_shortest_path(G,n_samples=10000):
 	return mean(lengths)
 
 
+# Use adjacency matrix for closeness centrality
+def find_closeness_centrality(G):
+	A = nx.adjacency_matrix(G).tolil()
+	D = scipy.sparse.csgraph.floyd_warshall(A, directed=False, unweighted=False)
+
+	n = D.shape[0]
+	closeness_centrality = {}
+	for r in range(n):
+	    cc = 0.0
+	    possible_paths = list(enumerate(D[r, :]))
+	    shortest_paths = dict(filter(lambda x: not x[1] == np.inf, possible_paths))
+	    
+	    total = sum(shortest_paths.values())
+	    n_shortest_paths = len(shortest_paths) - 1.0
+	    if total > 0.0 and n > 1:
+	        s = n_shortest_paths / (n - 1)
+	        cc = (n_shortest_paths / total) * s
+	    closeness_centrality[r] = cc
+
+	return closeness_centrality
+
 # Modes: prepare flat and log (reading from flat)
 
 
@@ -116,7 +137,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 		# Calculate flat: closeness centrality
 		print("Get closeness centrality (flat).")
-		node_df["closeness_centrality"]=pd.Series(nx.closeness_centrality(G))
+		node_df["closeness_centrality"]=pd.Series(find_closeness_centrality(G))
 		# flat: clustering coefficient
 		print("Get local clustering coefficient (flat).")
 		node_df["lcc"]=pd.Series(nx.clustering(G))
