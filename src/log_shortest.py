@@ -3,6 +3,8 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import random
+import scipy.sparse
+import scipy.sparse.csgraph
 
 # Import approximate diameter function
 import networkx.algorithms.approximation
