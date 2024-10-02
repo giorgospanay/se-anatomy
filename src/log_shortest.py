@@ -39,7 +39,8 @@ def pd_concat_layers(l1,l2,l1_id,l2_id):
 def find_avg_shortest_path(G,n_samples=10000):
 	nodes=list(G.nodes())
 	lengths=[]
-	for _ in range(n_samples):
+	for i in range(n_samples):
+		if i%1000==0: print(f"Progress: {i//1000}/{n_samples}")
 		u,v=random.choices(nodes,k=2)
 		lengths.append(nx.shortest_path_length(G,source=u,target=v))
 
