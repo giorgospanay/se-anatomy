@@ -137,15 +137,10 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		w_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
-		# Calculate flat: closeness centrality
-		print("Get closeness centrality (flat).")
-		node_df["closeness_centrality"]=pd.Series(find_closeness_centrality(G))
-		# flat: clustering coefficient
-		print("Get local clustering coefficient (flat).")
-		node_df["lcc"]=pd.Series(nx.clustering(G))
-
-
-
+		
+		
+		
+		
 	# N -- number of nodes:
 	n=G.number_of_nodes()
 
