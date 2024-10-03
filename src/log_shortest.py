@@ -42,36 +42,45 @@ def find_avg_shortest_path(G,n_samples=10000):
 	nodes=list(G.nodes())
 	lengths=[]
 	for i in range(n_samples):
-		if i%1000==0: print(f"Progress: {i//1000}/{n_samples}")
+		# Progress update
+		if i%1000==0: print(f"Progress: {i//1000}/{n_samples/1000}")
+		# Sample two nodes to calculate shortest path length between them
 		u,v=random.choices(nodes,k=2)
 		lengths.append(nx.shortest_path_length(G,source=u,target=v))
 
 	return mean(lengths)
 
+# Find approximate closeness centrality by sampling
+def find_closeness_centrality(G,n_samples=10000):
+	# Randomly sample nodes to compute shortest paths
+	sample_nodes=random.sample(G.nodes(),n_samples)
 
-# Use adjacency matrix for closeness centrality
-def find_closeness_centrality(G):
-	A = nx.adjacency_matrix(G).tolil()
-	D = scipy.sparse.csgraph.floyd_warshall(A, directed=False, unweighted=False)
+	# Compute shortest path lengths from each node in the sample
+	closeness_centrality={}
+	for i,node in enumerate(G.nodes()):
 
-	n = D.shape[0]
-	closeness_centrality = {}
-	for r in range(n):
-	    cc = 0.0
-	    possible_paths = list(enumerate(D[r, :]))
-	    shortest_paths = dict(filter(lambda x: not x[1] == np.inf, possible_paths))
-	    
-	    total = sum(shortest_paths.values())
-	    n_shortest_paths = len(shortest_paths) - 1.0
-	    if total > 0.0 and n > 1:
-	        s = n_shortest_paths / (n - 1)
-	        cc = (n_shortest_paths / total) * s
-	    closeness_centrality[r] = cc
+		# Progress update
+		if i%1000==0: print(f"Progress: {i//1000}/{n_samples/1000}")
+
+		# Calculate shortest paths from each node
+		shortest_paths=nx.single_source_shortest_path_length(G,node)
+		
+		# Only sum up the distances to the sampled nodes
+		reachable_nodes=set(shortest_paths.keys()).intersection(sample_nodes)
+		if len(reachable_nodes)>1:
+			total_distance=sum(shortest_paths[target] for target in reachable_nodes)
+			if total_distance>0:
+				# Approximate closeness centrality formula
+				closeness=(len(reachable_nodes)-1)/total_distance
+				# Normalize by the fraction of reachable nodes
+				closeness*=(len(G)-1)/(len(reachable_nodes)-1)
+			else:
+				closeness=0.0
+		else:
+			closeness=0.0
+		closeness_centrality[node]=closeness
 
 	return closeness_centrality
-
-# Modes: prepare flat and log (reading from flat)
-
 
 # Read node info df here
 node_df=pd.read_csv(f"{log_path}/node_2017.csv",index_col="PersonNr",header=0)
@@ -137,9 +146,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		w_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
-		
-		
-		
+
 		
 	# N -- number of nodes:
 	n=G.number_of_nodes()
@@ -149,7 +156,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 	print("Finding components.")
 	# n_comps -- number of components:
-	components=sorted(nx.connected_components(G), key=len, reverse=True)
+	components=sorted(nx.connected_components(G),key=len,reverse=True)
 	n_comps=len(components)
 
 	print("Finding GC.")
@@ -164,6 +171,15 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 	print("Finding approximate GC shortest path")
 	# d -- (estimated) average shortest path of GC:
 	d_len=find_avg_shortest_path(GC,n_samples=20000)
+
+
+	# For flat:
+	# Calculate approx closeness centrality (sample size: 0.03% of GC)
+	print("Get approx closeness centrality (flat).")
+	node_df["closeness"]=pd.Series(find_closeness_centrality(G,n_samples=int(len(components[0])*0.0003)))
+	# flat: clustering coefficient
+	print("Get local clustering coefficient (flat).")
+	node_df["lcc"]=pd.Series(nx.clustering(G))
 
 	# Collect garbage
 	G=None
