@@ -174,12 +174,13 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 
 	# For flat:
-	# Calculate approx closeness centrality (sample size: 0.03% of GC)
-	print("Get approx closeness centrality (flat).")
-	node_df["closeness"]=pd.Series(find_closeness_centrality(G,n_samples=int(len(components[0])*0.0003)))
-	# flat: clustering coefficient
-	print("Get local clustering coefficient (flat).")
-	node_df["lcc"]=pd.Series(nx.clustering(G))
+	if net_name=="flat_all":
+		# Calculate approx closeness centrality (sample size: 0.03% of GC)
+		print("Get approx closeness centrality (flat).")
+		node_df["closeness"]=pd.Series(find_closeness_centrality(G,n_samples=int(len(components[0])*0.0003)))
+		# flat: clustering coefficient
+		print("Get local clustering coefficient (flat).")
+		node_df["lcc"]=pd.Series(nx.clustering(G))
 
 	# Collect garbage
 	G=None
