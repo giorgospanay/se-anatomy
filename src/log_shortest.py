@@ -172,6 +172,8 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 		node_df["tri_fam"]=pd.Series(nx.triangles(G))
 
+		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+
 	elif net_name=="flat_fn":
 		print("Reading in Neighbourhood 2017")
 		
@@ -194,6 +196,8 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		n_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
+		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+
 	elif net_name=="flat_fne":
 		print("Reading in Education 2017")
 
@@ -215,6 +219,8 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 		e_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+
+		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
 	elif net_name=="flat_all":
 		print("Reading in Work 2017")
