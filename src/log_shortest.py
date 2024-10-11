@@ -172,7 +172,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 		node_df["tri_fam"]=pd.Series(nx.triangles(G))
 
-		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+		G_id=G
 
 	elif net_name=="flat_fn":
 		print("Reading in Neighbourhood 2017")
