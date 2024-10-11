@@ -124,7 +124,7 @@ def find_closeness_centrality_target(G,n_samples=10000):
 		sum_distances=0
 		# Check if node is not disconnected (should not be the case)
 		if G.degree[node]>=1:
-			for j,_ node_v in enumerate(sample_nodes):
+			for j,_node_v in enumerate(sample_nodes):
 				# Check if node has key in appended dict
 				if node in shortest_paths[j]:
 					length_reachable=shortest_paths[j][node]
