@@ -75,25 +75,6 @@ fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
 
-# Fig. 1C: Plot histogram (flattened opp. network) as line
-print("Figure 1C")
-fig1c, ax1c = plt.subplots()
-
-#ax1c.set_ylabel("Frequency")
-ax1c.set_xlabel("Degree")
-ax1c.set_yscale("log")
-ax1c.set_xscale("log")
-ax1c.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
-ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
-
-ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
-
-# Save
-fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
-fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
-
-# ---------------------------------------------------------------------------
-
 node_df=None
 
 # If mode=calc: make df
@@ -133,15 +114,47 @@ if mode=="calc":
 	node_df=pd.concat([fam_df,edu_df,nbr_df,work_df],axis=1,join="outer",copy=False)
 	node_df.fillna(0.0,inplace=True)
 
+	# Add new line to calculate total degree for all nodes
+	node_df["deg_total"]=node_df["deg_fam"]+node_df["deg_edu"]+node_df["deg_nbr"]+node_df["deg_work"]
+
 	# Save to csv for comparison
-	node_df.to_csv(f"{log_path}/node_2017.csv")
+	node_df.to_csv(f"{log_path}/node_a_2017.csv")
 
 # If no mode set, read file from csv
 else:
-	node_df=pd.read_csv(f"{log_path}/node_2017.csv",index_col="PersonNr",header=0)
+	node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
+
+# ---------------------------------------------------------------------------
+
+# Fig. 1C: Plot histogram (flattened opp. network) as line
+print("Figure 1C")
+fig1c, ax1c = plt.subplots()
+
+# Calculate histogram from deg_total
 
 
-#### Uncomment for disconnected nodes. Curr no node is disconnected in the network
+# Plot deg_total histogram
+ax1c.plot(hist_total,color="black",marker=",",linestyle="dashdot")
+# Also plot deg_flat histogram
+ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
+
+#ax1c.set_ylabel("Frequency")
+ax1c.set_xlabel("Degree")
+ax1c.set_yscale("log")
+ax1c.set_xscale("log")
+ax1c.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
+
+
+
+# 
+
+
+# Save
+fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
+fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
+
+
 # ---------------------------------------------------------------------------
 
 # Fig. 1B: Plot disconnected nodes in each layer
@@ -170,7 +183,7 @@ fig1b.savefig(f"{plot_path}/fig1b.png",bbox_inches='tight',dpi=300)
 # Fig. 1D: Plot #layers for which a node is disconnected
 print("Figure 1D")
 fig1d, ax1d = plt.subplots()
-node_df["nz_layers"]=4-np.count_nonzero(node_df==0.0,axis=1)
+node_df["nz_layers"]=4-np.count_nonzero(node_df[["deg_fam","deg_edu","deg_nbr","deg_work"]]==0.0,axis=1)
 
 ax1d.hist(node_df["nz_layers"],color="black")
 
