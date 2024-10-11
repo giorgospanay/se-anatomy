@@ -32,7 +32,7 @@ if len(args)>=1:
 
 # Flatten layers using pandas
 def pd_flatten_layers(l1,l2):
-	return pd.concat([l1,l2],copy=False).groupby(["PersonNr","PersonNr2"]).first().reset_index(drop=True,inplace=True)
+	return pd.concat([l1,l2],copy=False).groupby(["PersonNr","PersonNr2"]).first().reset_index(drop=True)
 
 # Concatenate layers (keeping layer id)
 def pd_concat_layers(l1,l2,l1_id,l2_id):
@@ -186,12 +186,12 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		print("Flatten.")
 		df=pd_flatten_layers(df,n_df)
 		# Save us from future calculations!!
-		pd.to_csv(df,f"{csv_path}/flat_fn2017.csv")
+		df.to_csv(f"{csv_path}/flat_fn2017.csv")
 
 		print("Flatten with ids.")
 		df_id=pd_flatten_layers(df,n_df)
 		# Save us from future calculations!!
-		pd.to_csv(df_id,f"{csv_path}/flat_fn_id2017.csv")
+		df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 
 		n_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
@@ -210,12 +210,12 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		print("Flatten.")
 		df=pd_flatten_layers(df,e_df)
 		# Save us from future calculations!!
-		pd.to_csv(df,f"{csv_path}/flat_fne2017.csv")
+		df.to_csv(f"{csv_path}/flat_fne2017.csv")
 
 		print("Flatten with ids.")
 		df_id=pd_flatten_layers(df_id,e_df)
 		# Save us from future calculations!!
-		pd.to_csv(df_id,f"{csv_path}/flat_fne_id2017.csv")
+		df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 
 		e_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
@@ -234,12 +234,12 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		print("Flatten.")
 		df=pd_flatten_layers(df,w_df)
 		# Save us from future calculations!!
-		pd.to_csv(df,f"{csv_path}/flat_all2017.csv")
+		df.to_csv(f"{csv_path}/flat_all2017.csv")
 
 		print("Flatten with ids.")
 		df_id=pd_flatten_layers(df_id,w_df)
 		# Save us from future calculations!!
-		pd.to_csv(df_id,f"{csv_path}/flat_all_id2017.csv")
+		df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 
 		w_df=None
 
