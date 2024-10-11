@@ -186,12 +186,12 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		print("Flatten.")
 		df=pd_flatten_layers(df,n_df)
 		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/flat_fn2017.csv")
+		pd.to_csv(df,f"{csv_path}/flat_fn2017.csv")
 
 		print("Flatten with ids.")
 		df_id=pd_flatten_layers(df,n_df)
 		# Save us from future calculations!!
-		df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
+		pd.to_csv(df_id,f"{csv_path}/flat_fn_id2017.csv")
 
 		n_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
@@ -210,12 +210,12 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		print("Flatten.")
 		df=pd_flatten_layers(df,e_df)
 		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/flat_fne2017.csv")
+		pd.to_csv(df,f"{csv_path}/flat_fne2017.csv")
 
 		print("Flatten with ids.")
 		df_id=pd_flatten_layers(df_id,e_df)
 		# Save us from future calculations!!
-		df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
+		pd.to_csv(df_id,f"{csv_path}/flat_fne_id2017.csv")
 
 		e_df=None
 		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
@@ -234,12 +234,12 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 		print("Flatten.")
 		df=pd_flatten_layers(df,w_df)
 		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/flat_all2017.csv")
+		pd.to_csv(df,f"{csv_path}/flat_all2017.csv")
 
 		print("Flatten with ids.")
 		df_id=pd_flatten_layers(df_id,w_df)
 		# Save us from future calculations!!
-		df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
+		pd.to_csv(df_id,f"{csv_path}/flat_all_id2017.csv")
 
 		w_df=None
 
@@ -275,7 +275,7 @@ for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
 	print("Finding approximate GC shortest path")
 	# d -- (estimated) average shortest path of GC:
-	d_len=find_avg_shortest_path(GC,n_samples=20000)
+	d_len=find_avg_shortest_path(GC,n_samples=5000)
 
 
 	# For flat:
