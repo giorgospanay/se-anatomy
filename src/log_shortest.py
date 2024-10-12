@@ -32,7 +32,7 @@ if len(args)>=1:
 
 # Flatten layers using pandas
 def pd_flatten_layers(l1,l2):
-	return pd.concat([l1,l2],copy=False).groupby(["PersonNr","PersonNr2"]).first().reset_index(drop=True)
+	return pd.concat([l1,l2],copy=False).drop_duplicates().reset_index(drop=True)
 
 # Concatenate layers (keeping layer id)
 def pd_concat_layers(l1,l2,l1_id=None,l2_id=None):
