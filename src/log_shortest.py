@@ -144,182 +144,211 @@ def find_closeness_centrality_target(G,n_samples=10000):
 		return closeness_centrality
 
 
-# Read node info df here
-node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
-node_df.fillna(0.0,inplace=True)
-
+node_df=None
 table_2=pd.DataFrame(columns=["n","m","comp","gc","diam","avg_sp"])
 
-for net_name in ["family","flat_fn","flat_fne","flat_all"]:
+if mode!="calc-node":
+	# Read node info df here
+	node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
+	node_df.fillna(0.0,inplace=True)
 
-	# Read network here
 	df=None
-	G=None
-	if net_name=="family":
-		print("Reading in Family 2017")
-		fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
-		df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
+	df_id=None
 
-		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/family2017.csv")
+	# Iterate over all layers (order: F-N-E-W)
+	for net_name in ["family","flat_fn","flat_fne","flat_all"]:
 
-		# Collect garbage
-		fam_df=None
-		gc.collect()
+		# Read network here
+		G=None
+		G_id=None
+		if net_name=="family":
+			print("Reading in Family 2017")
+			## Removed code. Uncomment if necessary to recreate all family types of edges
+			#
+			# fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
+			# df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
+			# # Save us from future calculations!!
+			# df.to_csv(f"{csv_path}/family2017.csv")
+			# Collect garbage
+			# fam_df=None
+			# gc.collect()
+			df=pd.read_csv(f"{csv_path}/family2017.csv")
 
-		# Also calculate node triangles here
-		print("Get triangles.")
-		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
-		node_df["tri_fam"]=pd.Series(nx.triangles(G))
+			G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 
-		G_id=G
+			if mode=="flatten":
+				# Also calculate node triangles here
+				print("Get triangles.")
+				node_df["tri_fam"]=pd.Series(nx.triangles(G))
 
-	elif net_name=="flat_fn":
-		print("Reading in Neighbourhood 2017")
-		
-		# Read alone for triangles
-		n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
-		G=nx.from_pandas_edgelist(n_df,source="PersonNr",target="PersonNr2")
-		print("Get triangles.")
-		node_df["tri_nbr"]=pd.Series(nx.triangles(G))
+			G_id=G
 
-		print("Flatten.")
-		df=pd_flatten_layers(df,n_df)
-		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/flat_fn2017.csv")
+		elif net_name=="flat_fn":
+			print("Reading in Neighbourhood 2017")
+			
+			if "flatten" in mode:
+				# Read alone for triangles
+				n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
+				if mode=="flatten":
+					G=nx.from_pandas_edgelist(n_df,source="PersonNr",target="PersonNr2")
+					print("Get triangles.")
+					node_df["tri_nbr"]=pd.Series(nx.triangles(G))
 
-		print("Flatten with ids.")
-		df_id=pd_flatten_layers(df,n_df)
-		# Save us from future calculations!!
-		df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
+					print("Flatten.")
+					df=pd_flatten_layers(df,n_df)
+					# Save us from future calculations!!
+					df.to_csv(f"{csv_path}/flat_fn2017.csv")
 
-		n_df=None
-		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+				if mode=="flatten-id":
+					print("Flatten with ids.")
+					df_id=pd_concat_layers(df,n_df)
+					# Save us from future calculations!!
+					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
+			else:
+				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv")
+				G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
-		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+		elif net_name=="flat_fne":
+			print("Reading in Education 2017")
 
-	elif net_name=="flat_fne":
-		print("Reading in Education 2017")
+			if "flatten" in mode:
+				# Read alone for triangles
+				e_df=pd.read_csv(f"{csv_path}/education2017.csv")
+				if mode=="flatten":
+					G=nx.from_pandas_edgelist(e_df,source="PersonNr",target="PersonNr2")
+					print("Get triangles.")
+					node_df["tri_edu"]=pd.Series(nx.triangles(G))
 
-		# Read alone for triangles
-		e_df=pd.read_csv(f"{csv_path}/education2017.csv")
-		G=nx.from_pandas_edgelist(e_df,source="PersonNr",target="PersonNr2")
-		print("Get triangles.")
-		node_df["tri_edu"]=pd.Series(nx.triangles(G))
+					print("Flatten.")
+					df=pd_flatten_layers(df,e_df)
+					# Save us from future calculations!!
+					df.to_csv(f"{csv_path}/flat_fne2017.csv")
 
-		print("Flatten.")
-		df=pd_flatten_layers(df,e_df)
-		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/flat_fne2017.csv")
+				if mode=="flatten-id":
+					print("Flatten with ids.")
+					df_id=pd_concat_layers(df_id,e_df)
+					# Save us from future calculations!!
+					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
+			else:
+				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv")
+				G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
-		print("Flatten with ids.")
-		df_id=pd_flatten_layers(df_id,e_df)
-		# Save us from future calculations!!
-		df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
+		elif net_name=="flat_all":
+			print("Reading in Work 2017")
 
-		e_df=None
-		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+			if "flatten" in mode:
+				# Read work alone for triangles
+				w_df=pd.read_csv(f"{csv_path}/work2017.csv")
+				if mode=="flatten":
+					G=nx.from_pandas_edgelist(w_df,source="PersonNr",target="PersonNr2")
+					print("Get triangles (work).")
+					node_df["tri_work"]=pd.Series(nx.triangles(G))
 
-		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+					print("Flatten.")
+					df=pd_flatten_layers(df,w_df)
+					# Save us from future calculations!!
+					df.to_csv(f"{csv_path}/flat_all2017.csv")
 
-	elif net_name=="flat_all":
-		print("Reading in Work 2017")
-
-		# Read work alone for triangles
-		w_df=pd.read_csv(f"{csv_path}/work2017.csv")
-		print("Get triangles (work).")
-		G=nx.from_pandas_edgelist(w_df,source="PersonNr",target="PersonNr2")
-		node_df["tri_work"]=pd.Series(nx.triangles(G))
-
-		print("Flatten.")
-		df=pd_flatten_layers(df,w_df)
-		# Save us from future calculations!!
-		df.to_csv(f"{csv_path}/flat_all2017.csv")
-
-		print("Flatten with ids.")
-		df_id=pd_flatten_layers(df_id,w_df)
-		# Save us from future calculations!!
-		df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
-
-		w_df=None
-
-		G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
-
-		print("Create multigraph")
-		G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-
-
-		
-	# N -- number of nodes:
-	n=G_id.number_of_nodes()
-
-	# M -- number of edges:
-	m=G_id.number_of_edges()
-
-	# Debug
-	print(f"N={n} M={m}")
-
-	print("Finding components.")
-	# n_comps -- number of components:
-	components=sorted(nx.connected_components(G_id),key=len,reverse=True)
-	n_comps=len(components)
-
-	print("Finding GC.")
-	# GC -- relative size of giant component:
-	gc_pct=len(components[0])/n
-	GC=G.subgraph(components[0])
-
-	print("Finding approximate GC diameter.")
-	# D -- approx diameter of GC:
-	diam_len=nx.approximation.diameter(GC)
-
-	print("Finding approximate GC shortest path")
-	# d -- (estimated) average shortest path of GC:
-	d_len=find_avg_shortest_path(GC,n_samples=5000)
+				if mode=="flatten-id":
+					print("Flatten with ids.")
+					df_id=pd_concat_layers(df_id,w_df)
+					# Save us from future calculations!!
+					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
+			else:
+				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
+				print("Create multigraph")
+				G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
 
-	# For flat:
-	if net_name=="flat_all":
-		# Calculate approx closeness centrality (sample size: 0.03% of GC)
-		print("Get approx closeness centrality (flat).")
-		node_df["closeness"]=pd.Series(find_closeness_centrality_target(G,n_samples=int(len(components[0])*0.0003)))
-		# flat: clustering coefficient
-		print("Get local clustering coefficient (flat).")
-		node_df["lcc"]=pd.Series(nx.clustering(G))
-		# flat_id: excess closure
-		print("Get excess closure")
-		node_df["sum_tri"]=node_df["tri_fam"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
-		print("Get tie pairs")
-		node_df["tie_pairs"]=pd.Series(find_tie_pairs(G_id))
+		if mode=="calc-table":
+			# N -- number of nodes:
+			n=G_id.number_of_nodes()
 
-		def _cpure(row):
-			tpure=row[0]
-			tpairs=row[1]
-			if tpure==0 or tpairs==0: return 0
-			else: return tpure/tpairs
+			# M -- number of edges:
+			m=G_id.number_of_edges()
 
-		def _excess(row):
-			c_unique=row[0]
-			c_pure=row[1]
-			if c_pure==1: return 0
-			else: return (c_unique-c_pure)/(1-c_pure)
+			# Debug
+			print(f"N={n} M={m}")
 
-		print("Get excess closure")
-		node_df["c_pure"]=node_df[["sum_tri","tie_pairs"]].apply(_cpure,axis=1)
-		node_df["excess"]=node_df[["lcc","c_pure"]].apply(_excess,axis=1)
+			print("Finding components.")
+			# n_comps -- number of components:
+			components=sorted(nx.connected_components(G_id),key=len,reverse=True)
+			n_comps=len(components)
+
+			print("Finding GC.")
+			# GC -- relative size of giant component:
+			gc_pct=len(components[0])/n
+			GC=G.subgraph(components[0])
+
+			print("Finding approximate GC diameter.")
+			# D -- approx diameter of GC:
+			diam_len=nx.approximation.diameter(GC)
+
+			print("Finding approximate GC shortest path")
+			# d -- (estimated) average shortest path of GC:
+			d_len=find_avg_shortest_path(GC,n_samples=5000)
+
+			# Add to table 2
+			f_df=pd.DataFrame({"n":[n],"m":[m],"comp":[n_comps],"gc":[gc_pct],"diam":[diam_len],"avg_sp":[d_len]})
+			table_2=pd.concat([table_2,f_df],axis=0)
+
+	if mode=="flatten":
+		# Print out new node csv
+		node_df.to_csv(f"{log_path}/node_b_2017.csv")
+
+	if mode=="calc-table":
+		# Print out Table 2
+		table_2.to_csv(f"{plot_path}/table_2.csv",index=False)
+
+
+# For flat:
+if mode=="calc-node":
+	# Read node_b
+	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+
+	# Read flat_all (no id)
+	df=pd.read_csv(f"{csv_path}/flat_all2017.csv")
+
+	# Calculate approx closeness centrality (sample size: 0.03% of GC)
+	print("Get approx closeness centrality (flat).")
+	node_df["closeness"]=pd.Series(find_closeness_centrality_target(G,n_samples=int(len(components[0])*0.0003)))
+	# flat: clustering coefficient
+	print("Get local clustering coefficient (flat).")
+	node_df["lcc"]=pd.Series(nx.clustering(G))
 
 	# Collect garbage
+	df=None
 	G=None
-	GC=None
-	gc.collect()
 
-	# Add to table 2
-	f_df=pd.DataFrame({"n":[n],"m":[m],"comp":[n_comps],"gc":[gc_pct],"diam":[diam_len],"avg_sp":[d_len]})
-	table_2=pd.concat([table_2,f_df],axis=0)
+	# Read flat_all with ids
+	print("Read flat id")
+	df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
+	G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
-# Print out Table 2
-table_2.to_csv(f"{plot_path}/table_2.csv",index=False)
+	# flat_id: excess closure
+	print("Get excess closure")
+	node_df["sum_tri"]=node_df["tri_fam"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
+	print("Get tie pairs")
+	node_df["tie_pairs"]=pd.Series(find_tie_pairs(G_id))
 
-# Also print out new node csv
-node_df.to_csv(f"{log_path}/node_b_2017.csv")
+	def _cpure(row):
+		tpure=row[0]
+		tpairs=row[1]
+		if tpure==0 or tpairs==0: return 0
+		else: return tpure/tpairs
+
+	def _excess(row):
+		c_unique=row[0]
+		c_pure=row[1]
+		if c_pure==1: return 0
+		else: return (c_unique-c_pure)/(1-c_pure)
+
+	print("Get excess closure")
+	node_df["c_pure"]=node_df[["sum_tri","tie_pairs"]].apply(_cpure,axis=1)
+	node_df["excess"]=node_df[["lcc","c_pure"]].apply(_excess,axis=1)
+
+	
+	# Also print out new node csv
+	node_df.to_csv(f"{log_path}/node_c_2017.csv")
+
 
