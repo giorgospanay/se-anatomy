@@ -35,9 +35,11 @@ def pd_flatten_layers(l1,l2):
 	return pd.concat([l1,l2],copy=False).groupby(["PersonNr","PersonNr2"]).first().reset_index(drop=True)
 
 # Concatenate layers (keeping layer id)
-def pd_concat_layers(l1,l2,l1_id,l2_id):
-	l1["layer_id"]=l1_id
-	l2["layer_id"]=l2_id
+def pd_concat_layers(l1,l2,l1_id=None,l2_id=None):
+	if l1_id is not None:
+		l1["layer_id"]=l1_id
+	if l2_id is not None:	
+		l2["layer_id"]=l2_id
 	return pd.concat([l1,l2],copy=False)
 
 # Find tie pairs for each node
@@ -149,6 +151,7 @@ table_2=pd.DataFrame(columns=["n","m","comp","gc","diam","avg_sp"])
 
 if mode!="calc-node":
 	# Read node info df here
+	print("Read node_a")
 	node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
 	node_df.fillna(0.0,inplace=True)
 
@@ -201,7 +204,7 @@ if mode!="calc-node":
 
 				if mode=="flatten-id":
 					print("Flatten with ids.")
-					df_id=pd_concat_layers(df,n_df)
+					df_id=pd_concat_layers(df,n_df,l1_id="family",l2_id="neighbourhood")
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
@@ -226,7 +229,7 @@ if mode!="calc-node":
 
 				if mode=="flatten-id":
 					print("Flatten with ids.")
-					df_id=pd_concat_layers(df_id,e_df)
+					df_id=pd_concat_layers(df_id,e_df,l2_id="education")
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 			else:
@@ -241,7 +244,7 @@ if mode!="calc-node":
 				w_df=pd.read_csv(f"{csv_path}/work2017.csv")
 				if mode=="flatten":
 					G=nx.from_pandas_edgelist(w_df,source="PersonNr",target="PersonNr2")
-					print("Get triangles (work).")
+					print("Get triangles.")
 					node_df["tri_work"]=pd.Series(nx.triangles(G))
 
 					print("Flatten.")
@@ -251,7 +254,7 @@ if mode!="calc-node":
 
 				if mode=="flatten-id":
 					print("Flatten with ids.")
-					df_id=pd_concat_layers(df_id,w_df)
+					df_id=pd_concat_layers(df_id,w_df,l2_id="work")
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 			else:
