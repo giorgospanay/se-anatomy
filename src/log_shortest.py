@@ -310,9 +310,8 @@ if mode=="calc-node":
 	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
 
 	# Read flat_all (no id)
-	df=pd.read_csv(f"{csv_path}/flat_all2017.csv")
 	print("create nx all")
-	G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+	G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv"),source="PersonNr",target="PersonNr2")
 
 	# Calculate approx closeness centrality (sample size: 0.03% of GC)
 	print("Get approx closeness centrality (flat).")
