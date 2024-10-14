@@ -83,6 +83,7 @@ def find_avg_shortest_path2(G,n_samples=10000):
 	
 	for i,vertex in enumerate(sampled_vertices):
 		if i%1000==0: print(f"Progress: {i}/{n_samples}")
+		print(f"vertex {vertex}:")
 		# Get the shortest paths from the current vertex to all other vertices
 		distances = G.distances(source=vertex)[0]
 		
