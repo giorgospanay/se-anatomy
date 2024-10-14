@@ -74,9 +74,7 @@ def find_avg_shortest_path(G,n_samples=10000):
 		## igraph code
 		#print(f"{u}->{v}")
 		dist=G.distances(source=u,target=v)[0]
-		print(dist)
-		lengths.append(dist)
-		print(lengths)
+		lengths.append(dist[0])
 
 	return mean(lengths)
 
@@ -384,7 +382,7 @@ if mode!="calc-node":
 
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
-			d_len=find_avg_shortest_path(GC,n_samples=100)
+			d_len=find_avg_shortest_path(GC,n_samples=200)
 
 			print(f"SP:{d_len}")
 
