@@ -222,7 +222,7 @@ if mode!="calc-node":
 			# Collect garbage
 			# fam_df=None
 			# gc.collect()
-			df=pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+			df=pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
 
 			
 			#
