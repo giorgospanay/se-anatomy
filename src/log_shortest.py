@@ -78,39 +78,39 @@ def find_avg_shortest_path(G,n_samples=10000):
 
 def find_avg_shortest_path2(G,n_samples=10000):
 	sampled_vertices = random.sample(range(graph.vcount()), num_samples)
-    total_path_length = 0
-    count = 0
-    
-    for vertex in sampled_vertices:
-        # Get the shortest paths from the current vertex to all other vertices
-        distances = G.shortest_paths(source=vertex)[0]
-        
-        # Sum all the distances (excluding infinite distances and self-distances)
-        for dist in distances:
-            if dist > 0:  # Exclude unreachable nodes and self-loops
-                total_path_length += dist
-                count += 1
+	total_path_length = 0
+	count = 0
+	
+	for vertex in sampled_vertices:
+		# Get the shortest paths from the current vertex to all other vertices
+		distances = G.shortest_paths(source=vertex)[0]
+		
+		# Sum all the distances (excluding infinite distances and self-distances)
+		for dist in distances:
+			if dist > 0:  # Exclude unreachable nodes and self-loops
+				total_path_length += dist
+				count += 1
 
-    # Return the average shortest path length
-    return total_path_length / count if count > 0 else float('inf')
+	# Return the average shortest path length
+	return total_path_length / count if count > 0 else float('inf')
 
 # Find approximate diameter by BFS traversal on psuedo-peripheral vertex
 def find_pseudo_diameter(G):
-    # Start from a random node
-    start_vertex = random.randint(0, G.vcount()-1)
-    
-    # Perform the first BFS/DFS to find the farthest node from start_vertex
-    distances_from_start = G.shortest_paths_dijkstra(source=start_vertex)[0]
-    farthest_node_1 = distances_from_start.index(max(distances_from_start))
+	# Start from a random node
+	start_vertex = random.randint(0, G.vcount()-1)
+	
+	# Perform the first BFS/DFS to find the farthest node from start_vertex
+	distances_from_start = G.shortest_paths_dijkstra(source=start_vertex)[0]
+	farthest_node_1 = distances_from_start.index(max(distances_from_start))
 
-    # Perform the second BFS/DFS from the farthest node found
-    distances_from_farthest = G.shortest_paths_dijkstra(source=farthest_node_1)[0]
-    farthest_node_2 = distances_from_farthest.index(max(distances_from_farthest))
-    
-    # The maximum distance found in the second BFS/DFS is the approximate diameter
-    approximate_diameter = max(distances_from_farthest)
-    
-    return approximate_diameter
+	# Perform the second BFS/DFS from the farthest node found
+	distances_from_farthest = G.shortest_paths_dijkstra(source=farthest_node_1)[0]
+	farthest_node_2 = distances_from_farthest.index(max(distances_from_farthest))
+	
+	# The maximum distance found in the second BFS/DFS is the approximate diameter
+	approximate_diameter = max(distances_from_farthest)
+	
+	return approximate_diameter
 
 # Find approximate closeness centrality by sampling
 def find_closeness_centrality(G,n_samples=10000):
