@@ -77,7 +77,7 @@ def find_avg_shortest_path(G,n_samples=10000):
 	return mean(lengths)
 
 def find_avg_shortest_path2(G,n_samples=10000):
-	sampled_vertices = random.sample(range(graph.vcount()), num_samples)
+	sampled_vertices = random.sample(range(G.vcount()), num_samples)
 	total_path_length = 0
 	count = 0
 	
