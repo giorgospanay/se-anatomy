@@ -61,14 +61,17 @@ def find_tie_pairs(G_id):
 
 # Find approximate avg shortest path length by sampling
 def find_avg_shortest_path(G,n_samples=10000):
-	nodes=list(G.nodes())
+	nodes=list(G.vs)
 	lengths=[]
 	for i in range(n_samples):
 		# Progress update
 		if i%1000==0: print(f"Progress: {i//1000}/{n_samples/1000}")
 		# Sample two nodes to calculate shortest path length between them
 		u,v=random.choices(nodes,k=2)
-		lengths.append(nx.shortest_path_length(G,source=u,target=v))
+		## Uncomment to return to NetworkX
+		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
+		## igraph code
+		lengths.append(G_id.shortest_paths(source=u,target=v))
 
 	return mean(lengths)
 
@@ -177,9 +180,15 @@ if mode!="calc-node":
 			# gc.collect()
 			df=pd.read_csv(f"{csv_path}/family2017.csv")
 
-			G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+			
+			#
+			## Switch to igraph on other modes 
+			#
+			G=ig.Graph.DataFrame(df, directed=False)
 
 			if mode=="flatten":
+				# Do networkX here for triangle calc.
+				G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
 				# Also calculate node triangles here
 				print("Get triangles.")
 				node_df["tri_fam"]=pd.Series(nx.triangles(G))
@@ -209,7 +218,8 @@ if mode!="calc-node":
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
 				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv")
-				G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+				G_id=ig.Graph.DictList(df_id, directed=False)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
@@ -234,7 +244,8 @@ if mode!="calc-node":
 					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 			else:
 				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv")
-				G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+				G_id=ig.Graph.DictList(df_id, directed=False)
 
 		elif net_name=="flat_all":
 			print("Reading in Work 2017")
@@ -259,34 +270,67 @@ if mode!="calc-node":
 					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 			else:
 				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
-				print("Create multigraph")
-				G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-
+				print("Create igraph")
+				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+				G_id=ig.Graph.DictList(df_id, directed=False)
 
 		if mode=="calc-table":
+
+			#### Uncomment below to switch back to NetworkX code.
+			#
+			#
+			# # N -- number of nodes:
+			# n=G_id.number_of_nodes()
+			# 
+			# # M -- number of edges:
+			# m=G_id.number_of_edges()
+			# 
+			# # Debug
+			# print(f"N={n} M={m}")
+			# 
+			# print("Finding components.")
+			# # n_comps -- number of components:
+			# components=sorted(nx.connected_components(G_id),key=len,reverse=True)
+			# n_comps=len(components)
+			# 
+			# print("Finding GC.")
+			# # GC -- relative size of giant component:
+			# gc_pct=len(components[0])/n
+			# GC=G.subgraph(components[0])
+			# 
+			# print("Finding approximate GC diameter.")
+			# # D -- approx diameter of GC:
+			# diam_len=nx.approximation.diameter(GC)
+			#
+			# print("Finding approximate GC shortest path")
+			# # d -- (estimated) average shortest path of GC:
+			# d_len=find_avg_shortest_path(GC,n_samples=5000)
+
+			#### Switch to igraph code:
 			# N -- number of nodes:
-			n=G_id.number_of_nodes()
-
+			n=G_id.vcount()
+			
 			# M -- number of edges:
-			m=G_id.number_of_edges()
-
+			m=G_id.ecount()
+			
 			# Debug
 			print(f"N={n} M={m}")
-
+			
 			print("Finding components.")
 			# n_comps -- number of components:
-			components=sorted(nx.connected_components(G_id),key=len,reverse=True)
+			components=sorted(G_id.decompose(mode="weak",minelements=1),key=len,reverse=True)
 			n_comps=len(components)
-
+			
 			print("Finding GC.")
 			# GC -- relative size of giant component:
-			gc_pct=len(components[0])/n
-			GC=G.subgraph(components[0])
-
+			GC=components[0]
+			gc_pct=GC.vcount()/n
+			
 			print("Finding approximate GC diameter.")
-			# D -- approx diameter of GC:
-			diam_len=nx.approximation.diameter(GC)
-
+			# D -- (approx) diameter of GC:
+			# @TODO: try now and see if it works
+			diam_len=GC.diameter(directed=False)
+			
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
 			d_len=find_avg_shortest_path(GC,n_samples=5000)
