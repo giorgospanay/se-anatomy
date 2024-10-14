@@ -83,7 +83,7 @@ def find_avg_shortest_path2(G,n_samples=10000):
 	
 	for vertex in sampled_vertices:
 		# Get the shortest paths from the current vertex to all other vertices
-		distances = G.shortest_paths(source=vertex)[0]
+		distances = G.shortest_paths_dijkstra(source=vertex)[0]
 		
 		# Sum all the distances (excluding infinite distances and self-distances)
 		for dist in distances:
