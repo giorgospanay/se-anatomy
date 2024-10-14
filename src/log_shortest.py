@@ -72,7 +72,7 @@ def find_avg_shortest_path(G,n_samples=10000):
 		## Uncomment to return to NetworkX
 		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
 		## igraph code
-		lengths.append(G.shortest_paths_dijkstra(source=u,target=v))
+		lengths.append(G.distances(source=u,target=v))
 
 	return mean(lengths)
 
@@ -81,8 +81,8 @@ def find_avg_shortest_path2(G,n_samples=10000):
 	total_path_length = 0
 	count = 0
 	
-	for vertex in sampled_vertices:
-		print(f"vertex {vertex}:")
+	for i,vertex in enumerate(sampled_vertices):
+		if i%1000==0: print(f"Progress: {i}/{n_samples}")
 		# Get the shortest paths from the current vertex to all other vertices
 		distances = G.distances(source=vertex)[0]
 		
@@ -101,11 +101,11 @@ def find_pseudo_diameter(G):
 	start_vertex = random.randint(0, G.vcount()-1)
 	
 	# Perform the first BFS/DFS to find the farthest node from start_vertex
-	distances_from_start = G.shortest_paths_dijkstra(source=start_vertex)[0]
+	distances_from_start = G.distances(source=start_vertex)[0]
 	farthest_node_1 = distances_from_start.index(max(distances_from_start))
 
 	# Perform the second BFS/DFS from the farthest node found
-	distances_from_farthest = G.shortest_paths_dijkstra(source=farthest_node_1)[0]
+	distances_from_farthest = G.distances(source=farthest_node_1)[0]
 	farthest_node_2 = distances_from_farthest.index(max(distances_from_farthest))
 	
 	# The maximum distance found in the second BFS/DFS is the approximate diameter
@@ -260,7 +260,7 @@ if mode!="calc-node":
 			else:
 				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DictList(df_id, directed=False)
+				G_id=ig.Graph.DataFrame(df_id, directed=False)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
@@ -286,7 +286,7 @@ if mode!="calc-node":
 			else:
 				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DictList(df_id, directed=False)
+				G_id=ig.Graph.DataFrame(df_id, directed=False)
 
 		elif net_name=="flat_all":
 			print("Reading in Work 2017")
@@ -313,7 +313,7 @@ if mode!="calc-node":
 				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				print("Create igraph")
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DictList(df_id, directed=False)
+				G_id=ig.Graph.DataFrame(df_id, directed=False)
 
 		if mode=="calc-table":
 
