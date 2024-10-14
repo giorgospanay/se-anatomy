@@ -222,17 +222,15 @@ if mode!="calc-node":
 			# Collect garbage
 			# fam_df=None
 			# gc.collect()
-			df=pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
-
 			
 			#
 			## Switch to igraph on other modes 
 			#
-			G=ig.Graph.DataFrame(df, directed=False)
+			G=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]], directed=False)
 
 			if mode=="flatten":
 				# Do networkX here for triangle calc.
-				G=nx.from_pandas_edgelist(df,source="PersonNr",target="PersonNr2")
+				G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]],source="PersonNr",target="PersonNr2")
 				# Also calculate node triangles here
 				print("Get triangles.")
 				node_df["tri_fam"]=pd.Series(nx.triangles(G))
@@ -261,9 +259,8 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
-				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(df_id, directed=False)
+				#G_id=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]],source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]] directed=False)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
@@ -287,9 +284,9 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
+				#df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(df_id, directed=False)
+				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 		elif net_name=="flat_all":
 			print("Reading in Work 2017")
@@ -313,10 +310,10 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
+				#df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 				print("Create igraph")
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(df_id, directed=False)
+				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 		if mode=="calc-table":
 
@@ -405,9 +402,12 @@ if mode=="calc-node":
 	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
 
 	# Read flat_all (no id)
-	print("create nx all")
-	G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"}),source="PersonNr",target="PersonNr2")
-
+	
+	## Uncomment to revert to nx
+	# G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"}),source="PersonNr",target="PersonNr2")
+	print("Read all")
+	G=pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
+	
 	# Calculate approx closeness centrality (sample size: 0.03% of GC)
 	print("Get approx closeness centrality (flat).")
 	node_df["closeness"]=pd.Series(find_closeness_centrality_target(G,n_samples=int(len(components[0])*0.0003)))
