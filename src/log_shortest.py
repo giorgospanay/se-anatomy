@@ -72,14 +72,14 @@ def find_avg_shortest_path(G,n_samples=10000):
 		## Uncomment to return to NetworkX
 		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
 		## igraph code
-		lengths.append(G_id.shortest_paths(source=u,target=v))
+		lengths.append(G_id.shortest_paths_dijkstra(source=u,target=v))
 
 	return mean(lengths)
 
 # Find approximate diameter by BFS traversal on psuedo-peripheral vertex
 def find_pseudo_diameter(G):
     # Start from a random node
-    start_vertex = random.randint(0, G.vcount() - 1)
+    start_vertex = random.randint(0, G.vcount()-1)
     
     # Perform the first BFS/DFS to find the farthest node from start_vertex
     distances_from_start = G.shortest_paths_dijkstra(source=start_vertex)[0]
@@ -356,9 +356,13 @@ if mode!="calc-node":
 			#diam_len=GC.diameter(directed=False)
 			diam_len=find_pseudo_diameter(GC)
 			
+			print(f"Diameter:{diam_len}")
+
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
 			d_len=find_avg_shortest_path(GC,n_samples=5000)
+
+			print(f"SP:{d_len}")
 
 			# Add to table 2
 			f_df=pd.DataFrame({"n":[n],"m":[m],"comp":[n_comps],"gc":[gc_pct],"diam":[diam_len],"avg_sp":[d_len]})
