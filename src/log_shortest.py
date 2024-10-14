@@ -72,7 +72,9 @@ def find_avg_shortest_path(G,n_samples=10000):
 		## Uncomment to return to NetworkX
 		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
 		## igraph code
-		lengths.append(G.distances(source=u,target=v))
+		print(f"{u}->{v}")
+		dist=G.distances(source=u,target=v)[0]
+		lengths.append(0)
 
 	return mean(lengths)
 
@@ -380,7 +382,7 @@ if mode!="calc-node":
 
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
-			d_len=find_avg_shortest_path2(GC,n_samples=5000)
+			d_len=find_avg_shortest_path(GC,n_samples=100)
 
 			print(f"SP:{d_len}")
 
