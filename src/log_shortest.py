@@ -319,7 +319,7 @@ if mode!="calc-node":
 			
 			print("Finding components.")
 			# n_comps -- number of components:
-			components=sorted(G_id.decompose(mode="weak",minelements=1),key=ig.vcount(),reverse=True)
+			components=sorted(G_id.decompose(mode="weak"),key=lambda s: s.vcount(),reverse=True)
 			n_comps=len(components)
 			
 			print("Finding GC.")
