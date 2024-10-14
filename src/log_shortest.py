@@ -178,7 +178,7 @@ if mode!="calc-node":
 			# Collect garbage
 			# fam_df=None
 			# gc.collect()
-			df=pd.read_csv(f"{csv_path}/family2017.csv").astype("int")
+			df=pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 
 			
 			#
@@ -217,7 +217,7 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv")
+				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 				G_id=ig.Graph.DictList(df_id, directed=False)
 
@@ -243,7 +243,7 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv")
+				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 				G_id=ig.Graph.DictList(df_id, directed=False)
 
@@ -269,7 +269,7 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
+				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				print("Create igraph")
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 				G_id=ig.Graph.DictList(df_id, directed=False)
@@ -318,7 +318,7 @@ if mode!="calc-node":
 			
 			print("Finding components.")
 			# n_comps -- number of components:
-			components=sorted(G_id.decompose(mode="weak",minelements=1),key=len,reverse=True)
+			components=sorted(G_id.decompose(mode="weak",minelements=1),key=vcount,reverse=True)
 			n_comps=len(components)
 			
 			print("Finding GC.")
@@ -355,7 +355,7 @@ if mode=="calc-node":
 
 	# Read flat_all (no id)
 	print("create nx all")
-	G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv"),source="PersonNr",target="PersonNr2")
+	G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"}),source="PersonNr",target="PersonNr2")
 
 	# Calculate approx closeness centrality (sample size: 0.03% of GC)
 	print("Get approx closeness centrality (flat).")
