@@ -178,7 +178,7 @@ if mode!="calc-node":
 			# Collect garbage
 			# fam_df=None
 			# gc.collect()
-			df=pd.read_csv(f"{csv_path}/family2017.csv")
+			df=pd.read_csv(f"{csv_path}/family2017.csv").astype("int")
 
 			
 			#
