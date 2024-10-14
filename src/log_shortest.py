@@ -59,6 +59,7 @@ def find_tie_pairs(G_id):
 
 	return tie_pairs
 
+
 # Find approximate avg shortest path length by sampling
 def find_avg_shortest_path(G,n_samples=10000):
 	nodes=list(G.vs)
@@ -74,6 +75,24 @@ def find_avg_shortest_path(G,n_samples=10000):
 		lengths.append(G_id.shortest_paths(source=u,target=v))
 
 	return mean(lengths)
+
+# Find approximate diameter by BFS traversal on psuedo-peripheral vertex
+def find_pseudo_diameter(G):
+    # Start from a random node
+    start_vertex = random.randint(0, G.vcount() - 1)
+    
+    # Perform the first BFS/DFS to find the farthest node from start_vertex
+    distances_from_start = G.shortest_paths_dijkstra(source=start_vertex)[0]
+    farthest_node_1 = distances_from_start.index(max(distances_from_start))
+
+    # Perform the second BFS/DFS from the farthest node found
+    distances_from_farthest = G.shortest_paths_dijkstra(source=farthest_node_1)[0]
+    farthest_node_2 = distances_from_farthest.index(max(distances_from_farthest))
+    
+    # The maximum distance found in the second BFS/DFS is the approximate diameter
+    approximate_diameter = max(distances_from_farthest)
+    
+    return approximate_diameter
 
 # Find approximate closeness centrality by sampling
 def find_closeness_centrality(G,n_samples=10000):
@@ -147,6 +166,8 @@ def find_closeness_centrality_target(G,n_samples=10000):
 		closeness_centrality[node]=closeness
 
 		return closeness_centrality
+
+
 
 
 node_df=None
@@ -326,11 +347,14 @@ if mode!="calc-node":
 			# GC -- relative size of giant component:
 			GC=components[0]
 			gc_pct=GC.vcount()/n
+
+			print(f"#Comps={n_comps} GC={gc_pct}")
 			
 			print("Finding approximate GC diameter.")
 			# D -- (approx) diameter of GC:
 			# @TODO: try now and see if it works
-			diam_len=GC.diameter(directed=False)
+			#diam_len=GC.diameter(directed=False)
+			diam_len=find_pseudo_diameter(GC)
 			
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
