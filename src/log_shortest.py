@@ -154,9 +154,10 @@ table_2=pd.DataFrame(columns=["n","m","comp","gc","diam","avg_sp"])
 
 if mode!="calc-node":
 	# Read node info df here
-	print("Read node_a")
-	node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
-	node_df.fillna(0.0,inplace=True)
+	if mode=="flatten":
+		print("Read node_a")
+		node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
+		node_df.fillna(0.0,inplace=True)
 
 	df=None
 	df_id=None
@@ -318,7 +319,7 @@ if mode!="calc-node":
 			
 			print("Finding components.")
 			# n_comps -- number of components:
-			components=sorted(G_id.decompose(mode="weak",minelements=1),key=vcount,reverse=True)
+			components=sorted(G_id.decompose(mode="weak",minelements=1),key=ig.vcount(),reverse=True)
 			n_comps=len(components)
 			
 			print("Finding GC.")
