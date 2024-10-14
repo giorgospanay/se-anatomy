@@ -379,7 +379,7 @@ if mode!="calc-node":
 
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
-			d_len=find_avg_shortest_path2(GC,n_samples=5)
+			d_len=find_avg_shortest_path2(GC,n_samples=5000)
 
 			print(f"SP:{d_len}")
 
