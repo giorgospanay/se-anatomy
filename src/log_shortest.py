@@ -74,7 +74,9 @@ def find_avg_shortest_path(G,n_samples=10000):
 		## igraph code
 		#print(f"{u}->{v}")
 		dist=G.distances(source=u,target=v)[0]
+		print(dist)
 		lengths.append(dist)
+		print(lengths)
 
 	return mean(lengths)
 
