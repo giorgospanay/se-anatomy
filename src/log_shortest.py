@@ -76,6 +76,24 @@ def find_avg_shortest_path(G,n_samples=10000):
 
 	return mean(lengths)
 
+def find_avg_shortest_path2(G,n_samples=10000):
+	sampled_vertices = random.sample(range(graph.vcount()), num_samples)
+    total_path_length = 0
+    count = 0
+    
+    for vertex in sampled_vertices:
+        # Get the shortest paths from the current vertex to all other vertices
+        distances = G.shortest_paths(source=vertex)[0]
+        
+        # Sum all the distances (excluding infinite distances and self-distances)
+        for dist in distances:
+            if dist > 0:  # Exclude unreachable nodes and self-loops
+                total_path_length += dist
+                count += 1
+
+    # Return the average shortest path length
+    return total_path_length / count if count > 0 else float('inf')
+
 # Find approximate diameter by BFS traversal on psuedo-peripheral vertex
 def find_pseudo_diameter(G):
     # Start from a random node
@@ -360,7 +378,7 @@ if mode!="calc-node":
 
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
-			d_len=find_avg_shortest_path(GC,n_samples=5000)
+			d_len=find_avg_shortest_path2(GC,n_samples=5000)
 
 			print(f"SP:{d_len}")
 
