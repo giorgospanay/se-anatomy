@@ -66,15 +66,15 @@ def find_avg_shortest_path(G,n_samples=10000):
 	lengths=[]
 	for i in range(n_samples):
 		# Progress update
-		if i%1000==0: print(f"Progress: {i//1000}/{n_samples/1000}")
+		if i%10==0: print(f"Progress: {i}/{n_samples}")
 		# Sample two nodes to calculate shortest path length between them
 		u,v=random.choices(nodes,k=2)
 		## Uncomment to return to NetworkX
 		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
 		## igraph code
-		print(f"{u}->{v}")
+		#print(f"{u}->{v}")
 		dist=G.distances(source=u,target=v)[0]
-		lengths.append(0)
+		lengths.append(dist)
 
 	return mean(lengths)
 
@@ -261,7 +261,7 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				df_id=pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 				G_id=ig.Graph.DataFrame(df_id, directed=False)
 
@@ -287,7 +287,7 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 				G_id=ig.Graph.DataFrame(df_id, directed=False)
 
@@ -313,7 +313,7 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 			else:
-				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 				print("Create igraph")
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 				G_id=ig.Graph.DataFrame(df_id, directed=False)
