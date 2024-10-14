@@ -260,7 +260,7 @@ if mode!="calc-node":
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
 				#G_id=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]],source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]] directed=False)
+				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
