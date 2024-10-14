@@ -72,7 +72,7 @@ def find_avg_shortest_path(G,n_samples=10000):
 		## Uncomment to return to NetworkX
 		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
 		## igraph code
-		lengths.append(G_id.shortest_paths_dijkstra(source=u,target=v))
+		lengths.append(G.shortest_paths_dijkstra(source=u,target=v))
 
 	return mean(lengths)
 
@@ -82,8 +82,9 @@ def find_avg_shortest_path2(G,n_samples=10000):
 	count = 0
 	
 	for vertex in sampled_vertices:
+		print(f"vertex {vertex}:")
 		# Get the shortest paths from the current vertex to all other vertices
-		distances = G.shortest_paths_dijkstra(source=vertex)[0]
+		distances = G.shortest_paths_bfs(source=vertex)[0]
 		
 		# Sum all the distances (excluding infinite distances and self-distances)
 		for dist in distances:
@@ -378,7 +379,7 @@ if mode!="calc-node":
 
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC:
-			d_len=find_avg_shortest_path2(GC,n_samples=5000)
+			d_len=find_avg_shortest_path2(GC,n_samples=5)
 
 			print(f"SP:{d_len}")
 
