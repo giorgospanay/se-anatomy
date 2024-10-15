@@ -26,8 +26,12 @@ obj_path=csv_path
 # Read cmd args
 args=sys.argv[1:]
 mode=""
+top=""
 if len(args)>=1:
 	mode=args[0]
+	if len(args)>=2:
+		top=args[1]
+
 
 
 # Flatten layers using pandas
@@ -195,6 +199,15 @@ def find_closeness_centrality_target(G,n_samples=10000):
 node_df=None
 table_2=pd.DataFrame(columns=["n","m","comp","gc","diam","avg_sp"])
 
+net_names=["family","flat_fn","flat_fne","flat_all"]
+if top=="top":
+	net_names=["family","flat_fn"]
+if top=="bot":
+	net_names=["flat_fne","flat_all"]
+if top=="flat":
+	net_names=["flat_all"]
+
+
 if mode!="calc-node":
 	# Read node info df here
 	if mode=="flatten":
@@ -206,7 +219,7 @@ if mode!="calc-node":
 	df_id=None
 
 	# Iterate over all layers (order: F-N-E-W)
-	for net_name in ["family","flat_fn","flat_fne","flat_all"]:
+	for net_name in net_names:
 
 		# Read network here
 		G=None
