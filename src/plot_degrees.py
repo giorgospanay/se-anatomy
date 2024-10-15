@@ -131,7 +131,7 @@ print("Figure 1C")
 fig1c, ax1c = plt.subplots()
 
 # Calculate histogram from deg_total
-hist_total=df["deg_total"].value_counts()
+hist_total=node_df["deg_total"].value_counts()
 print(hist_total)
 
 # Plot deg_total histogram
