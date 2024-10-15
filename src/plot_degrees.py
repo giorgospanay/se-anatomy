@@ -64,13 +64,13 @@ ax1a.set_xscale("log")
 ax1a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax1a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
-ax1a.plot(hist_fam,color="tab:blue",marker=",",linestyle="dashdot")
-ax1a.plot(hist_edu,color="tab:orange",marker=",",linestyle="dashdot")
-ax1a.plot(hist_nbr,color="tab:green",marker=",",linestyle="dashdot")
-ax1a.plot(hist_work,color="tab:red",marker=",",linestyle="dashdot")
+ax1a.plot(hist_fam,color="blue",marker=".",linestyle="dashdot")
+ax1a.plot(hist_edu,color="teal",marker=".",linestyle="dashdot")
+ax1a.plot(hist_nbr,color="yellow",marker=".",linestyle="dashdot")
+ax1a.plot(hist_work,color="grey",marker=".",linestyle="dashdot")
 
 # Save
-fig1a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center",ncols=2)
+fig1a.legend(labels=["Family","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2)
 fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
@@ -131,12 +131,13 @@ print("Figure 1C")
 fig1c, ax1c = plt.subplots()
 
 # Calculate histogram from deg_total
-
+hist_total=df["deg_total"].value_counts()
+print(hist_total)
 
 # Plot deg_total histogram
-ax1c.plot(hist_total,color="black",marker=",",linestyle="dashdot")
+ax1c.plot(hist_total,color="black",marker=".",linestyle="dashdot")
 # Also plot deg_flat histogram
-ax1c.plot(hist_flat,color="black",marker=",",linestyle="dashdot")
+ax1c.plot(hist_flat,color="grey",marker=",",linestyle="dashdot")
 
 #ax1c.set_ylabel("Frequency")
 ax1c.set_xlabel("Degree")
@@ -151,7 +152,7 @@ ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K"
 
 
 # Save
-fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
+fig1c.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 
@@ -168,7 +169,7 @@ zero_work=(node_df["deg_work"]==0.0).sum()
 # # Debug
 # print(f"f:{zero_fam}, e:{zero_edu}, n:{zero_nbr}, w:{zero_work}")
 
-ax1b.bar(range(4),[zero_fam,zero_edu,zero_nbr,zero_work],color=["tab:blue","tab:orange","tab:green","tab:red"])
+ax1b.bar(range(4),[zero_fam,zero_edu,zero_nbr,zero_work],color=["blue","teal","yellow","grey"])
 
 ax1b.set_xlabel("No connections")
 ax1b.set_yticks([0,2000000,4000000,6000000,8000000],labels=["0","2M","4M","6M","8M"])
@@ -219,10 +220,10 @@ hist_work.reverse()
 deg_work=list(reversed(range(len(hist_work))))
 cs_work=np.cumsum(hist_work)
 
-ax2a.plot(deg_fam,cs_fam,color="tab:blue",marker=",",linestyle="dashdot")
-ax2a.plot(deg_edu,cs_edu,color="tab:orange",marker=",",linestyle="dashdot")
-ax2a.plot(deg_nbr,cs_nbr,color="tab:green",marker=",",linestyle="dashdot")
-ax2a.plot(deg_work,cs_work,color="tab:red",marker=",",linestyle="dashdot")
+ax2a.plot(deg_fam,cs_fam,color="blue",marker=".",linestyle="dashdot")
+ax2a.plot(deg_edu,cs_edu,color="teal",marker=".",linestyle="dashdot")
+ax2a.plot(deg_nbr,cs_nbr,color="yellow",marker=".",linestyle="dashdot")
+ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
 
 ax2a.set_xlabel("Degree")
 ax2a.set_ylabel("Sample with k > Degree")
@@ -231,7 +232,7 @@ ax2a.set_xscale("log")
 
 
 # Save
-fig2a.legend(labels=["Family","Education","Neighbourhood","Work"],loc="upper center",alignment="center",ncols=2)
+fig2a.legend(labels=["Family","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2)
 fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
