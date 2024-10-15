@@ -123,6 +123,11 @@ if mode=="calc":
 # If no mode set, read file from csv
 else:
 	node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
+	if "deg_total" not in node_df:
+		# Add new line to calculate total degree for all nodes
+		node_df["deg_total"]=node_df["deg_fam"]+node_df["deg_edu"]+node_df["deg_nbr"]+node_df["deg_work"]
+		node_df.to_csv(f"{log_path}/node_a_2017.csv")
+
 
 # ---------------------------------------------------------------------------
 
