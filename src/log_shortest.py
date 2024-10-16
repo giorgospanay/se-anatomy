@@ -8,6 +8,9 @@ import scipy.sparse
 import scipy.sparse.csgraph
 import math
 
+# Import pyteexgraph
+import pyteexgraph as teex
+
 # Import approximate diameter function
 import networkx.algorithms.approximation
 from statistics import mean
@@ -73,6 +76,7 @@ def find_avg_shortest_path(G,n_samples=10000):
 		if i%10==0: print(f"Progress: {i}/{n_samples}")
 		# Sample two nodes to calculate shortest path length between them
 		u,v=random.choices(nodes,k=2)
+		
 		## Uncomment to return to NetworkX
 		#lengths.append(nx.shortest_path_length(G,source=u,target=v))
 		## igraph code
@@ -81,6 +85,9 @@ def find_avg_shortest_path(G,n_samples=10000):
 		lengths.append(dist[0])
 
 	return mean(lengths)
+
+
+
 
 def find_avg_shortest_path2(G,n_samples=10000):
 	sampled_vertices = random.sample(range(G.vcount()), n_samples)
@@ -237,9 +244,14 @@ if mode!="calc-node":
 			# gc.collect()
 			
 			#
-			## Switch to igraph on other modes 
+			## Uncomment to return to igraph
 			#
-			G=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]], directed=False)
+			# G=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/family2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]], directed=False)
+			
+			# 
+			## Switch to pyteexgraph code for other modes
+			# 
+			G=teex.Graph(filename=f"{csv_path}/family2017.csv",directed=False)
 
 			if mode=="flatten":
 				# Do networkX here for triangle calc.
@@ -272,8 +284,14 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
+				## NetworkX:
 				#G_id=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]],source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
+				
+				## igraph: 
+				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
+
+				## pyteexgraph:
+				G_id=teex.Graph(filename=f"{csv_path}/flat_fn_id2017.csv",directed=False)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
@@ -297,9 +315,15 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
 			else:
+				## NetworkX:
 				#df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
+				
+				## igraph:
+				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
+
+				## pyteexgraph:
+				G_id=teex.Graph(filename=f"{csv_path}/flat_fn_id2017.csv",directed=False)
 
 		elif net_name=="flat_all":
 			print("Reading in Work 2017")
@@ -323,10 +347,15 @@ if mode!="calc-node":
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
 			else:
+				## NetworkX
 				#df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
-				print("Create igraph")
 				#G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
-				G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
+
+				## igraph:
+				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
+
+				## pyteexgraph:
+				G_id=teex.Graph(filename=f"{csv_path}/flat_fn_id2017.csv",directed=False)
 
 		if mode=="calc-table":
 
@@ -360,41 +389,79 @@ if mode!="calc-node":
 			# # d -- (estimated) average shortest path of GC:
 			# d_len=find_avg_shortest_path(GC,n_samples=5000)
 
-			#### Switch to igraph code:
+			# ---------------------------------------------------------
+
+			#### Uncomment below to switch to igraph code:
+			# # N -- number of nodes:
+			# n=G_id.vcount()
+			
+			# # M -- number of edges:
+			# m=G_id.ecount()
+			
+			# # Debug
+			# print(f"N={n} M={m}")
+			
+			# print("Finding components.")
+			# # n_comps -- number of components:
+			# components=sorted(G_id.decompose(mode="weak"),key=lambda s: s.vcount(),reverse=True)
+			# n_comps=len(components)
+			
+			# print("Finding GC.")
+			# # GC -- relative size of giant component:
+			# GC=components[0]
+			# gc_pct=GC.vcount()/n
+
+			# print(f"#Comps={n_comps} GC={gc_pct}")
+			
+			# print("Finding approximate GC diameter.")
+			# # D -- (approx) diameter of GC:
+			# # @TODO: try now and see if it works
+			# #diam_len=GC.diameter(directed=False)
+			# diam_len=find_pseudo_diameter(GC)
+			
+			# print(f"Diameter:{diam_len}")
+
+			# print("Finding approximate GC shortest path")
+			# # d -- (estimated) average shortest path of GC:
+			# d_len=find_avg_shortest_path(GC,n_samples=100)
+
+			# print(f"SP:{d_len}")
+
+			# ---------------------------------------------------------
+
+			#### pyteexgraph code:
 			# N -- number of nodes:
-			n=G_id.vcount()
+			n=G_id.nodes(teex.Scope.FULL)
 			
 			# M -- number of edges:
-			m=G_id.ecount()
+			m=G_id.edges(teex.Scope.FULL)
 			
 			# Debug
 			print(f"N={n} M={m}")
 			
-			print("Finding components.")
+			print("Finding components / GC.")
+			components=G_id.computeWCC()
 			# n_comps -- number of components:
-			components=sorted(G_id.decompose(mode="weak"),key=lambda s: s.vcount(),reverse=True)
-			n_comps=len(components)
-			
-			print("Finding GC.")
-			# GC -- relative size of giant component:
-			GC=components[0]
-			gc_pct=GC.vcount()/n
+			n_comps=G_id.wccCount()
+
+			gc_size=G_id.nodes(teex.Scope.LWCC)
+			gc_pct=gc_size/n
 
 			print(f"#Comps={n_comps} GC={gc_pct}")
 			
 			print("Finding approximate GC diameter.")
 			# D -- (approx) diameter of GC:
-			# @TODO: try now and see if it works
-			#diam_len=GC.diameter(directed=False)
-			diam_len=find_pseudo_diameter(GC)
+			diam_len=G_id.diameterBD()
 			
 			print(f"Diameter:{diam_len}")
 
 			print("Finding approximate GC shortest path")
-			# d -- (estimated) average shortest path of GC:
-			d_len=find_avg_shortest_path(GC,n_samples=100)
+			# d -- (estimated) average shortest path of GC (samples):
+			d_len=G_id.averageDistance(scope=teex.Scope.LWCC, sample_fraction=1000*n)
 
 			print(f"SP:{d_len}")
+
+			# ---------------------------------------------------------
 
 			# Add to table 2
 			f_df=pd.DataFrame({"n":[n],"m":[m],"comp":[n_comps],"gc":[gc_pct],"diam":[diam_len],"avg_sp":[d_len]})
