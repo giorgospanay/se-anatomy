@@ -39,20 +39,20 @@ if len(args)>=1:
 # Removes self-loops from the dataframe (assumes names are ["PersonNr","PersonNr2"])
 def remove_self_loops(df):
 	index_mask=df[(df["PersonNr"]==df["PersonNr2"])].index
-	return df.drop(index_mask,inplace=True).reset_index(drop=True)
+	return df.drop(index_mask,inplace=True)
 
 
 
-
-# Read full family layer
-print("Reading full family network")
-fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
-print("Making edgelist")
-df=make_entire_edge_list(fam_df)
-print("Removing self loops")
-df=remove_self_loops(df)
-df.to_csv(f"{csv_path}/family2017.csv")
-df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
+if mode=="fam":
+	# Read full family layer
+	print("Reading full family network")
+	fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
+	print("Making edgelist")
+	df=make_entire_edge_list(fam_df)
+	print("Removing self loops")
+	df=remove_self_loops(df)
+	df.to_csv(f"{csv_path}/family2017.csv")
+	df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
 
 
 print("df:")
@@ -96,25 +96,31 @@ print(house_df)
 
 # -----------------------------------------------------------------------------------
 
-# Read old neighbourhood
-n_df=pd.read_csv(f"{csv_path}/old_neighbourhood2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
-n_df=remove_self_loops(n_df)
-n_df.to_csv(f"{csv_path}/neighbourhood2017.csv")
-n_df.to_csv(f"{csv_path}/edgelist_neighbourhood2017.csv",sep=" ",index=False,header=False)
+if mode=="nbr":
+	# Read old neighbourhood
+	print("Removing loops from neighbourhood")
+	n_df=pd.read_csv(f"{csv_path}/old_neighbourhood2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+	n_df=remove_self_loops(n_df)
+	n_df.to_csv(f"{csv_path}/neighbourhood2017.csv")
+	n_df.to_csv(f"{csv_path}/edgelist_neighbourhood2017.csv",sep=" ",index=False,header=False)
 
 
-# Read old education 
-e_df=pd.read_csv(f"{csv_path}/old_education2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
-e_df=remove_self_loops(e_df)
-e_df.to_csv(f"{csv_path}/education2017.csv")
-e_df.to_csv(f"{csv_path}/edgelist_education2017.csv",sep=" ",index=False,header=False)
+# Read old education
+if mode=="edu":
+	print("Removing loops from education")
+	e_df=pd.read_csv(f"{csv_path}/old_education2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+	e_df=remove_self_loops(e_df)
+	e_df.to_csv(f"{csv_path}/education2017.csv")
+	e_df.to_csv(f"{csv_path}/edgelist_education2017.csv",sep=" ",index=False,header=False)
 
 
 # Read old work
-w_df=pd.read_csv(f"{csv_path}/old_work2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
-w_df=remove_self_loops(w_df)
-w_df.to_csv(f"{csv_path}/work2017.csv")
-w_df.to_csv(f"{csv_path}/edgelist_work2017.csv",sep=" ",index=False,header=False)
+if mode=="work":
+	print("Removing loops from work")
+	w_df=pd.read_csv(f"{csv_path}/old_work2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+	w_df=remove_self_loops(w_df)
+	w_df.to_csv(f"{csv_path}/work2017.csv")
+	w_df.to_csv(f"{csv_path}/edgelist_work2017.csv",sep=" ",index=False,header=False)
 
 
 
