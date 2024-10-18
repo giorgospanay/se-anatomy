@@ -39,7 +39,7 @@ if len(args)>=1:
 # Removes self-loops from the dataframe (assumes names are ["PersonNr","PersonNr2"])
 def remove_self_loops(df):
 	index_mask=df[(df["PersonNr"]==df["PersonNr2"])].index
-	return df.drop(index_mask,inplace=True)
+	return df.drop(index_mask).reset_index(drop=True)
 
 
 
