@@ -235,14 +235,14 @@ if mode!="calc-node":
 			print("Reading in Family 2017")
 			## Removed code. Uncomment if necessary to recreate all family types of edges
 			#
-			fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
-			df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
-			# Save us from future calculations!!
-			df.to_csv(f"{csv_path}/family2017.csv")
-			df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
-			# Collect garbage
-			fam_df=None
-			gc.collect()
+			# fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
+			# df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
+			# # Save us from future calculations!!
+			# df.to_csv(f"{csv_path}/family2017.csv")
+			# df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
+			# # Collect garbage
+			# fam_df=None
+			# gc.collect()
 			
 			#
 			## Uncomment to return to igraph
