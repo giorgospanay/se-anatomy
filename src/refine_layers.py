@@ -54,44 +54,43 @@ if mode=="fam":
 	df.to_csv(f"{csv_path}/family2017.csv")
 	df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
 
+	print("df:")
+	print(df)
 
-print("df:")
-print(df)
+	# Set correct labels here
+	close_labels=["parent","siblings","child","partners"]
+	ext_labels=["grandparents","grandchildren","aunts_uncles","niece_nephews","cousins"]
+	house_labels=["family_household"]
 
-# Set correct labels here
-close_labels=["parent","siblings","child","partners"]
-ext_labels=["grandparents","grandchildren","aunts_uncles","niece_nephews","cousins"]
-house_labels=["family_household"]
+	# Close family
+	print("Make close family")
+	close_mask=df["connection"].isin(close_labels)
+	close_df=df[close_mask][["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
+	close_df.to_csv(f"{csv_path}/close_family2017.csv")
+	close_df.to_csv(f"{csv_path}/edgelist_close_family2017.csv",sep=" ",index=False,header=False)
 
-# Close family
-print("Make close family")
-close_mask=df["connection"].isin(close_labels)
-close_df=df[close_mask][["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
-close_df.to_csv(f"{csv_path}/close_family2017.csv")
-close_df.to_csv(f"{csv_path}/edgelist_close_family2017.csv",sep=" ",index=False,header=False)
+	print("close df:")
+	print(close_df)
 
-print("close df:")
-print(close_df)
+	# Extended family
+	print("Make extended family")
+	ext_mask=df["connection"].isin(ext_labels)
+	ext_df=df[ext_mask][["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
+	ext_df.to_csv(f"{csv_path}/extended_family2017.csv")
+	ext_df.to_csv(f"{csv_path}/edgelist_extended_family2017.csv",sep=" ",index=False,header=False)
 
-# Extended family
-print("Make extended family")
-ext_mask=df["connection"].isin(ext_labels)
-ext_df=df[ext_mask][["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
-ext_df.to_csv(f"{csv_path}/extended_family2017.csv")
-ext_df.to_csv(f"{csv_path}/edgelist_extended_family2017.csv",sep=" ",index=False,header=False)
+	print("extended df:")
+	print(ext_df)
 
-print("extended df:")
-print(ext_df)
+	# Household
+	print("Make household")
+	house_mask=df["connection"].isin(house_labels)
+	house_df=df[house_mask][["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
+	house_df.to_csv(f"{csv_path}/household2017.csv")
+	house_df.to_csv(f"{csv_path}/edgelist_household2017.csv",sep=" ",index=False,header=False)
 
-# Household
-print("Make household")
-house_mask=df["connection"].isin(house_labels)
-house_df=df[house_mask][["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
-house_df.to_csv(f"{csv_path}/household2017.csv")
-house_df.to_csv(f"{csv_path}/edgelist_household2017.csv",sep=" ",index=False,header=False)
-
-print("household df:")
-print(house_df)
+	print("household df:")
+	print(house_df)
 
 
 # -----------------------------------------------------------------------------------
