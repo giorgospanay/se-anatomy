@@ -41,6 +41,12 @@ def remove_self_loops(df):
 	index_mask=df[(df["PersonNr"]==df["PersonNr2"])].index
 	return df.drop(index_mask).reset_index(drop=True)
 
+if mode=="fix":
+	print("Quick fix")
+	df=pd.read_csv(f"{csv_path}/family2017.csv")
+	df=df[["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
+	df.to_csv(f"{csv_path}/family2017.csv")
+	df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
 
 
 if mode=="fam":
@@ -51,6 +57,7 @@ if mode=="fam":
 	df=make_entire_edge_list(fam_df)
 	print("Removing self loops")
 	df=remove_self_loops(df)
+	df=df[["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
 	df.to_csv(f"{csv_path}/family2017.csv")
 	df.to_csv(f"{csv_path}/edgelist_family2017.csv",sep=" ",index=False,header=False)
 
