@@ -206,9 +206,9 @@ def find_closeness_centrality_target(G,n_samples=10000):
 node_df=None
 table_2=pd.DataFrame(columns=["n","m","comp","gc","diam","avg_sp"])
 
-net_names=["family","flat_fn","flat_fne","flat_all"]
+net_names=["close_family","family","flat_fn","flat_fne","flat_all"]
 if top=="top":
-	net_names=["family","flat_fn"]
+	net_names=["close_family","family","flat_fn"]
 if top=="bot":
 	net_names=["flat_fne","flat_all"]
 if top=="flat":
@@ -231,8 +231,13 @@ if mode!="calc-node":
 		# Read network here
 		G=None
 		G_id=None
-		if net_name=="family":
-			print("Reading in Family 2017")
+		if net_name=="close_family":
+			print("Reading in: Close Family 2017")
+			G_id=teex.Graph(filename=f"{csv_path}/edgelist_close_family2017.csv",directed=False)
+
+
+		elif net_name=="family":
+			print("Reading in Family 2017:: C+E+H")
 			## Removed code. Uncomment if necessary to recreate all family types of edges
 			#
 			# fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
