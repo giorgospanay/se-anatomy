@@ -457,7 +457,7 @@ if mode!="calc-node":
 
 			print("Finding approximate GC shortest path")
 			# d -- (estimated) average shortest path of GC (samples):
-			d_len=G_id.averageDistance(scope=teex.Scope.LWCC, sample_fraction=1000*n)
+			d_len=G_id.averageDistance(scope=teex.Scope.LWCC, sample_fraction=1000)
 
 			print(f"SP:{d_len}")
 
