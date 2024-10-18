@@ -235,7 +235,7 @@ if mode!="calc-node":
 			print("Reading in Family 2017")
 			## Removed code. Uncomment if necessary to recreate all family types of edges
 			#
-			fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr")
+			fam_df=read_in_network(pd.read_csv(f"{csv_path}/final_network2017.csv"),"PersonNr").astype({"PersonNr":"int","PersonNr2":"int"})
 			df = make_entire_edge_list(fam_df)[["PersonNr","PersonNr2"]]
 			# Save us from future calculations!!
 			df.to_csv(f"{csv_path}/family2017.csv")
@@ -268,7 +268,7 @@ if mode!="calc-node":
 			
 			if "flatten" in mode:
 				# Read alone for triangles
-				n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv")
+				n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(n_df,source="PersonNr",target="PersonNr2")
 					# print("Get triangles.")
@@ -300,7 +300,7 @@ if mode!="calc-node":
 
 			if "flatten" in mode:
 				# Read alone for triangles
-				e_df=pd.read_csv(f"{csv_path}/education2017.csv")
+				e_df=pd.read_csv(f"{csv_path}/education2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(e_df,source="PersonNr",target="PersonNr2")
 					# print("Get triangles.")
@@ -333,7 +333,7 @@ if mode!="calc-node":
 
 			if "flatten" in mode:
 				# Read work alone for triangles
-				w_df=pd.read_csv(f"{csv_path}/work2017.csv")
+				w_df=pd.read_csv(f"{csv_path}/work2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(w_df,source="PersonNr",target="PersonNr2")
 					# print("Get triangles.")
