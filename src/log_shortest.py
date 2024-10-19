@@ -233,8 +233,8 @@ if mode!="calc-node":
 		G_id=None
 		if net_name=="close_family":
 			print("Reading in: Close Family 2017")
-			G_id=teex.Graph(filename=f"{csv_path}/edgelist_close_family2017.csv",directed=False)
-
+			#G_id=teex.Graph(filename=f"{csv_path}/edgelist_close_family2017.csv",directed=False)
+			G_id=teex.Graph(filename=f"{csv_path}/edgelist_close_family2017.csv",directed=True)
 
 		elif net_name=="family":
 			print("Reading in Family 2017:: C+E+H")
@@ -257,7 +257,8 @@ if mode!="calc-node":
 			# 
 			## Switch to pyteexgraph code for other modes
 			# 
-			G=teex.Graph(filename=f"{csv_path}/edgelist_family2017.csv",directed=False)
+			#G=teex.Graph(filename=f"{csv_path}/edgelist_family2017.csv",directed=False)
+			G=teex.Graph(filename=f"{csv_path}/edgelist_family2017.csv",directed=True)
 
 			# if mode=="flatten":
 			# 	# Do networkX here for triangle calc.
@@ -298,7 +299,8 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fn2017.csv",directed=False)
+				#G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fn2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fn2017.csv",directed=True)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
@@ -331,7 +333,8 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fne2017.csv",directed=False)
+				#G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fne2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fne2017.csv",directed=True)
 
 		elif net_name=="flat_all":
 			print("Reading in Work 2017")
@@ -364,7 +367,8 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
+				#G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=True)
 
 		if mode=="calc-table":
 
