@@ -280,7 +280,7 @@ if mode!="calc-node":
 					# node_df["tri_nbr"]=pd.Series(nx.triangles(G))
 
 					print("Flatten.")
-					df=pd_flatten_layers(df,n_df)
+					df=pd_flatten_layers(df,n_df)[["PersonNr","PersonNr2"]]
 					# Save us from future calculations!!
 					df.to_csv(f"{csv_path}/flat_fn2017.csv")
 					df.to_csv(f"{csv_path}/edgelist_flat_fn2017.csv",sep=" ",index=False,header=False)
@@ -312,7 +312,7 @@ if mode!="calc-node":
 					# node_df["tri_edu"]=pd.Series(nx.triangles(G))
 
 					print("Flatten.")
-					df=pd_flatten_layers(df,e_df)
+					df=pd_flatten_layers(df,e_df)[["PersonNr","PersonNr2"]]
 					# Save us from future calculations!!
 					df.to_csv(f"{csv_path}/flat_fne2017.csv")
 					df.to_csv(f"{csv_path}/edgelist_flat_fne2017.csv",sep=" ",index=False,header=False)
@@ -345,7 +345,7 @@ if mode!="calc-node":
 					# node_df["tri_work"]=pd.Series(nx.triangles(G))
 
 					print("Flatten.")
-					df=pd_flatten_layers(df,w_df)
+					df=pd_flatten_layers(df,w_df)[["PersonNr","PersonNr2"]]
 					# Save us from future calculations!!
 					df.to_csv(f"{csv_path}/flat_all2017.csv")
 					df.to_csv(f"{csv_path}/edgelist_flat_all2017.csv",sep=" ",index=False,header=False)

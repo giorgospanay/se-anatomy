@@ -1,19 +1,6 @@
 import os, glob, parse, pickle, sys, gc
-import networkx as nx
-import igraph as ig
 import numpy as np
 import pandas as pd
-import random
-import scipy.sparse
-import scipy.sparse.csgraph
-import math
-
-# Import pyteexgraph
-import pyteexgraph as teex
-
-# Import approximate diameter function
-import networkx.algorithms.approximation
-from statistics import mean
 
 # Local imports
 from simplify_family import read_in_network, simplify_family_layer, make_entire_edge_list
