@@ -39,7 +39,7 @@ if len(args)>=1:
 
 # Flatten layers using pandas
 def pd_flatten_layers(l1,l2):
-	return pd.concat([l1,l2],copy=False).drop_duplicates().reset_index(drop=True)
+	return pd.concat([l1,l2],copy=False).drop_duplicates(subset=["PersonNr","PersonNr2"]).reset_index(drop=True)
 
 # Concatenate layers (keeping layer id)
 def pd_concat_layers(l1,l2,l1_id=None,l2_id=None):
@@ -275,6 +275,7 @@ if mode!="calc-node":
 			if "flatten" in mode:
 				# Read alone for triangles
 				n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(n_df,source="PersonNr",target="PersonNr2")
 					# print("Get triangles.")
