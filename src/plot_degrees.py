@@ -286,7 +286,8 @@ fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 print("Figure 2B")
 fig2b, ax2b = plt.subplots()
 
-hist_total.reverse()
+
+hist_total.sort_index(ascending=False,inplace=True)
 deg_total=list(reversed(range(len(hist_total))))
 cs_total=np.cumsum(hist_total)
 
