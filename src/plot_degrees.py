@@ -275,6 +275,8 @@ ax2a.set_ylabel("Sample with k > Degree")
 ax2a.set_yscale("log")
 ax2a.set_xscale("log") 
 
+ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+ax2a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
 # Save
 fig2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3)
@@ -300,7 +302,10 @@ ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
 ax2b.set_xlabel("Degree")
 ax2b.set_yscale("log")
-ax2b.set_xscale("log") 
+ax2b.set_xscale("log")
+
+ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+ax2b.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
 fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
