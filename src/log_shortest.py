@@ -374,7 +374,7 @@ if mode!="calc-node":
 				## pyteexgraph:
 				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
 
-				if mode=="calc-closeness":
+				if mode=="calc-close":
 					# Calculate WCC
 					G_id.computeWCC()
 
