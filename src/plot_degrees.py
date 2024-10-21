@@ -82,7 +82,7 @@ ax1a.plot(hist_nbr,color="gold",marker=".",linestyle="dashdot")
 ax1a.plot(hist_work,color="grey",marker=".",linestyle="dashdot")
 
 # Save
-fig1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2)
+fig1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3)
 fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
@@ -277,7 +277,7 @@ ax2a.set_xscale("log")
 
 
 # Save
-fig2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2)
+fig2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3)
 fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
