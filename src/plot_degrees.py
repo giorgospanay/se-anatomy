@@ -235,7 +235,7 @@ fig2a, ax2a = plt.subplots()
 
 hist_close.reverse()
 deg_close=list(reversed(range(len(hist_close))))
-cs_close=np.cumsum(hist_fam)
+cs_close=np.cumsum(hist_close)
 
 hist_ext.reverse()
 deg_ext=list(reversed(range(len(hist_ext))))
