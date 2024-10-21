@@ -217,7 +217,7 @@ if top=="flat":
 
 if mode!="calc-node":
 	# Read node info df here
-	if mode=="flatten":
+	if mode=="calc-close":
 		print("Read node_a")
 		node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
 		node_df.fillna(0.0,inplace=True)
@@ -374,6 +374,20 @@ if mode!="calc-node":
 				## pyteexgraph:
 				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
 
+				if mode=="calc-closeness":
+					# Calculate WCC
+					G_id.computeWCC()
+
+					gc_size=G_id.nodes(teex.Scope.LWCC)
+
+					# Calculate closeness centrality for LWCC
+					closeness=G_id.closenessCentrality(scope=teex.Scope.FULL,sample_fraction=int(0.0003*gc_size))
+					print(closeness)
+
+					node_df["closeness"]=pd.Series(dict(zip(closeness[0,:],closeness[1,:])))
+
+
+
 		if mode=="calc-table":
 
 			#### Uncomment below to switch back to NetworkX code.
@@ -484,8 +498,9 @@ if mode!="calc-node":
 			f_df=pd.DataFrame({"n":[n],"m":[m],"comp":[n_comps],"gc":[gc_pct],"diam":[diam_len],"avg_sp":[d_len]})
 			table_2=pd.concat([table_2,f_df],axis=0)
 
-	if mode=="flatten":
+	if mode=="calc-close":
 		# Print out new node csv
+		node_df.fillna(0.0)
 		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
 	if mode=="calc-table":
