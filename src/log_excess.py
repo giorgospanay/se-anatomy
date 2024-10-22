@@ -191,8 +191,6 @@ for layer_name in net_names:
 		node_df.fillna(0.0,inplace=True)
 		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
-		pass
-
 	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
 	if mode=="calc-excess":
 
