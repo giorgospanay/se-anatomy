@@ -381,10 +381,14 @@ if mode!="calc-node":
 					gc_size=G_id.nodes(teex.Scope.LWCC)
 
 					# Calculate closeness centrality for LWCC
-					closeness=G_id.closenessCentrality(scope=teex.Scope.FULL,sample_fraction=int(0.0003*gc_size))
+					closeness=G_id.closenessCentrality(scope=teex.Scope.LWCC,sample_fraction=int(0.0003*gc_size))
 					print(closeness)
 
-					node_df["closeness"]=pd.Series(dict(zip(closeness[0,:],closeness[1,:])))
+					with open(f"{log_path}/closeness_vals.txt","w") as wf:
+						for val in closeness:
+							wf.write(f"{val}\n")
+
+					node_df["closeness"]=pd.Series(dict(zip(closeness[:,0],closeness[:,1])))
 
 
 
