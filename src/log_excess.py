@@ -113,7 +113,22 @@ def get_approx_closeness(G,n_samples=100):
 net_names=["flat_all"]
 
 if mode=="calc-tri":
-	net_names=["close_family","extended_family","household","neighbourhood","education","work"]
+	net_names=["close_family","extended_family","household","education","neighbourhood","work"]
+
+
+if mode=="fix-tri":
+	net_names=[]
+	# Read node dataframe
+	print("Read node_b")
+	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+	node_df.fillna(0.0,inplace=True)
+
+	# Calculate pure triangles (sum of tri on each layer separately)
+	node_df["pure_tri"]=node_df["tri_close"]+node_df["tri_ext"]+node_df["tri_house"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
+
+	# Save result to node dataframe
+	node_df.to_csv(f"{log_path}/node_b_2017.csv")
+
 
 # For normal networks:
 for layer_name in net_names:
@@ -150,9 +165,12 @@ for layer_name in net_names:
 		node_df[df_str]=pd.Series(get_node_triangles(G))
 
 		# Save result to node dataframe
-		node_df.fillna(0.0)
+		node_df.fillna(0.0,inplace=True)
 		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
+	# Calculate local clustering coefficient??
+	if mode=="calc-lcc":
+		pass
 
 	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
 	if mode=="calc-excess":
