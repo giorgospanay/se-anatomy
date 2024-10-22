@@ -135,18 +135,13 @@ if mode=="fix-tri":
 # For normal networks:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-
-	# Make NetworKit graph from dataframe
-	# G=read_nk_from_pandas(
-	# 	pd.read_csv(f"{csv_path}/{layer_name}.csv").astype({"PersonNr":"int","PersonNr2":"int"})
-	# )
-
 	# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
 	G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
 	# Index all edges
+	print("Indexing edges.")
 	G.indexEdges()
 
-	# For exc/embeddedness modes: calculate # neighbors over all edges and add attb here
+	# @TODO: For exc/embeddedness modes: calculate # neighbors over all edges and add attb here
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
@@ -175,7 +170,7 @@ for layer_name in net_names:
 	# Calculate local clustering coefficient
 	if mode=="calc-lcc":
 		print("Calculating lcc")
-		lcc_scores=nk.clustering.LocalClusteringCoefficient(G).run().scores()
+		lcc_scores=nk.centrality.LocalClusteringCoefficient(G).run().scores()
 
 		lcc_dict={}
 		for u in G.iterNodes():
