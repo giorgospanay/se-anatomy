@@ -62,11 +62,11 @@ def get_node_triangles(G,multi_weight=False,out_scores=False):
 			# Progress print
 			if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):score={score}")
 			# Add to dictionary if missing
-			if u not in node_tri: node_tri[u]=0
-			if v not in node_tri: node_tri[v]=0
+			if u+1 not in node_tri: node_tri[u+1]=0
+			if v+1 not in node_tri: node_tri[v+1]=0
 			# Add score
-			node_tri[u]+=score
-			node_tri[v]+=score
+			node_tri[u+1]+=score
+			node_tri[v+1]+=score
 			# Counter++
 			ctr+=1
 	# Weight on (multi-)edges:: calculate triangles x weight (#layers connected)
@@ -76,11 +76,11 @@ def get_node_triangles(G,multi_weight=False,out_scores=False):
 			# Progress print
 			if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}[w={w}]):score={score}")
 			# Add to dictionary if missing
-			if u not in node_tri: node_tri[u]=0
-			if v not in node_tri: node_tri[v]=0
+			if u+1 not in node_tri: node_tri[u+1]=0
+			if v+1 not in node_tri: node_tri[v+1]=0
 			# Add score*w
-			node_tri[u]+=(score*w)
-			node_tri[v]+=(score*w)
+			node_tri[u+1]+=(score*w)
+			node_tri[v+1]+=(score*w)
 			# Counter++
 			ctr+=1
 	if out_scores: 
@@ -102,8 +102,8 @@ def get_tie_pairs(G,node_df):
 		if u not in nbr_sum: nbr_sum[u]=0
 		if v not in nbr_sum: nbr_sum[v]=0
 		# Add edge sum to u,v
-		nbr_sum[u]+=math.comb(w,2)
-		nbr_sum[v]+=math.comb(w,2)
+		nbr_sum[u+1]+=math.comb(w,2)
+		nbr_sum[v+1]+=math.comb(w,2)
 		# Counter++
 		ctr+=1
 
@@ -178,12 +178,13 @@ for layer_name in net_names:
 		# Set weights on G accordingly
 		print("Set weights on G")
 		for u,v in G.iterEdges():
-			if u in df.index.levels[0] and v in df.index.levels[1]:
-				G.setWeight(u,v,df.loc[u,v])
+			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
+				G.setWeight(u,v,df.loc[u+1,v+1])
+
 			else:
-				print(f"Skipped index ({u},{v}).")
-				print(f"Index in lv0: {u in df.index.levels[0]}")
-				print(f"Index in lv1: {v in df.index.levels[1]}")
+				print(f"Skipped index ({u+1},{v+1}).")
+				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
+				print(f"Index in lv1: {v+1 in df.index.levels[1]}")
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
@@ -216,7 +217,7 @@ for layer_name in net_names:
 
 		lcc_dict={}
 		for u in G.iterNodes():
-			lcc_dict[u]=lcc_scores[u]
+			lcc_dict[u+1]=lcc_scores[u]
 
 		# Read node dataframe
 		print("Read node_b")
