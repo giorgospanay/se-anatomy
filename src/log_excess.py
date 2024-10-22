@@ -27,35 +27,52 @@ if len(args)>=1:
 		top=args[1]
 
 
-def read_nk_from_pandas(df):
+def read_nk_from_pandas(df,multi_weight=False):
 	# Initialize an empty graph in NetworKit
 	# Set 'directed=False' for an undirected graph, 'directed=True' for a directed graph
-	G = nk.graph.Graph(n=max(df["PersonNr"].max(),df["PersonNr2"].max())+1, directed=False)
+	G = nk.graph.Graph(n=max(df["PersonNr"].max(),df["PersonNr2"].max())+1, weighted=multi_weight, directed=False)
 
 	# Add edges from the DataFrame to the NetworKit graph
 	for index, row in df.iterrows():
-	    G.addEdge(row["PersonNr"],row["PersonNr2"])
+		if multi_weight:
+			# First check if edge exists
+
+	    	G.addEdge(row["PersonNr"],row["PersonNr2"])
+
+	    else: G.addEdge(row["PersonNr"],row["PersonNr2"])
 
 	return G
 
 # Returns triangles per node, and scores (list of edges)
-def get_node_triangles(G, out_scores=False):
-	G.indexEdges()
+def get_node_triangles(G,multi_weight=False,out_scores=False):
     e_triangles=nk.sparsification.TriangleEdgeScore(G)
     e_triangles.run()
 
     # Run through all edges, calculate triangles per node
     print("Calculating triangle edge score")
 	node_tri={}
-	for u,v in G.iterEdges():
-		if u not in node_tri: node_tri[u]=0
-		if v not in node_tri: node_tri[v]=0
-		score=e_triangles.score(u,v)
+	# No weight on edges:: normal triangle calculation
+	if not multi_weight:
+		for u,v in G.iterEdges():
+			if u not in node_tri: node_tri[u]=0
+			if v not in node_tri: node_tri[v]=0
+			score=e_triangles.score(u,v)
 
-		print(f"Score({u},{v}):{score}")
-		# Add score divided by 3
-		node_tri[u]+=score//3
-		node_tri[v]+=score//3
+			#print(f"Score({u},{v}):{score}")
+			# Add score divided by 3
+			node_tri[u]+=score//3
+			node_tri[v]+=score//3
+	# Weight on (multi-)edges:: calculate triangles x weight (#layers connected)
+	else:
+		for u,v,w in G.iterEdgesWeights():
+			if u not in node_tri: node_tri[u]=0
+			if v not in node_tri: node_tri[v]=0
+			score=e_triangles.score(u,v)
+
+			#print(f"Score({u},{v}):{score}")
+			# Add score divided by 3
+			node_tri[u]+=(score*w)//3
+			node_tri[v]+=(score*w)//3
 
 	if out_scores: 
 		return node_tri, e_triangles.scores()
@@ -91,13 +108,19 @@ net_names=["flat_all"]
 if mode=="calc-tri":
 	net_names=["close_family","extended_family","household","neighbourhood","education","work"]
 
+# For normal networks:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
 
 	# Make NetworKit graph from dataframe
-	G=read_nk_from_pandas(
-		pd.read_csv(f"{csv_path}/{layer_name}.csv").astype({"PersonNr":"int","PersonNr2":"int"})
-	)
+	# G=read_nk_from_pandas(
+	# 	pd.read_csv(f"{csv_path}/{layer_name}.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+	# )
+
+	# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
+	G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
+	# Index all edges
+	G.indexEdges()
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
@@ -120,13 +143,18 @@ for layer_name in net_names:
 		node_df[df_str]=pd.Series(get_node_triangles(G))
 
 		# Save result to node dataframe
+		node_df.fillna(0.0)
+		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
 
 	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
 	if mode=="calc-excess":
+		# Need to only read flat (with ids?)
 		pass
+
 	# Calculate embeddedness from triangles
 	if mode=="calc-embed":
+		# Need to only read flat (potentially with ids)
 		pass
 
 
