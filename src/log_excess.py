@@ -47,35 +47,42 @@ def read_nk_from_pandas(df,multi_weight=False):
 def get_node_triangles(G,multi_weight=False,out_scores=False):
 	e_triangles=nk.sparsification.TriangleEdgeScore(G)
 	e_triangles.run()
+	e_scores=e_triangles.scores()
 
 	# Run through all edges, calculate triangles per node
 	print("Calculating triangle edge score")
 	node_tri={}
+	ctr=0
 	# No weight on edges:: normal triangle calculation
 	if not multi_weight:
 		for u,v in G.iterEdges():
+			score=e_scores[G.edgeId(u,v)]
+			# Progress print
+			if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):score={score}")
+			# Add to dictionary if missing
 			if u not in node_tri: node_tri[u]=0
 			if v not in node_tri: node_tri[v]=0
-			score=e_triangles.score(u,v)
-
-			#print(f"Score({u},{v}):{score}")
-			# Add score divided by 3
-			node_tri[u]+=score//3
-			node_tri[v]+=score//3
+			# Add score
+			node_tri[u]+=score
+			node_tri[v]+=score
+			# Counter++
+			ctr+=1
 	# Weight on (multi-)edges:: calculate triangles x weight (#layers connected)
 	else:
 		for u,v,w in G.iterEdgesWeights():
+			score=e_scores[G.edgeId(u,v)]
+			# Progress print
+			if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}[w={w}]):score={score}")
+			# Add to dictionary if missing
 			if u not in node_tri: node_tri[u]=0
 			if v not in node_tri: node_tri[v]=0
-			score=e_triangles.score(u,v)
-
-			#print(f"Score({u},{v}):{score}")
-			# Add score divided by 3
-			node_tri[u]+=(score*w)//3
-			node_tri[v]+=(score*w)//3
-
+			# Add score*w
+			node_tri[u]+=(score*w)
+			node_tri[v]+=(score*w)
+			# Counter++
+			ctr+=1
 	if out_scores: 
-		return node_tri, e_triangles.scores()
+		return node_tri, e_scores
 	else: 
 		return node_tri
 
