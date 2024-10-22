@@ -200,7 +200,7 @@ for layer_name in net_names:
 		# Read node dataframe
 		print("Read node_b")
 		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
-		node_df=node_df[["PersonNr","deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work","deg_total","closeness"]]
+		node_df=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work","deg_total","closeness"]]
 		node_df.fillna(0.0,inplace=True)
 
 		# Calculate triangles and save result to node df
