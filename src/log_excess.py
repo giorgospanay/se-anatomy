@@ -78,8 +78,8 @@ def get_tie_pairs(G):
 
 
 def get_approx_closeness(G,n_samples=100):
-	# Best pun I can leave in my code. Shoutout to Central Cee
-	central_c=nk.centrality.ApproxCloseness(G,n_samples,normalized=True)
+	# Shoutout
+	central_c = nk.centrality.ApproxCloseness(G,n_samples,normalized=True)
 
 
 
@@ -89,9 +89,11 @@ def get_approx_closeness(G,n_samples=100):
 net_names=["flat_all"]
 
 if mode=="calc-tri":
-	net_names=["close_family","extended_family","household","neighborhood","education","work"]
+	net_names=["close_family","extended_family","household","neighbourhood","education","work"]
 
 for layer_name in net_names:
+	print(f"Reading in {layer_name}:")
+
 	# Make NetworKit graph from dataframe
 	G=read_nk_from_pandas(
 		pd.read_csv(f"{csv_path}/{layer_name}.csv").astype({"PersonNr":"int","PersonNr2":"int"})
@@ -101,13 +103,22 @@ for layer_name in net_names:
 	if mode=="calc-tri":
 		# Decide column string based on layer name
 		df_str=""
-		if layer_name==""
-
+		if layer_name=="close_family": df_str="tri_close"
+		elif layer_name=="extended_family": df_str="tri_ext"
+		elif layer_name=="household": df_str="tri_house"
+		elif layer_name=="neighbourhood": df_str="tri_nbr"
+		elif layer_name=="education": df_str="tri_edu"
+		elif layer_name=="work": df_str="tri_work"
 
 		# Read node dataframe
+		print("Read node_b")
+		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+		node_df.fillna(0.0,inplace=True)
 
 		# Calculate triangles and save result to node df
-		node_df[]=get_node_triangles(G)
+		print("Get triangles")
+		node_df[df_str]=pd.Series(get_node_triangles(G))
+
 		# Save result to node dataframe
 
 

@@ -293,8 +293,16 @@ if mode!="calc-node":
 					df.to_csv(f"{csv_path}/edgelist_flat_fn2017.csv",sep=" ",index=False,header=False)
 
 				if mode=="flatten-id":
+					# Read and flatten every family-based layer first
+					print("Reading close family")
+					df_id=pd.read_csv(f"{csv_path}/close_family2017.csv")
+					print("Flattening with extended family")
+					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/extended_family2017.csv"),l1_id="close_family",l2_id="extended_family")
+					print("Flattening with household")
+					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/household.csv"),l2_id="household")
+
 					print("Flatten with ids.")
-					df_id=pd_concat_layers(df,n_df,l1_id="family",l2_id="neighbourhood")
+					df_id=pd_concat_layers(df_id,n_df,l2_id="neighbourhood")
 					# Save us from future calculations!!
 					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
 			else:
