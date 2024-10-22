@@ -37,19 +37,19 @@ def read_nk_from_pandas(df,multi_weight=False):
 		if multi_weight:
 			# First check if edge exists
 
-	    	G.addEdge(row["PersonNr"],row["PersonNr2"])
+			G.addEdge(row["PersonNr"],row["PersonNr2"])
 
-	    else: G.addEdge(row["PersonNr"],row["PersonNr2"])
+		else: G.addEdge(row["PersonNr"],row["PersonNr2"])
 
 	return G
 
 # Returns triangles per node, and scores (list of edges)
 def get_node_triangles(G,multi_weight=False,out_scores=False):
-    e_triangles=nk.sparsification.TriangleEdgeScore(G)
-    e_triangles.run()
+	e_triangles=nk.sparsification.TriangleEdgeScore(G)
+	e_triangles.run()
 
-    # Run through all edges, calculate triangles per node
-    print("Calculating triangle edge score")
+	# Run through all edges, calculate triangles per node
+	print("Calculating triangle edge score")
 	node_tri={}
 	# No weight on edges:: normal triangle calculation
 	if not multi_weight:
