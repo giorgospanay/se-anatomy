@@ -171,8 +171,9 @@ for layer_name in net_names:
 
 		# Find number of layers where edge exists
 		print("Find n_layers")
-		df["n_layers"] = df.groupby(["PersonNr","PersonNr2"]).transform('size')
-		df=df.set_index(["PersonNr","PersonNr2"])[["PersonNr","PersonNr2","n_layers"]]
+		df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
+		df=df[["PersonNr","PersonNr2","n_layers"]]
+		df=df.set_index(["PersonNr","PersonNr2"])
 		
 		# Set weights on G accordingly
 		print("Set weights on G")
