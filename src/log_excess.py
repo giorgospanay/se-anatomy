@@ -27,23 +27,23 @@ if len(args)>=1:
 		top=args[1]
 
 
-def read_nk_from_pandas(df,N=-1,multi_weight=False):
-	n_nodes=N
-	if N==-1: n_nodes=max(df["PersonNr"].max(),df["PersonNr2"].max())
+# def read_nk_from_pandas(df,N=-1,multi_weight=False):
+# 	n_nodes=N
+# 	if N==-1: n_nodes=max(df["PersonNr"].max(),df["PersonNr2"].max())
 
-	# Initialize an empty graph in NetworKit
-	G = nk.graph.Graph(n=n_nodes,weighted=multi_weight,directed=False)
+# 	# Initialize an empty graph in NetworKit
+# 	G = nk.graph.Graph(n=n_nodes,weighted=multi_weight,directed=False)
 
-	# Add edges from the DataFrame to the NetworKit graph
-	for index, row in df.iterrows():
-		if multi_weight:
-			# First check if edge exists
+# 	# Add edges from the DataFrame to the NetworKit graph
+# 	for index, row in df.iterrows():
+# 		if multi_weight:
+# 			# First check if edge exists
 
-			G.addEdge(row["PersonNr"],row["PersonNr2"])
+# 			G.addEdge(row["PersonNr"],row["PersonNr2"])
 
-		else: G.addEdge(row["PersonNr"],row["PersonNr2"])
+# 		else: G.addEdge(row["PersonNr"],row["PersonNr2"])
 
-	return G
+# 	return G
 
 # Returns triangles per node, and scores (list of edges)
 def get_node_triangles(G,multi_weight=False,out_scores=False):
@@ -88,6 +88,38 @@ def get_node_triangles(G,multi_weight=False,out_scores=False):
 	else: 
 		return node_tri
 
+
+# Returns tie pairs per node for a graph G
+def get_tie_pairs(G,node_df):
+	nbr_sum={}
+	tie_pairs={}
+	ctr=0
+	# Iterate first over all edges
+	for u,v,w in G.iterEdgesWeights():
+		# Progress print
+		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}[w={w}])")
+		# Add to dictionary if missing
+		if u not in nbr_sum: nbr_sum[u]=0
+		if v not in nbr_sum: nbr_sum[v]=0
+		# Add edge sum to u,v
+		nbr_sum[u]+=math.comb(w,2)
+		nbr_sum[v]+=math.comb(w,2)
+		# Counter++
+		ctr+=1
+
+	# Then iterate over all nodes to calculate final number of tie pairs
+	ctr=0
+	for u in nbr_sum:
+		k_u=node_df.loc[u]["deg_total"]
+		# P(u)=comb(deg_total(u),2)-sum_neighbours(comb(n_layers,2))
+		tie_pairs[u]=math.comb(k_u,2)-nbr_sum[u]
+		# Progress print
+		if ctr%1000000==0: print(f"Node #{ctr//1000000}({u}): P(u)={tie_pairs[u]}")
+		# Counter++
+		ctr+=1
+
+	return tie_pairs
+
 # Checks for embeddedness and tie range (second shortest path)
 def get_embeddedness(G,e_scores):
 	# For all edges in G: if embeddedness==0 (score=0) then find second SP
@@ -98,22 +130,7 @@ def get_embeddedness(G,e_scores):
 
 
 
-def get_tie_pairs(G):
-
-	return
-
-
-def get_approx_closeness(G,n_samples=100):
-	# Shoutout
-	central_c = nk.centrality.ApproxCloseness(G,n_samples,normalized=True)
-
-
-
-
-# For all sets of networks: get triangles. More care for flat.
-
 net_names=["flat_all"]
-
 if mode=="calc-tri":
 	net_names=["close_family","extended_family","household","education","neighbourhood","work"]
 
@@ -141,7 +158,26 @@ for layer_name in net_names:
 	print("Indexing edges.")
 	G.indexEdges()
 
-	# @TODO: For exc/embeddedness modes: calculate # neighbors over all edges and add attb here
+	# For special triangle modes (excess, embeddedness): 
+	#  calculate # neighbors over all edges and add as weight
+	if mode=="calc-excess" or mode=="calc-embed":
+		# Make weighted graph
+		print("Making weighted graph.")
+		G=nk.graphtools.toWeighted(G)
+
+		# Read flat_all with ids
+		print("Reading flat_all_id:")
+		df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+
+		# Find number of layers where edge exists
+		print("Find n_layers")
+		df["n_layers"] = df.groupby(["PersonNr","PersonNr2"]).transform('size')
+		df=df.set_index(["PersonNr","PersonNr2"])[["PersonNr","PersonNr2","n_layers"]]
+		
+		# Set weights on G accordingly
+		print("Set weights on G")
+		for u,v in G.iterEdges():
+			G.setWeight(u,v,df.loc[u,v])
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
@@ -188,11 +224,40 @@ for layer_name in net_names:
 
 	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
 	if mode=="calc-excess":
+		# Read node dataframe
+		print("Read node_b")
+		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
 
-		df['D'] = df.groupby(['A', 'B'])['A'].transform('size')
+		# Calculate multi triangles
+		print("Get multi-triangles.")
+		node_df["tri_actual"]=pd.Series(get_node_triangles(G,multi_weight=True))
 
-		# Need to only read flat (with ids?)
-		pass
+		# Calculate tie pairs per node
+		print("Get tie pairs.")
+		node_df["tie_pairs"]=pd.Series(get_tie_pairs(G,node_df))
+
+		# Calculate excess closure
+		print("Get excess closure.")
+		node_df["excess_closure"]=node_df[["tri_actual","tri_pure","tie_pairs"]]
+
+		def _excess(row):
+			tri_actual=row[0]
+			tri_pure=row[1]
+			tie_pairs=row[2]
+
+			if tie_pairs==0: return 0.0
+
+			c_pure=tri_pure/tie_pairs
+			c_actual=tri_actual/tie_pairs
+			
+			if c_pure==1: return 0.0
+			else: return (c_unique-c_pure)/(1-c_pure)
+
+		# Save result to node dataframe
+		node_df.fillna(0.0,inplace=True)
+		node_df.to_csv(f"{log_path}/node_b_2017.csv")
+
+		
 
 	# Calculate embeddedness from triangles
 	if mode=="calc-embed":
