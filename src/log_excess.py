@@ -27,10 +27,12 @@ if len(args)>=1:
 		top=args[1]
 
 
-def read_nk_from_pandas(df,multi_weight=False):
+def read_nk_from_pandas(df,N=-1,multi_weight=False):
+	n_nodes=N
+	if N==-1: n_nodes=max(df["PersonNr"].max(),df["PersonNr2"].max())
+
 	# Initialize an empty graph in NetworKit
-	# Set 'directed=False' for an undirected graph, 'directed=True' for a directed graph
-	G = nk.graph.Graph(n=max(df["PersonNr"].max(),df["PersonNr2"].max())+1, weighted=multi_weight, directed=False)
+	G = nk.graph.Graph(n=n_nodes,weighted=multi_weight,directed=False)
 
 	# Add edges from the DataFrame to the NetworKit graph
 	for index, row in df.iterrows():
@@ -120,7 +122,7 @@ if mode=="fix-tri":
 	net_names=[]
 	# Read node dataframe
 	print("Read node_b")
-	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0).astype({"PersonNr":"int"})
 	node_df.fillna(0.0,inplace=True)
 
 	# Calculate pure triangles (sum of tri on each layer separately)
@@ -143,6 +145,8 @@ for layer_name in net_names:
 	G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
 	# Index all edges
 	G.indexEdges()
+
+	# For exc/embeddedness modes: calculate # neighbors over all edges and add attb here
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
@@ -168,12 +172,32 @@ for layer_name in net_names:
 		node_df.fillna(0.0,inplace=True)
 		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
-	# Calculate local clustering coefficient??
+	# Calculate local clustering coefficient
 	if mode=="calc-lcc":
+		print("Calculating lcc")
+		lcc_scores=nk.clustering.LocalClusteringCoefficient(G).run().scores()
+
+		lcc_dict={}
+		for u in G.iterNodes():
+			lcc_dict[u]=lcc_scores[u]
+
+		# Read node dataframe
+		print("Read node_b")
+		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+
+		node_df["lcc"]=pd.Series(lcc_dict)
+
+		# Save result to node dataframe
+		node_df.fillna(0.0,inplace=True)
+		node_df.to_csv(f"{log_path}/node_b_2017.csv")
+
 		pass
 
 	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
 	if mode=="calc-excess":
+
+		df['D'] = df.groupby(['A', 'B'])['A'].transform('size')
+
 		# Need to only read flat (with ids?)
 		pass
 
