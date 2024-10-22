@@ -1,12 +1,11 @@
 import os, glob, parse, pickle, sys, gc
-import networkx as nx
-import igraph as ig
 import numpy as np
 import pandas as pd
 import random
 import scipy.sparse
 import scipy.sparse.csgraph
 import math
+import networkit as nk
 
 # Import pyteexgraph
 import pyteexgraph as teex
@@ -28,112 +27,98 @@ if len(args)>=1:
 		top=args[1]
 
 
+def read_nk_from_pandas(df):
+	# Initialize an empty graph in NetworKit
+	# Set 'directed=False' for an undirected graph, 'directed=True' for a directed graph
+	G = nk.graph.Graph(n=max(df["PersonNr"].max(),df["PersonNr2"].max())+1, directed=False)
 
-def 
+	# Add edges from the DataFrame to the NetworKit graph
+	for index, row in df.iterrows():
+	    G.addEdge(row["PersonNr"],row["PersonNr2"])
+
+	return G
+
+# Returns triangles per node, and scores (list of edges)
+def get_node_triangles(G, out_scores=False):
+	G.indexEdges()
+    e_triangles=nk.sparsification.TriangleEdgeScore(G)
+    e_triangles.run()
+
+    # Run through all edges, calculate triangles per node
+    print("Calculating triangle edge score")
+	node_tri={}
+	for u,v in G.iterEdges():
+		if u not in node_tri: node_tri[u]=0
+		if v not in node_tri: node_tri[v]=0
+		score=e_triangles.score(u,v)
+
+		print(f"Score({u},{v}):{score}")
+		# Add score divided by 3
+		node_tri[u]+=score//3
+		node_tri[v]+=score//3
+
+	if out_scores: 
+		return node_tri, e_triangles.scores()
+	else: 
+		return node_tri
+
+# Checks for embeddedness and tie range (second shortest path)
+def get_embeddedness(G,e_scores):
+	# For all edges in G: if embeddedness==0 (score=0) then find second SP
+
+	# Otherwise continue plotting
+
+	return
 
 
-def get_excess_closure(G, selected_nodes=[], node_type="label", selected_layers=[], layer_type = "layer", batchsize=100000):
-		
-	# ====================== input handling ========================
 
-		# handling layer input
-		if layer_type not in ["label", "layer", "binary", "group"]:
-			raise ValueError(f"Invalid layer_type '{layer_type}'. Please choose from 'label' or 'layer' or 'binary'.")
-		
-		for layer in selected_layers:
-			if layer not in self.layers[layer_type].tolist():
-				raise ValueError(f"Invalid layer '{layer}' for layer_type '{layer_type}'. Please choose from {self.layers[layer_type].unique().tolist()}.")
-		
-		if len(selected_layers)==0:
-			selected_layers = self.layers[layer_type].unique().tolist()
+def get_tie_pairs(G):
 
-		# get corresponding binary representation
-		binary_repr = sum([self._layer_conversion_dict[f"{layer_type}_to_binary"][layer] for layer in selected_layers])
-	
-		# handling node input
-		if len(selected_nodes)==0:
-			selected_nodes = self.nodes["id"].tolist()
-		else:
-			if node_type == "label":
-				selected_nodes = [self.to_id(n) for n in selected_nodes]
-			elif node_type == "id":
-				pass
-			else:
-				raise ValueError(f"Invalid node_type '{node_type}'. Please choose from 'label' or 'id'.")
-
-		# ====================== actual calculation ========================
-		# obtain a copy of the sparse adjacency matrix such that each element
-		# A[i,j] contains the number of links between i and j
-		A = deepcopy(self.A)
-		A.data = A.data & binary_repr
-		# this is necessary, otherwise the denominators will not be correct
-		# (we're using indptr and indices to calculate neighbor degrees)
-		A.eliminate_zeros()
+	return
 
 
-		# create lookup table for mapping binary values to number of layers / multiplexity
-		lookup = {}
-		for num in np.unique(A.data):
-			lookup[num] = bin(num).count("1")
-		# apply lookup table
-		A.data = np.array([lookup[x] for x in A.data])
+def get_approx_closeness(G,n_samples=100):
+	# Best pun I can leave in my code. Shoutout to Central Cee
+	central_c=nk.centrality.ApproxCloseness(G,n_samples,normalized=True)
 
-		# find all triangles
-		triangles = np.empty(0, dtype=np.int64)
-		# B = A @ A @ A contains the number of paths of length 3 between B[i,j]
-		# so B.diagonal() contains the number of triangles:
-		#     paths of length 3 between a node and itself
-		# // 2 as every path is found in both directions
-		# B will not fit in memory, so we do this in steps
-		for i in range(0, len(selected_nodes), batchsize):
-			start = i
-			end = i+batchsize
-			# if end is larger than matrix size, let it be the matrixsize
-			if end > len(selected_nodes):
-				end = len(selected_nodes)
-			A_ = A[selected_nodes[start:end],:]
-			res = (A_ @ A @ A_.T).diagonal() // 2
-			triangles = np.concatenate((triangles, res))
 
-		# get number of triangles which only use 1 layer
-		pure_triangles = np.zeros(len(selected_nodes))
-		for layer in selected_layers:
-			t = np.empty(0, dtype=np.int64)
-			lA = self.get_layer_adjacency_matrix(layer=layer, layer_type=layer_type)
-			for i in range(0,  len(selected_nodes), batchsize):
-				start = i
-				end = i+batchsize
-				# if end is larger than matrix size, let it be the matrixsize
-				if end > len(selected_nodes):
-					end = len(selected_nodes)
-				A_ = lA[selected_nodes[start:end],:]
-				res = (A_ @ lA @ A_.T).diagonal() // 2
-				t = np.concatenate((t, np.array(res)))
-			pure_triangles += t
 
-		# decrease matrix size to only selected nodes
-		A = A[selected_nodes,:]
 
-		# compute the denominator
-		# sum of neighbor degrees, over 2
-		l = comb(A.sum(axis=1), 2)
-		# sum of: neighbor degrees over two
-		r = csr_matrix((comb(A.data, 2), A.indices, A.indptr),(len(selected_nodes),self.N)).sum(axis=1)
-		P = np.array(l - r).T[0]
-		# we ensure that division by zero errors are correctly handled and nan/inf
-		# values are avoided    
+# For all sets of networks: get triangles. More care for flat.
 
-		# pure_triangles / P
-		Cpure = np.divide(pure_triangles, P, out=np.zeros(len(selected_nodes)), where=P!=0)
-		# triangles / P
-		Cunique = np.divide(triangles, P, out=np.zeros(len(selected_nodes)), where=P!=0)
+net_names=["flat_all"]
 
-		# (Cunique - Cpure) / (1 - Cpure)
-		excess_closure = np.divide(Cunique-Cpure, 1-Cpure, out=np.zeros(len(selected_nodes)), where=(1-Cpure)!=0)
-		clustering_coefficient = Cunique
+if mode=="calc-tri":
+	net_names=["close_family","extended_family","household","neighborhood","education","work"]
 
-		return {
-			"clustering_coefficient": dict(zip([self.to_label(n) for n in selected_nodes],clustering_coefficient)),
-			"excess_closure": dict(zip([self.to_label(n) for n in selected_nodes],excess_closure))
-		}
+for layer_name in net_names:
+	# Make NetworKit graph from dataframe
+	G=read_nk_from_pandas(
+		pd.read_csv(f"{csv_path}/{layer_name}.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+	)
+
+	# Calculate triangles for individual layers
+	if mode=="calc-tri":
+		# Decide column string based on layer name
+		df_str=""
+		if layer_name==""
+
+
+		# Read node dataframe
+
+		# Calculate triangles and save result to node df
+		node_df[]=get_node_triangles(G)
+		# Save result to node dataframe
+
+
+	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
+	if mode=="calc-excess":
+		pass
+	# Calculate embeddedness from triangles
+	if mode=="calc-embed":
+		pass
+
+
+
+
 
