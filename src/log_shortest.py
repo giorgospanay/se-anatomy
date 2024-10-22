@@ -299,7 +299,7 @@ if mode!="calc-node":
 					print("Flattening with extended family")
 					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/extended_family2017.csv"),l1_id="close_family",l2_id="extended_family")
 					print("Flattening with household")
-					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/household.csv"),l2_id="household")
+					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/household2017.csv"),l2_id="household")
 
 					print("Flatten with ids.")
 					df_id=pd_concat_layers(df_id,n_df,l2_id="neighbourhood")
