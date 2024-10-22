@@ -129,11 +129,15 @@ def get_embeddedness(G,e_scores):
 	return
 
 
+# Read node_b
+print("Read node_b")
+node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+node_df.fillna(0.0,inplace=True)
 
 net_names=["flat_all"]
 if mode=="calc-tri":
 	net_names=["close_family","extended_family","household","education","neighbourhood","work"]
-
+	node_df=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work","deg_total","closeness"]]
 
 if mode=="fix-tri":
 	net_names=[]
@@ -197,45 +201,25 @@ for layer_name in net_names:
 		elif layer_name=="education": df_str="tri_edu"
 		elif layer_name=="work": df_str="tri_work"
 
-		# Read node dataframe
-		print("Read node_b")
-		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
-		node_df=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work","deg_total","closeness"]]
-		node_df.fillna(0.0,inplace=True)
-
-		# Calculate triangles and save result to node df
+		# Calculate triangles
 		print("Get triangles")
 		node_df[df_str]=pd.Series(get_node_triangles(G))
 
-		# Save result to node dataframe
-		node_df.fillna(0.0,inplace=True)
-		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
 	# Calculate local clustering coefficient
 	if mode=="calc-lcc":
 		print("Calculating lcc")
 		lcc_scores=nk.centrality.LocalClusteringCoefficient(G).run().scores()
 
+		# Create dictionary to pass as series
 		lcc_dict={}
 		for u in G.iterNodes():
 			lcc_dict[u+1]=lcc_scores[u]
 
-		# Read node dataframe
-		print("Read node_b")
-		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
-
 		node_df["lcc"]=pd.Series(lcc_dict)
-
-		# Save result to node dataframe
-		node_df.fillna(0.0,inplace=True)
-		node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
 	# Calculate excess closure and clustering coefficient (assuming triangle data exists)
 	if mode=="calc-excess":
-		# Read node dataframe
-		print("Read node_b")
-		node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
-
 		# Calculate multi triangles
 		print("Get multi-triangles.")
 		node_df["tri_actual"]=pd.Series(get_node_triangles(G,multi_weight=True))
@@ -246,7 +230,7 @@ for layer_name in net_names:
 
 		# Calculate excess closure
 		print("Get excess closure.")
-		node_df["excess_closure"]=node_df[["tri_actual","tri_pure","tie_pairs"]]
+		node_df["excess_closure"]=node_df[["tri_actual","tri_pure","tie_pairs"]].apply(_excess,axis=1)
 
 		def _excess(row):
 			tri_actual=row[0]
@@ -260,11 +244,6 @@ for layer_name in net_names:
 			
 			if c_pure==1: return 0.0
 			else: return (c_unique-c_pure)/(1-c_pure)
-
-		# Save result to node dataframe
-		node_df.fillna(0.0,inplace=True)
-		node_df.to_csv(f"{log_path}/node_b_2017.csv")
-
 		
 
 	# Calculate embeddedness from triangles
@@ -273,6 +252,9 @@ for layer_name in net_names:
 		pass
 
 
-
+# Save result to node dataframe
+print("Saving node_b")
+node_df.fillna(0.0,inplace=True)
+node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
 
