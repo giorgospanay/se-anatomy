@@ -27,24 +27,6 @@ if len(args)>=1:
 		top=args[1]
 
 
-# def read_nk_from_pandas(df,N=-1,multi_weight=False):
-# 	n_nodes=N
-# 	if N==-1: n_nodes=max(df["PersonNr"].max(),df["PersonNr2"].max())
-
-# 	# Initialize an empty graph in NetworKit
-# 	G = nk.graph.Graph(n=n_nodes,weighted=multi_weight,directed=False)
-
-# 	# Add edges from the DataFrame to the NetworKit graph
-# 	for index, row in df.iterrows():
-# 		if multi_weight:
-# 			# First check if edge exists
-
-# 			G.addEdge(row["PersonNr"],row["PersonNr2"])
-
-# 		else: G.addEdge(row["PersonNr"],row["PersonNr2"])
-
-# 	return G
-
 # Returns triangles per node, and scores (list of edges)
 def get_node_triangles(G,multi_weight=False,out_scores=False):
 	e_triangles=nk.sparsification.TriangleEdgeScore(G)
@@ -130,30 +112,24 @@ def get_embeddedness(G,e_scores):
 
 
 # Read node_b
-print("Read node_b")
+print("Reading node_b")
 node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
 node_df.fillna(0.0,inplace=True)
 
+# Set net-names
 net_names=["flat_all"]
+# Special lists for calc-tri: init node_df, iterate over all layers
 if mode=="calc-tri":
 	net_names=["close_family","extended_family","household","education","neighbourhood","work"]
 	node_df=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work","deg_total","closeness"]]
-
+# Special lists for fix-tri: sum node_df, no need to iterate layers
 if mode=="fix-tri":
 	net_names=[]
-	# Read node dataframe
-	print("Read node_b")
-	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
-	node_df.fillna(0.0,inplace=True)
-
 	# Calculate pure triangles (sum of tri on each layer separately)
 	node_df["pure_tri"]=node_df["tri_close"]+node_df["tri_ext"]+node_df["tri_house"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
 
-	# Save result to node dataframe
-	node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
-
-# For normal networks:
+# For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
 	# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
@@ -183,8 +159,7 @@ for layer_name in net_names:
 		print("Set weights on G")
 		for u,v in G.iterEdges():
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
-				G.setWeight(u,v,df.loc[u+1,v+1])
-
+				G.setWeight(u,v,float(df.loc[u+1,v+1]["n_layers"]))
 			else:
 				print(f"Skipped index ({u+1},{v+1}).")
 				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
