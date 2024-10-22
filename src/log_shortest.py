@@ -372,9 +372,7 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=None
-				if top!="none":
-					G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
 
 				if mode=="calc-close":
 					# Calculate WCC
