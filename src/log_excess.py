@@ -139,7 +139,7 @@ if mode=="fix-tri":
 	net_names=[]
 	# Read node dataframe
 	print("Read node_b")
-	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0).astype({"PersonNr":"int"})
+	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
 	node_df.fillna(0.0,inplace=True)
 
 	# Calculate pure triangles (sum of tri on each layer separately)
