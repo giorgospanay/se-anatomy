@@ -178,7 +178,12 @@ for layer_name in net_names:
 		# Set weights on G accordingly
 		print("Set weights on G")
 		for u,v in G.iterEdges():
-			G.setWeight(u,v,df.loc[u,v])
+			if u in df.index.levels[0] and v in df.index.levels[1]:
+				G.setWeight(u,v,df.loc[u,v])
+			else:
+				print(f"Skipped index ({u},{v}).")
+				print(f"Index in lv0: {u in df.index.levels[0]}")
+				print(f"Index in lv1: {v in df.index.levels[1]}")
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
