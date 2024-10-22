@@ -372,7 +372,9 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
+				G_id=None
+				if top!="none":
+					G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
 
 				if mode=="calc-close":
 					# Calculate WCC
@@ -380,15 +382,23 @@ if mode!="calc-node":
 
 					gc_size=G_id.nodes(teex.Scope.LWCC)
 
-					# Calculate closeness centrality for LWCC
-					closeness=G_id.closenessCentrality(scope=teex.Scope.LWCC,sample_fraction=int(0.0003*gc_size))
-					print(closeness)
+					# Change ugly flag here if already calculated
+					closeness_calculated=True
+					
+					if not closeness_calculated:
+						# Calculate closeness centrality for LWCC
+						closeness=G_id.closenessCentrality(scope=teex.Scope.LWCC,sample_fraction=int(0.0003*gc_size))
+						print(closeness)
 
-					with open(f"{log_path}/closeness_vals.txt","w") as wf:
-						for val in closeness:
-							wf.write(f"{val}\n")
-
-					node_df["closeness"]=pd.Series(dict(zip(closeness[:,0],closeness[:,1])))
+						with open(f"{log_path}/closeness_vals.txt","w") as wf:
+							for val in closeness:
+								wf.write(f"{val}\n")
+					else:
+						closeness=[]
+						with open (f"{log_path}/closeness_vals.txt","r") as rf:
+							closeness=[float(line.rstrip()) if line.rstrip()!="inf" else 0.0 for line in rf]
+						# Add values of closeness into df
+						node_df["closeness"]=pd.Series(dict(zip(range(1,len(closeness)+1),closeness)))
 
 
 
