@@ -171,7 +171,8 @@ for layer_name in net_names:
 		for u,v in G.iterEdges():
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
 				val=df.loc[(u+1,v+1)]["n_layers"].item()
-				G.setWeight(u,v,)
+				print(val)
+				G.setWeight(u,v,val)
 			else:
 				print(f"Skipped index ({u+1},{v+1}).")
 				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
