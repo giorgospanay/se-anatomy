@@ -174,7 +174,7 @@ for layer_name in net_names:
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
 				row=df.loc[pd.IndexSlice[(u+1,v+1)]]
 				print(row)
-				val=row[["n_layers"]]
+				val=row[["n_layers"]].values[0]
 				print(val)
 				G.setWeight(u,v,val)
 			else:
