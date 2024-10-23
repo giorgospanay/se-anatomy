@@ -138,7 +138,11 @@ if mode=="fix-node":
 	node_attb=pd.read_csv(f"{log_path}/node_attributes_2017.csv",indexcol="PersonNr",header=0)
 
 	print("Merging:")
+	node_full=pd.concat([node_df,node_attb],axis=1)
 
+	print("Saving:")
+	node_full.fillna(0.0,inplace=True)
+	node_full.to_csv(f"{log_path}/node_final_2017.csv")
 
 # For normal modes:
 for layer_name in net_names:
@@ -287,8 +291,9 @@ for layer_name in net_names:
 
 
 # Save result to node dataframe
-print("Saving node_b")
-node_df.fillna(0.0,inplace=True)
-node_df.to_csv(f"{log_path}/node_b_2017.csv")
+if mode=="fix-node":
+	print("Saving node_b")
+	node_df.fillna(0.0,inplace=True)
+	node_df.to_csv(f"{log_path}/node_b_2017.csv")
 
 
