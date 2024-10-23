@@ -170,7 +170,7 @@ for layer_name in net_names:
 		print("Set weights on G")
 		for u,v in G.iterEdges():
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
-				val=df.loc[(u+1,v+1)]["n_layers"].item()
+				val=df.loc[(u+1,v+1)][["n_layers"]].item()
 				print(val)
 				G.setWeight(u,v,val)
 			else:
