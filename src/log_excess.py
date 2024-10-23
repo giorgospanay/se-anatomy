@@ -181,7 +181,7 @@ for layer_name in net_names:
 			df=df[df["n_layers"]>=2][["PersonNr","PersonNr2","n_layers"]]
 
 			print("Set weights on G from filtered df")
-			for index, row in df.interrows():
+			for index, row in df.iterrows():
 				if G.hasEdge(row[0]-1,row[1]-1):
 					G.setWeight(row[0]-1,row[1]-1,row[2])
 				elif G.hasEdge(row[1]-1,row[0]-1):
