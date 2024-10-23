@@ -84,8 +84,8 @@ def get_tie_pairs(G,node_df):
 		if u+1 not in nbr_sum: nbr_sum[u+1]=0
 		if v+1 not in nbr_sum: nbr_sum[v+1]=0
 		# Add edge sum to u,v
-		nbr_sum[u+1]+=math.comb(w,2)
-		nbr_sum[v+1]+=math.comb(w,2)
+		nbr_sum[u+1]+=math.comb(int(w),2)
+		nbr_sum[v+1]+=math.comb(int(w),2)
 		# Counter++
 		ctr+=1
 
