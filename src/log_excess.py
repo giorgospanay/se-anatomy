@@ -81,8 +81,8 @@ def get_tie_pairs(G,node_df):
 		# Progress print
 		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}[w={w}])")
 		# Add to dictionary if missing
-		if u not in nbr_sum: nbr_sum[u]=0
-		if v not in nbr_sum: nbr_sum[v]=0
+		if u+1 not in nbr_sum: nbr_sum[u+1]=0
+		if v+1 not in nbr_sum: nbr_sum[v+1]=0
 		# Add edge sum to u,v
 		nbr_sum[u+1]+=math.comb(w,2)
 		nbr_sum[v+1]+=math.comb(w,2)
@@ -132,7 +132,7 @@ if mode=="fix-tri":
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-	flag_weighted_saved=False
+	flag_weighted_saved=True
 	G=None
 	# Read weighted graph if saved already
 	if (mode=="calc-excess" or mode=="calc-embed") and flag_weighted_saved:
@@ -179,6 +179,8 @@ for layer_name in net_names:
 			# Filter: Only check rows where n_layers>=2
 			print("Filter df")
 			df=df[df["n_layers"]>=2][["PersonNr","PersonNr2","n_layers"]]
+			print(f"Length df:{len(df)}")
+			print(df)
 
 			print("Set weights on G from filtered df")
 			for index, row in df.iterrows():
