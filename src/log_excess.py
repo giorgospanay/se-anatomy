@@ -161,8 +161,10 @@ for layer_name in net_names:
 
 			df.to_csv(f"{csv_path}/flat_all_id_nl2017.csv")
 		else:
+			print("Reading, setting index, sorting.")
 			df=pd.read_csv(f"{csv_path}/flat_all_id_nl2017.csv")
 			df=df.set_index(["PersonNr","PersonNr2"])
+			df=df.sort_index()
 
 			print(df)
 		
@@ -170,7 +172,9 @@ for layer_name in net_names:
 		print("Set weights on G")
 		for u,v in G.iterEdges():
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
-				val=df.loc[(u+1,v+1)][["n_layers"]].item()
+				row=df.loc[pd.IndexSlice[(u+1,v+1)]]
+				print(row)
+				val=row[["n_layers"]]
 				print(val)
 				G.setWeight(u,v,val)
 			else:
