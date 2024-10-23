@@ -146,7 +146,7 @@ for layer_name in net_names:
 		G=nk.graphtools.toWeighted(G)
 
 		# Set flag for grouping done here
-		grouping_flag=False
+		grouping_flag=True
 
 		if not grouping_flag:
 			# Read flat_all with ids
@@ -161,14 +161,17 @@ for layer_name in net_names:
 
 			df.to_csv(f"{csv_path}/flat_all_id_nl2017.csv")
 		else:
-			df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
+			df=pd.read_csv(f"{csv_path}/flat_all_id_nl2017.csv")
 			df=df.set_index(["PersonNr","PersonNr2"])
+
+			print(df)
 		
 		# Set weights on G accordingly
 		print("Set weights on G")
 		for u,v in G.iterEdges():
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
-				G.setWeight(u,v,df.at[(u+1,v+1),"n_layers"])
+
+				G.setWeight(u,v,df.loc[(u+1,v+1),"n_layers"])
 			else:
 				print(f"Skipped index ({u+1},{v+1}).")
 				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
