@@ -269,9 +269,9 @@ for layer_name in net_names:
 		# Calculate excess closure
 		print("Get excess closure.")
 		def _excess(row):
-			tri_actual=row[0]
-			tri_pure=row[1]
-			tie_pairs=row[2]
+			tri_actual=float(row[0])
+			tri_pure=float(row[1])
+			tie_pairs=float(row[2])
 
 			if tie_pairs==0: return 0.0
 
@@ -279,7 +279,7 @@ for layer_name in net_names:
 			c_actual=tri_actual/tie_pairs
 			
 			if c_pure==1: return 0.0
-			else: return (c_unique-c_pure)/(1-c_pure)
+			else: return (c_actual-c_pure)/(1-c_pure)
 
 		node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
 		
