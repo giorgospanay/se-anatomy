@@ -145,21 +145,30 @@ for layer_name in net_names:
 		print("Making weighted graph.")
 		G=nk.graphtools.toWeighted(G)
 
-		# Read flat_all with ids
-		print("Reading flat_all_id:")
-		df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+		# Set flag for grouping done here
+		grouping_flag=False
 
-		# Find number of layers where edge exists
-		print("Find n_layers")
-		df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
-		df=df[["PersonNr","PersonNr2","n_layers"]]
-		df=df.set_index(["PersonNr","PersonNr2"])
+		if not grouping_flag:
+			# Read flat_all with ids
+			print("Reading flat_all_id:")
+			df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+
+			# Find number of layers where edge exists
+			print("Find n_layers")
+			df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
+			df=df[["PersonNr","PersonNr2","n_layers"]]
+			df=df.set_index(["PersonNr","PersonNr2"])
+
+			df.to_csv(f"{csv_path}/flat_all_id_nl2017.csv")
+		else:
+			df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
+			df=df.set_index(["PersonNr","PersonNr2"])
 		
 		# Set weights on G accordingly
 		print("Set weights on G")
 		for u,v in G.iterEdges():
 			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
-				G.setWeight(u,v,float(df.at[(u+1,v+1)]["n_layers"]))
+				G.setWeight(u,v,df.at[(u+1,v+1),"n_layers"])
 			else:
 				print(f"Skipped index ({u+1},{v+1}).")
 				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
