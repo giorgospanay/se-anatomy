@@ -135,7 +135,7 @@ if mode=="fix-node":
 	net_names=[]
 	# Read node attributes from b
 	print("Reading node_attb")
-	node_attb=pd.read_csv(f"{log_path}/node_attributes_2017.csv",indexcol="PersonNr",header=0)
+	node_attb=pd.read_csv(f"{log_path}/node_attributes_2017.csv",index_col="PersonNr",header=0)
 
 	print("Merging:")
 	node_full=pd.concat([node_df,node_attb],axis=1)
