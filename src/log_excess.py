@@ -268,8 +268,6 @@ for layer_name in net_names:
 
 		# Calculate excess closure
 		print("Get excess closure.")
-		node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
-
 		def _excess(row):
 			tri_actual=row[0]
 			tri_pure=row[1]
@@ -282,6 +280,8 @@ for layer_name in net_names:
 			
 			if c_pure==1: return 0.0
 			else: return (c_unique-c_pure)/(1-c_pure)
+
+		node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
 		
 
 	# Calculate embeddedness from triangles
