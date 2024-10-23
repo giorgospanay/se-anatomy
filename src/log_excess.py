@@ -171,16 +171,24 @@ for layer_name in net_names:
 		# Set weights on G accordingly
 		print("Set weights on G")
 		for u,v in G.iterEdges():
-			if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
+			if df.index.isin([(u+1,v+1)]).any():
 				row=df.loc[pd.IndexSlice[(u+1,v+1)]]
-				print(row)
 				val=row[["n_layers"]].values[0]
-				print(val)
+				G.setWeight(u,v,val)
+			elif df.index.isin([(v+1,u+1)]).any():
+				row=df.loc[pd.IndexSlice[(v+1,u+1)]]
+				val=row[["n_layers"]].values[0]
 				G.setWeight(u,v,val)
 			else:
 				print(f"Skipped index ({u+1},{v+1}).")
 				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
 				print(f"Index in lv1: {v+1 in df.index.levels[1]}")
+
+			# if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
+			# 	row=df.loc[pd.IndexSlice[(u+1,v+1)]]
+			# 	val=row[["n_layers"]].values[0]
+			# 	print(val)
+			# 	G.setWeight(u,v,val)
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
