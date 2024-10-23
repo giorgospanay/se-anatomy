@@ -1,0 +1,95 @@
+import os, sys, glob, parse, pickle, gc
+import networkx as nx
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import ast
+
+## GLOBALS
+csv_path="../results2"
+log_path="../result_logs"
+plot_path="../result_plots"
+obj_path=csv_path
+
+
+# Read cmd args
+args=sys.argv[1:]
+mode=""
+if len(args)>=1:
+	mode=args[0]
+
+
+# Read node_final: node statistics plus attributes
+print("Reading node_final")
+node_df=pd.read_csv(f"{log_path}/node_final_2017.csv",indexcol="PersonNr",header=0)
+
+# ------------------------------------------------------------------------
+
+# Fig. 3A: Embeddedness (hist, bins of 4?)
+print("Figure 3A")
+
+# ------------------------------------------------------------------------
+
+# Fig. 3B: Tie range, where embeddedness=0.
+print("Figure 3B")
+
+# ------------------------------------------------------------------------
+
+# Fig. 4A: # nodes vs. closure score (lcc, excess)
+print("Figure 4A")
+
+fig4a, ax4a = plt.subplots()
+
+# Obtain histograms in 200 bins
+hist_lcc=node_df["lcc"].value_counts(bins=200).sort_index()
+hist_exc=node_df["excess_closure"].value_counts(bins=200).sort_index()
+
+# Plot clustering coefficient histogram, fill under curve
+ax4a.plot(hist_lcc,color="blue",marker=",",linestyle="solid")
+ax4a.fill_between(len(hist_lcc),hist_lcc,color="blue")
+# Plot excess closure histogram, fill under curve
+ax4a.plot(hist_exc,color="red",marker=",",linestyle="solid")
+ax4a.fill_between(len(hist_exc),hist_exc,color="red")
+
+ax4a.set_xlabel("Closure")
+ax4a.set_ylabel("Number of nodes")
+ax4a.set_yscale("log")
+ax4a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
+
+fig4a.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
+fig4a.savefig(f"{plot_path}/fig4a.png",bbox_inches='tight',dpi=300)
+
+# ------------------------------------------------------------------------
+
+# Fig. 4B: closure score (lcc, excess) vs degree (plus percentiles)
+print("Figure 4B")
+
+fig4b, ax4b = plt.subplots()
+
+# Obtain histograms in 200 bins
+hist_lcc=node_df["lcc"].value_counts(bins=200).sort_index()
+hist_exc=node_df["excess_closure"].value_counts(bins=200).sort_index()
+
+# Plot clustering coefficient histogram, fill under curve
+ax4a.plot(hist_lcc,color="blue",marker=",",linestyle="solid")
+ax4a.fill_between(len(hist_lcc),hist_lcc,color="blue")
+# Plot excess closure histogram, fill under curve
+ax4a.plot(hist_exc,color="red",marker=",",linestyle="solid")
+ax4a.fill_between(len(hist_exc),hist_exc,color="red")
+
+ax4a.set_xlabel("Closure")
+ax4a.set_ylabel("Number of nodes")
+ax4a.set_yscale("log")
+ax4a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
+
+fig4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
+fig4b.savefig(f"{plot_path}/fig4a.png",bbox_inches='tight',dpi=300)
+
+
+# ------------------------------------------------------------------------
+
+# Fig. 5: income, education, urbanization x degree, excess closure, closeness vs. age
+print("Figure 5")
+
+
+# ------------------------------------------------------------------------

@@ -168,8 +168,8 @@ print(hist_total)
 
 # Plot deg_total histogram
 ax1c.plot(hist_total,color="black",marker=".",linestyle="dashdot")
-# Also plot deg_flat histogram
-ax1c.plot(hist_flat,color="grey",marker=",",linestyle="dashdot")
+# # Also plot deg_flat histogram
+# ax1c.plot(hist_flat,color="grey",marker=",",linestyle="dashdot")
 
 #ax1c.set_ylabel("Frequency")
 ax1c.set_xlabel("Degree")
@@ -179,7 +179,8 @@ ax1c.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax1c.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
 # Save
-fig1c.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
+fig1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
+#fig1c.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 fig1c.savefig(f"{plot_path}/fig1c.png",bbox_inches='tight',dpi=300)
 
 
@@ -288,12 +289,12 @@ hist_total.sort_index(ascending=False,inplace=True)
 deg_total=list(reversed(range(len(hist_total))))
 cs_total=np.cumsum(hist_total)
 
-hist_flat.reverse()
-deg_flat=list(reversed(range(len(hist_flat))))
-cs_flat=np.cumsum(hist_flat)
+# hist_flat.reverse()
+# deg_flat=list(reversed(range(len(hist_flat))))
+# cs_flat=np.cumsum(hist_flat)
 
 ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
-ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
+#ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
 ax2b.set_xlabel("Degree")
 ax2b.set_yscale("log")
@@ -302,7 +303,8 @@ ax2b.set_xscale("log")
 ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2b.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
-fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
+fig2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2)
+#fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 fig2b.savefig(f"{plot_path}/fig2b.png",bbox_inches='tight',dpi=300)
 
 

@@ -291,7 +291,7 @@ for layer_name in net_names:
 
 
 # Save result to node dataframe
-if mode=="fix-node":
+if mode!="fix-node":
 	print("Saving node_b")
 	node_df.fillna(0.0,inplace=True)
 	node_df.to_csv(f"{log_path}/node_b_2017.csv")
