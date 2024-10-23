@@ -132,8 +132,16 @@ if mode=="fix-tri":
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-	# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
-	G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
+	flag_weighted_saved=False
+	G=None
+	# Read weighted graph if saved already
+	if (mode=="calc-excess" or mode=="calc-embed") and flag_weighted_saved:
+		# Make Networkit graph from weighted edgelist.
+		G=nk.readGraph(f"{csv_path}/flat_all_id_w2017.csv",nk.Format.METIS)
+
+	else:
+		# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
+		G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
 	# Index all edges
 	print("Indexing edges.")
 	G.indexEdges()
@@ -141,54 +149,67 @@ for layer_name in net_names:
 	# For special triangle modes (excess, embeddedness): 
 	#  calculate # neighbors over all edges and add as weight
 	if mode=="calc-excess" or mode=="calc-embed":
-		# Make weighted graph
-		print("Making weighted graph.")
-		G=nk.graphtools.toWeighted(G)
+		if not flag_weighted_saved:
+			# Make weighted graph
+			print("Making weighted graph.")
+			G=nk.graphtools.toWeighted(G)
 
-		# Set flag for grouping done here
-		grouping_flag=True
+			# Set flag for grouping done here
+			grouping_flag=True
 
-		if not grouping_flag:
-			# Read flat_all with ids
-			print("Reading flat_all_id:")
-			df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+			if not grouping_flag:
+				# Read flat_all with ids
+				print("Reading flat_all_id:")
+				df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
 
-			# Find number of layers where edge exists
-			print("Find n_layers")
-			df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
-			df=df[["PersonNr","PersonNr2","n_layers"]]
-			df=df.set_index(["PersonNr","PersonNr2"])
-
-			df.to_csv(f"{csv_path}/flat_all_id_nl2017.csv")
-		else:
-			print("Reading, setting index, sorting.")
-			df=pd.read_csv(f"{csv_path}/flat_all_id_nl2017.csv")
-			df=df.set_index(["PersonNr","PersonNr2"])
-			df=df.sort_index()
-
-			print(df)
-		
-		# Set weights on G accordingly
-		print("Set weights on G")
-		for u,v in G.iterEdges():
-			if df.index.isin([(u+1,v+1)]).any():
-				row=df.loc[pd.IndexSlice[(u+1,v+1)]]
-				val=row[["n_layers"]].values[0]
-				G.setWeight(u,v,val)
-			elif df.index.isin([(v+1,u+1)]).any():
-				row=df.loc[pd.IndexSlice[(v+1,u+1)]]
-				val=row[["n_layers"]].values[0]
-				G.setWeight(u,v,val)
+				# Find number of layers where edge exists
+				print("Find n_layers")
+				df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
+				df=df[["PersonNr","PersonNr2","n_layers"]]
+				df=df.set_index(["PersonNr","PersonNr2"])
+				df.to_csv(f"{csv_path}/flat_all_id_nl2017.csv")
 			else:
-				print(f"Skipped index ({u+1},{v+1}).")
-				print(f"Index in lv0: {u+1 in df.index.levels[0]}")
-				print(f"Index in lv1: {v+1 in df.index.levels[1]}")
+				print("Reading, setting index, sorting.")
+				df=pd.read_csv(f"{csv_path}/flat_all_id_nl2017.csv")
+				# df=df.set_index(["PersonNr","PersonNr2"])
+				# df=df.sort_index()
 
-			# if u+1 in df.index.levels[0] and v+1 in df.index.levels[1]:
-			# 	row=df.loc[pd.IndexSlice[(u+1,v+1)]]
-			# 	val=row[["n_layers"]].values[0]
-			# 	print(val)
-			# 	G.setWeight(u,v,val)
+				print(df)
+
+			# Filter: Only check rows where n_layers>=2
+			print("Filter df")
+			df=df[df["n_layers"]>=2][["PersonNr","PersonNr2","n_layers"]]
+
+			print("Set weights on G from filtered df")
+			for index, row in df.interrows():
+				if G.hasEdge(row[0]-1,row[1]-1):
+					G.setWeight(row[0]-1,row[1]-1,row[2])
+				elif G.hasEdge(row[1]-1,row[0]-1):
+					G.setWeight(row[1]-1,row[0]-1,row[2])
+				else:
+					print(f"Skipped index ({row[0]},{row[1]}).")
+
+
+
+			# # Set weights on G accordingly
+			# print("Set weights on G")
+			# for u,v in G.iterEdges():
+			# 	if df.index.isin([(u+1,v+1)]).any():
+			# 		row=df.loc[pd.IndexSlice[(u+1,v+1)]]
+			# 		val=row[["n_layers"]].values[0]
+			# 		G.setWeight(u,v,val)
+			# 	elif df.index.isin([(v+1,u+1)]).any():
+			# 		row=df.loc[pd.IndexSlice[(v+1,u+1)]]
+			# 		val=row[["n_layers"]].values[0]
+			# 		G.setWeight(u,v,val)
+			# 	else:
+			# 		print(f"Skipped index ({u+1},{v+1}).")
+			# 		print(f"Index in lv0: {u+1 in df.index.levels[0]}")
+			# 		print(f"Index in lv1: {v+1 in df.index.levels[1]}")
+
+			# Save G for future usage
+			print("Saving G (weighted):")
+			nk.writeGraph(G,f"{csv_path}/flat_all_id_w2017.csv",nk.Format.METIS)
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
