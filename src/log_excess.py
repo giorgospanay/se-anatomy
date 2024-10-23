@@ -94,7 +94,7 @@ def get_tie_pairs(G,node_df):
 	for u in nbr_sum:
 		k_u=node_df.loc[u]["deg_total"]
 		# P(u)=comb(deg_total(u),2)-sum_neighbours(comb(n_layers,2))
-		tie_pairs[u]=math.comb(k_u,2)-nbr_sum[u]
+		tie_pairs[u]=math.comb(int(k_u),2)-nbr_sum[u]
 		# Progress print
 		if ctr%1000000==0: print(f"Node #{ctr//1000000}({u}): P(u)={tie_pairs[u]}")
 		# Counter++
