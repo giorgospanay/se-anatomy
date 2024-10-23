@@ -44,6 +44,9 @@ fig4a, ax4a = plt.subplots()
 hist_lcc=node_df["lcc"].value_counts(bins=200).sort_index()
 print(hist_lcc)
 hist_exc=node_df["excess_closure"].value_counts(bins=200).sort_index()
+print(node_df["excess_closure"].min())
+print(node_df["excess_closure"].max())
+
 print(hist_exc)
 
 # Plot clustering coefficient histogram, fill under curve
