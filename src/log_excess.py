@@ -138,7 +138,8 @@ if mode=="fix-node":
 	node_attb=pd.read_csv(f"{log_path}/node_attributes_2017.csv",index_col="PersonNr",header=0)
 
 	print("Merging:")
-	node_full=pd.concat([node_df,node_attb],axis=1)
+	#node_full=pd.concat([node_df,node_attb],axis=1)
+	node_full = pd.merge(node_df, node_attb, left_index=True, right_index=True)
 
 	print("Saving:")
 	node_full.fillna(0.0,inplace=True)
