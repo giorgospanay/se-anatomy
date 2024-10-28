@@ -18,16 +18,11 @@ mode=""
 if len(args)>=1:
 	mode=args[0]
 
+# ------------------------------------------------------------------------
 
 # Read node_final: node statistics plus attributes
 print("Reading node_final")
 node_df=pd.read_csv(f"{log_path}/node_final_2017.csv",index_col="PersonNr",header=0)
-
-print(node_df[node_df["excess_closure"]<0][["actual_tri","pure_tri","excess_closure","tie_pairs","lcc"]])
-
-print(node_df[node_df["excess_closure"]>1][["actual_tri","pure_tri","excess_closure","tie_pairs","lcc"]])
-
-print(node_df[node_df["tie_pairs"]<node_df["pure_tri"]][["actual_tri","pure_tri","excess_closure","tie_pairs","lcc"]])
 
 # ------------------------------------------------------------------------
 
@@ -56,11 +51,12 @@ print(node_df["excess_closure"].max())
 print(hist_exc)
 
 # Plot clustering coefficient histogram, fill under curve
-ax4a.plot(hist_lcc,color="blue",marker=",",linestyle="solid")
-ax4a.fill_between(len(hist_lcc),hist_lcc,color="blue")
+x_lcc=hist_lcc.index.mid
+ax4a.plot(x_lcc,hist_lcc,color="blue",marker=",",linestyle="solid")
+ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue")
 # Plot excess closure histogram, fill under curve
-ax4a.plot(hist_exc,color="red",marker=",",linestyle="solid")
-ax4a.fill_between(len(hist_exc),hist_exc,color="red")
+ax4a.plot(x_lcchist_exc,color="red",marker=",",linestyle="solid")
+ax4a.fill_between(x_lcc,hist_exc,color="lightcoral")
 
 ax4a.set_xlabel("Closure")
 ax4a.set_ylabel("Number of nodes")
