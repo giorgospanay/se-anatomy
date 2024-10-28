@@ -28,26 +28,12 @@ if len(args)>=1:
 
 
 # Manually removes duplicate edges from graph
-def remove_dups(G):
-	# u_edges=set()
-
-	# for u,v in G.iterEdges():
-	# 	# Create edge id, sorting manually through node ids		
-	# 	e=(min(u,v),max(u,v))
-		
-	# 	# Add to unique edges if not already present
-	# 	if e not in u_edges: u_edges.add(e)
-	# 	# If not unique, remove from graph
-	# 	else: 
-
-	G_n=nk.Graph(G.numberOfNodes(),directed=False)
-
+def remove_dups(G,n_weighted=False):
+	# Create empty graph, weighted if necessary.
+	G_n=nk.Graph(G.numberOfNodes(),directed=False,weighted=n_weighted)
+	# Iterate over all edges and add them into new empty graph. Ignore multiedges
 	G.forEdges(lambda u,v,w,id: G_n.addEdge(u,v,w=w,checkMultiEdge=True))
-
 	return G_n
-
-
-
 
 # Returns triangles per node, and scores (list of edges)
 def get_node_triangles(G,multi_weight=False,out_scores=False):

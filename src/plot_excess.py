@@ -27,6 +27,8 @@ print(node_df[node_df["excess_closure"]<0][["actual_tri","pure_tri","excess_clos
 
 print(node_df[node_df["excess_closure"]>1][["actual_tri","pure_tri","excess_closure","tie_pairs","lcc"]])
 
+print(node_df[node_df["tie_pairs"]>node_df["pure_tri"]][["actual_tri","pure_tri","excess_closure","tie_pairs","lcc"]])
+
 # ------------------------------------------------------------------------
 
 # Fig. 3A: Embeddedness (hist, bins of 4?)
