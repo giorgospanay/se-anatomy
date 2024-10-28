@@ -55,7 +55,7 @@ x_lcc=hist_lcc.index.mid
 ax4a.plot(x_lcc,hist_lcc,color="blue",marker=",",linestyle="solid")
 ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue")
 # Plot excess closure histogram, fill under curve
-ax4a.plot(x_lcchist_exc,color="red",marker=",",linestyle="solid")
+ax4a.plot(x_lcc,hist_exc,color="red",marker=",",linestyle="solid")
 ax4a.fill_between(x_lcc,hist_exc,color="lightcoral")
 
 ax4a.set_xlabel("Closure")
