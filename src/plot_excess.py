@@ -42,9 +42,9 @@ print("Figure 4A")
 fig4a, ax4a = plt.subplots()
 
 # Obtain histograms in 200 bins
-hist_lcc=node_df["lcc"].value_counts(bins=100).sort_index()
+hist_lcc=node_df["lcc"].value_counts(bins=50).sort_index()
 print(hist_lcc)
-hist_exc=node_df["excess_closure"].value_counts(bins=100).sort_index()
+hist_exc=node_df["excess_closure"].value_counts(bins=50).sort_index()
 print(node_df["excess_closure"].min())
 print(node_df["excess_closure"].max())
 
@@ -76,13 +76,13 @@ fig4b, ax4b = plt.subplots()
 
 # Get stats for clustering coefficient
 result_lcc=node_df.groupby("deg_total")["lcc"].agg(
-	mean_value=('mean'),                   # Mean of B for each A
+	mean_value='mean',                   # Mean of B for each A
 	percentile_25=('quantile', 0.25),      # 25th percentile of B for each A
 	percentile_75=('quantile', 0.75)       # 75th percentile of B for each A
 )
 # Get stats for excess closure
 result_exc=node_df.groupby("deg_total")["excess_closure"].agg(
-	mean_value=('mean'),                   # Mean of B for each A
+	mean_value='mean',                   # Mean of B for each A
 	percentile_25=('quantile', 0.25),      # 25th percentile of B for each A
 	percentile_75=('quantile', 0.75)       # 75th percentile of B for each A
 )
