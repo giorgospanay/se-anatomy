@@ -51,6 +51,7 @@ def get_node_triangles(G,multi_weight=False,out_scores=False):
 			node_tri[v+1]+=score
 			# Counter++
 			ctr+=1
+
 	# Weight on (multi-)edges:: calculate triangles x weight (#layers connected)
 	else:
 		for u,v,w in G.iterEdgesWeights():
@@ -65,6 +66,12 @@ def get_node_triangles(G,multi_weight=False,out_scores=False):
 			node_tri[v+1]+=(score*w)
 			# Counter++
 			ctr+=1
+
+	# Now div 2 for all adjacent edges
+	for u in node_tri:
+		temp=node_tri[u]
+		node_tri[u]=temp//2
+
 	if out_scores: 
 		return node_tri, e_scores
 	else: 
