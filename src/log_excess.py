@@ -176,7 +176,10 @@ for layer_name in net_names:
 	
 	# Manually remove duplicate edges
 	print("Removing duplicate edges.")
-	G=remove_dups(G)
+	if mode=="calc-excess":
+		G=remove_dups(G,n_weighted=True)
+	else:	
+		G=remove_dups(G)
 
 	# Index all edges
 	print("Indexing edges.")
