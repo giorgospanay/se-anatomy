@@ -117,6 +117,24 @@ def get_tie_pairs(G,node_df):
 
 	return tie_pairs
 
+# Calculates excess closure based on df rows.
+def _excess(row):
+	tri_actual=float(row[0])
+	tri_pure=float(row[1])
+	tie_pairs=float(row[2])
+
+	if tie_pairs==0: return 0.0
+
+	c_pure=tri_pure/tie_pairs
+	c_actual=tri_actual/tie_pairs
+
+	if c_pure==1: return 0.0
+	else: 
+		res=(c_actual-c_pure)/(1-c_pure)
+		if res<0: return 0.0
+		elif res>1: return 1.0
+		return res
+
 # Checks for embeddedness and tie range (second shortest path)
 def get_embeddedness(G,e_scores):
 	# For all edges in G: if embeddedness==0 (score=0) then find second SP
@@ -144,6 +162,12 @@ if mode=="fix-tri":
 	net_names=[]
 	# Calculate pure triangles (sum of tri on each layer separately)
 	node_df["pure_tri"]=node_df["tri_close"]+node_df["tri_ext"]+node_df["tri_house"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
+
+# Special lists for fix-exc: work on node_df, no need to iterate layers
+if mode=="fix-excess":
+	net_names=[]
+	# Fix excess closure exceptions: if negative, set to 0. If over 1, set to 1.
+	node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
 
 # Special lists for fix-node: add node_df attributes. No need to iterate layers
 if mode=="fix-node":
@@ -292,19 +316,6 @@ for layer_name in net_names:
 
 		# Calculate excess closure
 		print("Get excess closure.")
-		def _excess(row):
-			tri_actual=float(row[0])
-			tri_pure=float(row[1])
-			tie_pairs=float(row[2])
-
-			if tie_pairs==0: return 0.0
-
-			c_pure=tri_pure/tie_pairs
-			c_actual=tri_actual/tie_pairs
-			
-			if c_pure==1: return 0.0
-			else: return (c_actual-c_pure)/(1-c_pure)
-
 		node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
 		
 
