@@ -42,20 +42,21 @@ print("Figure 4A")
 fig4a, ax4a = plt.subplots()
 
 # Obtain histograms in 200 bins
-hist_lcc=node_df["lcc"].value_counts(bins=200).sort_index()
+hist_lcc=node_df["lcc"].value_counts(bins=100).sort_index()
 print(hist_lcc)
-hist_exc=node_df["excess_closure"].value_counts(bins=200).sort_index()
+hist_exc=node_df["excess_closure"].value_counts(bins=100).sort_index()
 print(node_df["excess_closure"].min())
 print(node_df["excess_closure"].max())
 
 print(hist_exc)
 
-# Plot clustering coefficient histogram, fill under curve
+# Plot clustering coefficient histogram
 x_lcc=hist_lcc.index.mid
 ax4a.plot(x_lcc,hist_lcc,color="blue",marker=",",linestyle="solid")
-ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue")
-# Plot excess closure histogram, fill under curve
+# Plot excess closure histogram
 ax4a.plot(x_lcc,hist_exc,color="red",marker=",",linestyle="solid")
+# Fill under curves. Overlap for both?
+ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue")
 ax4a.fill_between(x_lcc,hist_exc,color="lightcoral")
 
 ax4a.set_xlabel("Closure")
@@ -103,7 +104,6 @@ ax4b.set_yticks([1,10,100,1000,10000,100000],labels=["1","10","100","1K","10K","
 
 fig4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
 fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
-
 
 # ------------------------------------------------------------------------
 
