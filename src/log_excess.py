@@ -27,6 +27,28 @@ if len(args)>=1:
 		top=args[1]
 
 
+# Manually removes duplicate edges from graph
+def remove_dups(G):
+	# u_edges=set()
+
+	# for u,v in G.iterEdges():
+	# 	# Create edge id, sorting manually through node ids		
+	# 	e=(min(u,v),max(u,v))
+		
+	# 	# Add to unique edges if not already present
+	# 	if e not in u_edges: u_edges.add(e)
+	# 	# If not unique, remove from graph
+	# 	else: 
+
+	G_n=nk.Graph(G.numberOfNodes(),directed=False)
+
+	G.forEdges(lambda u,v,w,id: G_n.addEdge(u,v,w=w,checkMultiEdge=True))
+
+	return G_n
+
+
+
+
 # Returns triangles per node, and scores (list of edges)
 def get_node_triangles(G,multi_weight=False,out_scores=False):
 	e_triangles=nk.sparsification.TriangleEdgeScore(G)
@@ -165,6 +187,11 @@ for layer_name in net_names:
 	else:
 		# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
 		G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
+	
+	# Manually remove duplicate edges
+	print("Removing duplicate edges.")
+	G=remove_dups(G)
+
 	# Index all edges
 	print("Indexing edges.")
 	G.indexEdges()
