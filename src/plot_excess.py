@@ -113,6 +113,8 @@ fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
 # Fig. 5: income, education, urbanization x degree, excess closure, closeness vs. age
 print("Figure 5")
 
+matplotlib.rcParams['agg.path.chunksize'] = 10000
+
 # Set up the 3x3 grid
 fig5, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True, sharey=True)
 
