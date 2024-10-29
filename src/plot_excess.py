@@ -134,8 +134,7 @@ for i, row_value in enumerate(row_values):
 		ax = axes[i, j]
 
 		# Group values per (row_value). Find mean (y_col) and sort
-		row_data=filter_data.groupby(row_value).mean().sort_index()
-
+		row_data=filter_data.groupby(row_value).count()
 		print(row_data)
 		
 		# Get colormap to be used
