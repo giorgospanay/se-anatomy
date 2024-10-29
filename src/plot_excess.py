@@ -125,7 +125,9 @@ column_pairs = [("age","deg_total"),("age","excess_closure"),("age","closeness")
 # Plot each row and column
 for i, row_value in enumerate(row_values):
 	# Filter data for each row label
-	filter_data = node_df[node_df[row_value].notna()]
+	filter_data=node_df[node_df[row_value].notna()]
+	# Leave age<=90
+	filter_data=filter_data[filter_data["age"]<=90]
 
 	
 	for j, (x_col, y_col) in enumerate(column_pairs):
@@ -146,28 +148,35 @@ for i, row_value in enumerate(row_values):
 
 		# Get labels to be used
 		tx_lbl=""
+		bnd_lbl=[]
+		tick_lbl=[]
 		val_lbl=[]
 		if i==0:
 			tx_lbl="Income decile"
-			val_lbl=list(range(1,11))
+			bnd_lbl=[0,1,2,3,4,5,6,7,8,9,10]
+			tick_lbl=[0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5]
+			val_lbl=[1,2,3,4,5,6,7,8,9,10]
 		elif i==1:
 			tx_lbl="Highest education level"
-			val_lbl=["","Primary","Secondary","Tertiary"]
+			bnd_lbl=[0,1,2,3]
+			tick_lbl=[0.5,1.5,2.5]
+			val_lbl=["Primary","Secondary","Tertiary"]
 		elif i==2:
 			tx_lbl="Urbanization level"
-			val_lbl=["","Not urban","","Strongly urban"]
+			bnd_lbl=[0,1,2,3]
+			tick_lbl=[0.5,2.5]
+			val_lbl=["Not urban","Strongly urban"]
 
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
 		cm_range=np.arange(0,len(row_data.index))
+		norm=mpl.colors.BoundaryNorm(cm_range,cmap.N)
 		color=cmap(cm_range)
-
 
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data.index):
 			# Get data for unique_val
 			plot_data=filter_data[filter_data[row_value]==unique_val]
-			print(plot_data)
 
 			# Find mean on x_col for every age
 			plot_mean=plot_data.groupby("age")[y_col].mean()
@@ -193,7 +202,7 @@ for i, row_value in enumerate(row_values):
 		ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
-		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range,cmap.N),cmap=cmap),ax=ax,location="top",label=tx_lbl)
+		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=norm,cmap=cmap),ax=ax,location="top",label=tx_lbl)
 		cbar.set_ticks(ticks=cm_range,labels=val_lbl)
 
 #fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
