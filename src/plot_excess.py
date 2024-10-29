@@ -45,16 +45,17 @@ fig4a, ax4a = plt.subplots()
 hist_lcc=node_df["lcc"].value_counts(bins=50).sort_index()
 hist_exc=node_df["excess_closure"].value_counts(bins=50).sort_index()
 
-# Plot clustering coefficient histogram
+# Plot clustering coefficient histogram, excess closure histogram
 x_lcc=hist_lcc.index.mid
-ax4a.plot(x_lcc,hist_lcc,color="blue",marker=" ",linestyle="solid")
-# Plot excess closure histogram
-ax4a.plot(x_lcc,hist_exc,color="red",marker=" ",linestyle="solid")
+# ax4a.plot(x_lcc,hist_lcc,color="blue",marker=" ",linestyle="solid")
+# ax4a.plot(x_lcc,hist_exc,color="red",marker=" ",linestyle="solid")
+ax4a.plot(x_lcc,hist_lcc,color="lightskyblue",marker=" ",linestyle="solid")
+ax4a.plot(x_lcc,hist_exc,color="lightcoral",marker=" ",linestyle="solid")
+
 # Fill under curves. Overlap for both?
-#ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue")
-#ax4a.fill_between(x_lcc,hist_exc,color="lightcoral")
-ax4a.fill_between(x_lcc,hist_lcc,color="blue")
-ax4a.fill_between(x_lcc,hist_exc,color="red")
+ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue",interpolate=True)
+ax4a.fill_between(x_lcc,hist_exc,color="lightcoral",interpolate=True)
+
 
 ax4a.set_xlabel("Closure")
 ax4a.set_ylabel("Number of nodes")
