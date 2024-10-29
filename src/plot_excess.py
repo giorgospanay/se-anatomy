@@ -89,18 +89,20 @@ result_exc=node_df.groupby("deg_total")["excess_closure"].agg(
 # Get degree index
 result_index=result_lcc.index
 
-# Plot clustering coefficient histogram, fill under curve
+# Plot clustering coefficient histogram
 ax4b.plot(result_lcc["mean_value"],color="blue",marker=",",linestyle="solid")
-ax4b.fill_between(result_index,result_lcc["percentile_25"],y2=result_lcc["percentile_75"],color="lightskyblue")
-# Plot excess closure histogram, fill under curve
+# Plot excess closure histogram
 ax4b.plot(result_exc["mean_value"],color="red",marker=",",linestyle="solid")
+# Fill under curves
+ax4b.fill_between(result_index,result_lcc["percentile_25"],y2=result_lcc["percentile_75"],color="lightskyblue")
 ax4b.fill_between(result_index,result_exc["percentile_25"],y2=result_exc["percentile_75"],color="lightcoral")
+
 
 ax4b.set_ylabel("Closure")
 ax4b.set_xlabel("Degree")
 ax4b.set_xscale("log")
 
-ax4b.set_yticks([1,10,100,1000,10000,100000],labels=["1","10","100","1K","10K","100K"])
+ax4b.set_xticks([1,10,100,1000,10000,100000],labels=["1","10","100","1K","10K","100K"])
 
 fig4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
 fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
