@@ -124,8 +124,6 @@ column_pairs = [("age","deg_total"),("age","excess_closure"),("age","closeness")
 
 # Plot each row and column
 for i, row_value in enumerate(row_values):
-	# Set values to be ignored
-
 	# Filter data for each row label
 	filter_data = node_df[node_df[row_value].notna()]
 
@@ -161,8 +159,6 @@ for i, row_value in enumerate(row_values):
 			print(plot_mean)
 
 
-			#grouped_data[x_col].loc[unique_val], grouped_data[y_col].loc[unique_val]
-
 			# Plot line from heatmap
 			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
 		
@@ -175,10 +171,9 @@ for i, row_value in enumerate(row_values):
 		elif y_col=="excess_closure": 
 			y_lbl="Excess closure"
 
-		if i == 2:  # Only set x-axis label on the last row
-			ax.set_xlabel("Age")
-		if j == 0:  # Only set y-axis label on the first column
-			ax.set_ylabel(y_lbl)
+		# Set labels
+		ax.set_xlabel("Age")
+		ax.set_ylabel(y_lbl)
 		
 		# Add heatmap used as legend on top of figure
 		plt.colorbar(mpl.cm.ScalarMappable(cmap=cmap),ax=ax,location="top")
