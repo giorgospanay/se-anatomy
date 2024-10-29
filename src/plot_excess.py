@@ -123,7 +123,7 @@ row_values = ["income_group","education_level","DeSO"]
 column_pairs = [("age","deg_total"),("age","excess_closure"),("age","closeness")]
 
 # Plot each row and column
-for i, row_value in enumerate(row_values.items()):
+for i, row_value in enumerate(row_values):
 	# Set values to be ignored
 
 	# Filter data for each row label
