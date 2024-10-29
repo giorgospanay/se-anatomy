@@ -168,8 +168,8 @@ for i, row_value in enumerate(row_values):
 
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
-		cm_range=np.arange(0,len(row_data.index))
-		norm=mpl.colors.BoundaryNorm(cm_range,cmap.N)
+		cm_range=np.arange(0,len(row_data.index)+1)
+		norm=mpl.colors.BoundaryNorm(cm_range,len(val_lbl))
 		color=cmap(cm_range)
 
 		print(cm_range)
