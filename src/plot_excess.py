@@ -122,7 +122,7 @@ column_pairs = [("age","deg_total"), ("age","closeness"), ("age","excess_closure
 # Plot each row and column
 for i, (row_label, row_value) in enumerate(row_values.items()):
 	# Filter data for each row label ('I', 'E', 'U')
-	row_data = df[df[row_value].notna()]
+	row_data = node_df[node_df[row_value].notna()]
 	
 	for j, (x_col, y_col) in enumerate(column_pairs):
 		ax = axes[i, j]
