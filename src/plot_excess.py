@@ -140,11 +140,11 @@ for i, row_value in enumerate(row_values):
 		
 		# Get colormap to be used
 		cm_lbl=""
-		if y==0:
+		if j==0:
 			cm_lbl="Reds"
-		elif y==1:
+		elif j==1:
 			cm_lbl="Blues"
-		elif y==2:
+		elif j==2:
 			cm_lbl="Greens"
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
