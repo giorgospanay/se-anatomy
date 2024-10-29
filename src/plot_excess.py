@@ -174,7 +174,8 @@ for i, row_value in enumerate(row_values):
 
 
 			# Plot line from heatmap
-			ax.plot(plot_mean,color=color[idx],marker=" ",xlim=(0,90),label=f'{row_value}={unique_val}')
+			ax.xlim((0,90))
+			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
 			
 		# Set labels
 		y_lbl=""
