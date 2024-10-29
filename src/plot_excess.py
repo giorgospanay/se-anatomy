@@ -152,10 +152,10 @@ for i, row_value in enumerate(row_values):
 			val_lbl=list(range(1,11))
 		elif i==1:
 			tx_lbl="Highest education level"
-			val_lbl=["Primary","Secondary","Tertiary"]
+			val_lbl=["","Primary","Secondary","Tertiary"]
 		elif i==2:
 			tx_lbl="Urbanization level"
-			val_lbl=["Not urban","","Strongly urban"]
+			val_lbl=["","Not urban","","Strongly urban"]
 
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
