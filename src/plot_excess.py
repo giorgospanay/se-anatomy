@@ -203,7 +203,7 @@ for i, row_value in enumerate(row_values):
 		
 		# Add heatmap used as legend on top of figure
 		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=norm,cmap=cmap),ax=ax,location="top",label=tx_lbl)
-		cbar.set_ticks(ticks=cm_range,labels=val_lbl)
+		cbar.set_ticks(ticks=tick_lbl,labels=val_lbl)
 
 #fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
 fig5.savefig(f"{plot_path}/fig5.png",dpi=300)
