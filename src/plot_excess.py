@@ -129,14 +129,14 @@ for i, row_value in enumerate(row_values):
 	# Filter data for each row label
 	filter_data = node_df[node_df[row_value].notna()]
 
-	# Group values per (unique) value and sort
-	us_row_data=filter_data.groupby(row_value)
-	row_data=us_row_data.sort_index()
-
-	print(row_data)
 	
 	for j, (x_col, y_col) in enumerate(column_pairs):
 		ax = axes[i, j]
+
+		# Group values per (row_value). Find mean (y_col) and sort
+		row_data=filter_data.groupby(row_value)[y_col].mean().sort_index()
+
+		print(row_data)
 		
 		# Get colormap to be used
 		cm_lbl=""
@@ -150,10 +150,11 @@ for i, row_value in enumerate(row_values):
 		cmap=plt.get_cmap(cm_lbl)
 		color=cmap(np.linspace(0,1,len(row_data.index)))
 
+
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data):
 			# Get data for unique_val and aggregate to mean
-			plot_data=row_data[row_data[row_value] == unique_val][y_col].mean()
+			plot_data=row_data[row_data[row_value] == unique_val]
 
 			print(plot_data)
 
