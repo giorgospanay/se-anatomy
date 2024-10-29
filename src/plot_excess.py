@@ -135,7 +135,6 @@ for i, row_value in enumerate(row_values):
 
 		# Group values per (row_value). Find mean (y_col) and sort
 		row_data=filter_data.groupby(row_value).count()
-		print(row_data)
 		
 		# Get colormap to be used
 		cm_lbl=""
@@ -173,6 +172,9 @@ for i, row_value in enumerate(row_values):
 		norm=mpl.colors.BoundaryNorm(cm_range,cmap.N)
 		color=cmap(cm_range)
 
+		print(cm_range)
+		print(color)
+
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data.index):
 			# Get data for unique_val
@@ -185,7 +187,7 @@ for i, row_value in enumerate(row_values):
 
 			# Plot line from heatmap
 			ax.set_xlim(left=0,right=90)
-			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
+			ax.plot(plot_mean,color=color[cm_range[idx]],marker=" ",label=f'{row_value}={unique_val}')
 			
 		# Set labels
 		y_lbl=""
