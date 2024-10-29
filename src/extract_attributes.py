@@ -31,10 +31,10 @@ data['Sun2000niva'] = data['Sun2000niva'].astype(str)
 data['education_level'] = data['Sun2000niva'].apply(lambda x: x[0] if len(x) > 0 else '')
 
 di = {"1":"Primary","2":"Primary","3":"Secondary","4":"Tertiary","5":"Tertiary","6":"Tertiary","9":None}
-data.replace({"education_level": di})
+data.replace({"education_level": di},inplace=True)
 
-deso_i = {"A":"Not urban","B":"Urban","C":"Strongly urban","D":None}
-data.replace({"DeSO":deso_i})
+deso_i = {"A":"Not urban","B":"Urban","C":"Strongly urban","R":None}
+data.replace({"DeSO":deso_i},inplace=True)
 
 # income into deciles --> need to find that variable again
 #what means what again 
