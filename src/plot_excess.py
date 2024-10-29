@@ -117,34 +117,65 @@ print("Figure 5")
 matplotlib.rcParams['agg.path.chunksize'] = 10000
 
 # Set up the 3x3 grid
-fig5, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True, sharey=True)
+fig5, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True)
 
-row_values = {"income":"income_group","education":"education_level","urbanization":"DeSO"}
-column_pairs = [("age","deg_total"), ("age","closeness"), ("age","excess_closure")]
+row_values = ["income_group","education_level","DeSO"]
+column_pairs = [("age","deg_total"),("age","excess_closure"),("age","closeness")]
 
 # Plot each row and column
-for i, (row_label, row_value) in enumerate(row_values.items()):
-	# Filter data for each row label ('I', 'E', 'U')
-	row_data = node_df[node_df[row_value].notna()]
+for i, row_value in enumerate(row_values.items()):
+	# Set values to be ignored
+
+	# Filter data for each row label
+	filter_data = node_df[node_df[row_value].notna()]
+
+	# Group values per (unique) value
+	row_data=filter_data.groupby(row_value).sort_index()
+
+	print(row_data)
 	
 	for j, (x_col, y_col) in enumerate(column_pairs):
 		ax = axes[i, j]
 		
-		# Plot each unique value in the current row's column
-		for unique_val in row_data[row_value].unique():
-			plot_data = row_data[row_data[row_value] == unique_val]
-			ax.plot(plot_data[x_col], plot_data[y_col], marker='o', label=f'{row_value}={unique_val}')
-		
-		# Set titles and labels
-		ax.set_title(f'{x_col} vs {y_col}')
-		if i == 2:  # Only set x-axis label on the last row
-			ax.set_xlabel(x_col)
-		if j == 0:  # Only set y-axis label on the first column
-			ax.set_ylabel(y_col)
-		
-		ax.legend()
+		# Get colormap to be used
+		cm_lbl=""
+		if y==0:
+			cm_lbl="Reds"
+		elif y==1:
+			cm_lbl="Blues"
+		elif y==2:
+			cm_lbl="Greens"
+		# Get colormap and split into number of unique values left.
+		cmap=plt.get_cmap(cm_lbl)
+		color=cmap(np.linspace(0,1,len(row_data.index)))
 
-# Adjust layout for better readability
+		# Plot each unique value in the current row's column
+		for idx,unique_val in enumerate(row_data):
+			# Get data for unique_val and aggregate to mean
+			plot_data=row_data[row_data[row_value] == unique_val][y_col].mean()
+
+			print(plot_data)
+
+			# Plot line from heatmap
+			ax.plot(unique_val,plot_data,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
+		
+		# Set labels
+		y_lbl=""
+		if y_col=="deg_total": 
+			y_lbl="Degree"
+		elif y_col=="closeness": 
+			y_lbl="Closeness centrality"
+		elif y_col=="excess_closure": 
+			y_lbl="Excess closure"
+
+		if i == 2:  # Only set x-axis label on the last row
+			ax.set_xlabel("Age")
+		if j == 0:  # Only set y-axis label on the first column
+			ax.set_ylabel(y_lbl)
+		
+		# Add heatmap used as legend on top of figure
+		plt.colorbar(,ax=ax,location="top")
+
 fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
 
 # ------------------------------------------------------------------------
