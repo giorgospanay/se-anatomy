@@ -42,6 +42,6 @@ data['income_group'] = pd.qcut(data['Raks_SummaInk'], q=10, labels=False)
 
 
 #select variables 
-data = data[["PersonNr","age", "DeSO", "income_group", "education_level"]].astype({"income_group":"int"})
+data = data[["PersonNr","age", "DeSO", "income_group", "education_level"]]
 data.to_csv(f"{log_path}/node_attributes_2017.csv", index=False)
 
