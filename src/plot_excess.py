@@ -87,7 +87,7 @@ result_exc=node_df.groupby("deg_total")["excess_closure"].agg(
 	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
 # Get degree index
-result_index=result.index
+result_index=result_lcc.index
 
 # Plot clustering coefficient histogram, fill under curve
 ax4b.plot(result_lcc["mean_value"],color="blue",marker=",",linestyle="solid")
