@@ -170,7 +170,7 @@ for i, row_value in enumerate(row_values):
 		cmap=plt.get_cmap(cm_lbl)
 		cm_range=np.arange(0,len(row_data.index)+1)
 		norm=mpl.colors.BoundaryNorm(cm_range,len(val_lbl))
-		color=cmap(norm)
+		color=cmap(cm_range)
 
 		print(cm_range)
 		print(color)
@@ -188,7 +188,7 @@ for i, row_value in enumerate(row_values):
 
 			# Plot line from heatmap
 			ax.set_xlim(left=0,right=90)
-			ax.plot(plot_mean,color=color[cm_range[idx]],marker=" ",label=f'{row_value}={unique_val}')
+			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
 			
 		# Set labels
 		y_lbl=""
