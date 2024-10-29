@@ -76,15 +76,15 @@ fig4b, ax4b = plt.subplots()
 
 # Get stats for clustering coefficient
 result_lcc=node_df.groupby("deg_total")["lcc"].agg(
-	mean_value='mean',                   # Mean of B for each A
-	percentile_25=('quantile', 0.25),      # 25th percentile of B for each A
-	percentile_75=('quantile', 0.75)       # 75th percentile of B for each A
+	mean_value='mean',                   		# Mean of B for each A
+	percentile_25=lambda x: x.quantile(0.25),     # 25th percentile of B for each A
+	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
 # Get stats for excess closure
 result_exc=node_df.groupby("deg_total")["excess_closure"].agg(
 	mean_value='mean',                   # Mean of B for each A
-	percentile_25=('quantile', 0.25),      # 25th percentile of B for each A
-	percentile_75=('quantile', 0.75)       # 75th percentile of B for each A
+	percentile_25=lambda x: x.quantile(0.25),     # 25th percentile of B for each A
+	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
 # Get degree index
 result_index=result.index
