@@ -3,7 +3,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib
+import matplotlib as mpl
 import ast
 
 ## GLOBALS
@@ -114,7 +114,7 @@ fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
 # Fig. 5: income, education, urbanization x degree, excess closure, closeness vs. age
 print("Figure 5")
 
-matplotlib.rcParams['agg.path.chunksize'] = 10000
+mpl.rcParams['agg.path.chunksize'] = 10000
 
 # Set up the 3x3 grid
 fig5, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True)
@@ -174,7 +174,7 @@ for i, row_value in enumerate(row_values.items()):
 			ax.set_ylabel(y_lbl)
 		
 		# Add heatmap used as legend on top of figure
-		plt.colorbar(,ax=ax,location="top")
+		plt.colorbar(mpl.cm.ScalarMappable(cmap=cmap),ax=ax,location="top")
 
 fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
 
