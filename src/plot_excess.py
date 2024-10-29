@@ -129,6 +129,9 @@ for i, row_value in enumerate(row_values):
 	# Leave age<=90
 	filter_data=filter_data[filter_data["age"]<=90]
 
+	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
+	if row_value=="DeSO":
+		filter_data=filter_data[filter_data["DeSO"]!=0.0]
 	
 	for j, (x_col, y_col) in enumerate(column_pairs):
 		ax = axes[i, j]
@@ -188,7 +191,7 @@ for i, row_value in enumerate(row_values):
 
 			# Plot line from heatmap
 			ax.set_xlim(left=0,right=90)
-			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
+			ax.plot(plot_mean,color=norm(unique_val),marker=" ",label=f'{row_value}={unique_val}')
 			
 		# Set labels
 		y_lbl=""
