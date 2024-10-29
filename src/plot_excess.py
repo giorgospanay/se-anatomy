@@ -117,7 +117,7 @@ print("Figure 5")
 mpl.rcParams['agg.path.chunksize'] = 10000
 
 # Set up the 3x3 grid
-fig5, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True)
+fig5, axes = plt.subplots(3,3,figsize=(15,15))
 
 row_values = ["income_group","education_level","DeSO"]
 column_pairs = [("age","deg_total"),("age","excess_closure"),("age","closeness")]
@@ -159,7 +159,8 @@ for i, row_value in enumerate(row_values):
 
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
-		color=cmap(np.arange(0,len(row_data.index)))
+		cm_range=np.arange(0,len(row_data.index))
+		color=cmap(cm_range)
 
 
 		# Plot each unique value in the current row's column
@@ -192,8 +193,8 @@ for i, row_value in enumerate(row_values):
 		ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
-		cbar=plt.colorbar(mpl.cm.ScalarMappable(cmap=cmap),ax=ax,location="top",label=tx_lbl)
-		cbar.ax.set_xticklabels(val_lbl)
+		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range,cmap.N),cmap=cmap),ax=ax,location="top",label=tx_lbl)
+		cbar.set_ticks(ticks=cm_range,labels=val_lbl)
 
 #fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
 fig5.savefig(f"{plot_path}/fig5.png",dpi=300)
