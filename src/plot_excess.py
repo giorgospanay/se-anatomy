@@ -78,12 +78,15 @@ result_lcc=node_df.groupby("deg_total")["lcc"].agg(
 	percentile_25=lambda x: x.quantile(0.25),     # 25th percentile of B for each A
 	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
+print(result_lcc)
 # Get stats for excess closure
 result_exc=node_df.groupby("deg_total")["excess_closure"].agg(
 	mean_value='mean',                   		# Mean of B for each A
 	percentile_25=lambda x: x.quantile(0.25),     # 25th percentile of B for each A
 	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
+print(result_exc)
+
 # Get degree index
 result_index=result_lcc.index
 
@@ -110,5 +113,35 @@ fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
 # Fig. 5: income, education, urbanization x degree, excess closure, closeness vs. age
 print("Figure 5")
 
+# Set up the 3x3 grid
+fig5, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True, sharey=True)
+
+row_values = {"income":"income_group","education":"education_level","urbanization":"DeSO"}
+column_pairs = [("age","deg_total"), ("age","closeness"), ("age","excess_closure")]
+
+# Plot each row and column
+for i, (row_label, row_value) in enumerate(row_values.items()):
+	# Filter data for each row label ('I', 'E', 'U')
+	row_data = df[df[row_value].notna()]
+	
+	for j, (x_col, y_col) in enumerate(column_pairs):
+		ax = axes[i, j]
+		
+		# Plot each unique value in the current row's column
+		for unique_val in row_data[row_value].unique():
+			plot_data = row_data[row_data[row_value] == unique_val]
+			ax.plot(plot_data[x_col], plot_data[y_col], marker='o', label=f'{row_value}={unique_val}')
+		
+		# Set titles and labels
+		ax.set_title(f'{x_col} vs {y_col}')
+		if i == 2:  # Only set x-axis label on the last row
+			ax.set_xlabel(x_col)
+		if j == 0:  # Only set y-axis label on the first column
+			ax.set_ylabel(y_col)
+		
+		ax.legend()
+
+# Adjust layout for better readability
+fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
 
 # ------------------------------------------------------------------------
