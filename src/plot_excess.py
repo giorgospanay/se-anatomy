@@ -134,7 +134,7 @@ for i, row_value in enumerate(row_values):
 		ax = axes[i, j]
 
 		# Group values per (row_value). Find mean (y_col) and sort
-		row_data=filter_data.groupby(row_value)[y_col].mean().sort_index()
+		row_data=filter_data.groupby(row_value).mean().sort_index()
 
 		print(row_data)
 		
@@ -152,14 +152,20 @@ for i, row_value in enumerate(row_values):
 
 
 		# Plot each unique value in the current row's column
-		for idx,unique_val in enumerate(row_data):
-			# Get data for unique_val and aggregate to mean
-			plot_data=row_data[row_data[row_value] == unique_val]
-
+		for idx,unique_val in enumerate(row_data.index):
+			# Get data for unique_val
+			plot_data=filter_data[filter_data[row_value]==unique_val]
 			print(plot_data)
 
+			# Find mean on x_col for every age
+			plot_mean=plot_data.groupby("age")[y_col].mean()
+			print(plot_mean)
+
+
+			#grouped_data[x_col].loc[unique_val], grouped_data[y_col].loc[unique_val]
+
 			# Plot line from heatmap
-			ax.plot(unique_val,plot_data,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
+			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
 		
 		# Set labels
 		y_lbl=""
