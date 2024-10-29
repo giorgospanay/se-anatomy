@@ -43,12 +43,7 @@ fig4a, ax4a = plt.subplots()
 
 # Obtain histograms in 200 bins
 hist_lcc=node_df["lcc"].value_counts(bins=50).sort_index()
-print(hist_lcc)
 hist_exc=node_df["excess_closure"].value_counts(bins=50).sort_index()
-print(node_df["excess_closure"].min())
-print(node_df["excess_closure"].max())
-
-print(hist_exc)
 
 # Plot clustering coefficient histogram
 x_lcc=hist_lcc.index.mid
@@ -102,7 +97,7 @@ ax4b.set_ylabel("Closure")
 ax4b.set_xlabel("Degree")
 ax4b.set_xscale("log")
 
-ax4b.set_xticks([1,10,100,1000,10000,100000],labels=["1","10","100","1K","10K","100K"])
+ax4b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 
 fig4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
 fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
