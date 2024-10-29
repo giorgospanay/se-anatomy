@@ -129,8 +129,9 @@ for i, row_value in enumerate(row_values):
 	# Filter data for each row label
 	filter_data = node_df[node_df[row_value].notna()]
 
-	# Group values per (unique) value
-	row_data=filter_data.groupby(row_value).sort_index()
+	# Group values per (unique) value and sort
+	us_row_data=filter_data.groupby(row_value)
+	row_data=us_row_data.sort_index()
 
 	print(row_data)
 	
