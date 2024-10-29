@@ -170,13 +170,14 @@ for i, row_value in enumerate(row_values):
 		cmap=plt.get_cmap(cm_lbl)
 		cm_range=np.arange(0,len(row_data.index)+1)
 		norm=mpl.colors.BoundaryNorm(cm_range,len(val_lbl))
-		color=cmap(cm_range)
+		color=cmap(norm)
 
 		print(cm_range)
 		print(color)
 
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data.index):
+			print(f"id:{idx} val:{unique_val}")
 			# Get data for unique_val
 			plot_data=filter_data[filter_data[row_value]==unique_val]
 
