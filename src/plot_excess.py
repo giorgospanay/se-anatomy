@@ -143,9 +143,23 @@ for i, row_value in enumerate(row_values):
 			cm_lbl="Blues"
 		elif j==2:
 			cm_lbl="Greens"
+
+		# Get labels to be used
+		tx_lbl=""
+		val_lbl=[]
+		if i==0:
+			tx_lbl="Income decile"
+			val_lbl=list(range(1,11))
+		elif i==1:
+			tx_lbl="Highest education level"
+			val_lbl=["Primary","Secondary","Tertiary"]
+		elif i==2:
+			tx_lbl="Urbanization level"
+			val_lbl=["Not urban","","Strongly urban"]
+
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
-		color=cmap(np.linspace(0,1,len(row_data.index)))
+		color=cmap(np.arange(0,len(row_data.index)))
 
 
 		# Plot each unique value in the current row's column
@@ -160,8 +174,8 @@ for i, row_value in enumerate(row_values):
 
 
 			# Plot line from heatmap
-			ax.plot(plot_mean,color=color[idx],marker=" ",label=f'{row_value}={unique_val}')
-		
+			ax.plot(plot_mean,color=color[idx],marker=" ",xlim=(0,90),label=f'{row_value}={unique_val}')
+			
 		# Set labels
 		y_lbl=""
 		if y_col=="deg_total": 
@@ -174,10 +188,13 @@ for i, row_value in enumerate(row_values):
 		# Set labels
 		ax.set_xlabel("Age")
 		ax.set_ylabel(y_lbl)
+		ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
-		plt.colorbar(mpl.cm.ScalarMappable(cmap=cmap),ax=ax,location="top")
+		cbar=plt.colorbar(mpl.cm.ScalarMappable(cmap=cmap),ax=ax,location="top",label=tx_lbl)
+		cbar.ax.set_yticklabels(val_lbl)
 
-fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
+#fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
+fig5.savefig(f"{plot_path}/fig5.png",dpi=300)
 
 # ------------------------------------------------------------------------
