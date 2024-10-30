@@ -171,7 +171,7 @@ for i, row_value in enumerate(row_values):
 
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
-		cm_range=np.arange(0,len(row_data.index)+1)
+		cm_range=np.linspace(0,1,len(row_data.index)+1)
 		color=cmap(cm_range)
 
 		print(cm_range)
@@ -207,7 +207,7 @@ for i, row_value in enumerate(row_values):
 		ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
-		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range,len(cm_range)),cmap=cmap),ax=ax,location="top",label=tx_lbl)
+		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range),cmap=cmap),ax=ax,location="top",label=tx_lbl)
 		cbar.set_ticks(ticks=tick_lbl,labels=val_lbl)
 
 #fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
