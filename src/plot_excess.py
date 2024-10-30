@@ -172,13 +172,7 @@ for i, row_value in enumerate(row_values):
 
 		# Get colormap and split into number of unique values left.
 		cmap=plt.get_cmap(cm_lbl)
-		cm_range=np.arange(0,len(row_data.index)+1)
-		norm1=mpl.colors.Normalize(vmin=0,vmax=len(row_data.index)+1)
-		#color=cmap(norm1)
-
-		print(row_data.index)
-		print(cm_range)
-		#print(color)
+		norm1=mpl.colors.Normalize(vmin=0,vmax=len(bnd_lbl)-1)
 
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data.index):
