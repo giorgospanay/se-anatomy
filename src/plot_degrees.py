@@ -41,7 +41,7 @@ hist_close=None
 
 print("Figure 1")
 
-fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(15,15))
+fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(5,5))
 
 # Fig 1A: Plot degree histogram per layer
 # Get hists. Now showing year=2017:
@@ -84,7 +84,7 @@ ax1a.plot(hist_nbr,color="gold",marker=".",linestyle="dashdot")
 ax1a.plot(hist_work,color="grey",marker=".",linestyle="dashdot")
 
 # Save
-ax1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(-0.25,1.05,1.25,0.2),mode="expand")
+ax1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 #fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
@@ -190,7 +190,7 @@ ax1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=
 #fig1b, ax1b = plt.subplots()
 
 # Set inset axes
-l,b,w,h=[0.85,0.85,0.4,0.175]
+l,b,w,h=[0.45,0.65,0.4,0.175]
 ax1b=ax1a.inset_axes([l,b,w,h])
 
 zero_close=(node_df["deg_close"]==0.0).sum()
@@ -219,7 +219,7 @@ ax1b.tick_params(axis="x",labelbottom=False)
 #fig1d, ax1d = plt.subplots()
 
 # Set inset axes
-l,b,w,h=[0.15,0.15,0.4,0.175]
+l,b,w,h=[0.15,0.1,0.4,0.175]
 ax1d=ax1c.inset_axes([l,b,w,h])
 
 node_df["nz_layers"]=6-np.count_nonzero(node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work"]]==0.0,axis=1)
@@ -244,7 +244,7 @@ fig1.savefig(f"{plot_path}/fig1.png",bbox_inches='tight',dpi=300)
 # # ---------------------------------------------------------------------------
 
 print("Figure 2")
-fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(15,15))
+fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(5,5))
 
 # Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
 hist_close.reverse()
@@ -288,7 +288,7 @@ ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
 
-ax2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(-0.25,1.05,1.25,0.2),mode="expand")
+ax2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 
 #fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
