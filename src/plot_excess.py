@@ -64,7 +64,7 @@ ax4a.set_ylabel("Number of nodes")
 ax4a.set_yscale("log")
 ax4a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
-ax4a.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
+ax4a.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.02,1,0.2),mode="expand")
 #fig4a.savefig(f"{plot_path}/fig4a.png",bbox_inches='tight',dpi=300)
 
 
@@ -102,10 +102,11 @@ ax4b.set_xscale("log")
 
 ax4b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 
-ax4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
+ax4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.02,1,0.2),mode="expand")
 
 # Save entire figure
-fig4.savefig(f"{plot_path}/fig4.png",bbox_inches='tight',dpi=300)
+#fig4.savefig(f"{plot_path}/fig4.png",bbox_inches='tight',dpi=300)
+fig4.savefig(f"{plot_path}/fig4.png",dpi=300)
 
 # ------------------------------------------------------------------------
 
