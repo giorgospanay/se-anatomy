@@ -161,12 +161,10 @@ else:
 # ---------------------------------------------------------------------------
 
 # Fig. 1C: Plot histogram (flattened opp. network) as line
-print("Figure 1C")
-fig1c, ax1c = plt.subplots()
+#fig1c, ax1c = plt.subplots()
 
 # Calculate histogram from deg_total
 hist_total=node_df["deg_total"].value_counts().sort_index()
-print(hist_total)
 
 # Plot deg_total histogram
 ax1c.plot(hist_total,color="black",marker=".",linestyle="dashdot")
@@ -193,7 +191,7 @@ ax1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=
 
 # Set inset axes
 l,b,w,h=[0.35,0.175,0.25,0.175]
-ax1b=ax1a.axes([l,b,w,h])
+ax1b=ax1a.inset_axes([l,b,w,h])
 
 zero_close=(node_df["deg_close"]==0.0).sum()
 zero_ext=(node_df["deg_ext"]==0.0).sum()
@@ -218,12 +216,11 @@ ax1b.tick_params(axis="x",labelbottom=False)
 # ---------------------------------------------------------------------------
 
 # Fig. 1D: Plot #layers for which a node is disconnected
-print("Figure 1D")
 #fig1d, ax1d = plt.subplots()
 
 # Set inset axes
 l,b,w,h=[0.35,0.175,0.25,0.175]
-ax1d=ax1c.axes([l,b,w,h])
+ax1d=ax1c.inset_axes([l,b,w,h])
 
 node_df["nz_layers"]=6-np.count_nonzero(node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work"]]==0.0,axis=1)
 
