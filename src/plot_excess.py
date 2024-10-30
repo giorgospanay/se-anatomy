@@ -177,7 +177,7 @@ for i, row_value in enumerate(row_values):
 
 		print(row_data.index)
 		print(cm_range)
-		print(color)
+		#print(color)
 
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data.index):
