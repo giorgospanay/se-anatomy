@@ -135,13 +135,58 @@ def _excess(row):
 		elif res>1: return 1.0
 		return res
 
-# Checks for embeddedness and tie range (second shortest path)
-def get_embeddedness(G,e_scores):
+# Checks for embeddedness and tie range
+def get_embeddedness(G):
+	# Get triangles
+	print("Getting triangles")
+	e_triangles=nk.sparsification.TriangleEdgeScore(G)
+	e_triangles.run()
+	e_scores=e_triangles.scores()
+
+	emb_dict={}
+	e_check=[]
+
 	# For all edges in G: if embeddedness==0 (score=0) then find second SP
+	print("Checking embeddedness score")
+	ctr=0
+	for u,v,w in G.iterEdgesWeights():
+		score=e_scores[G.edgeId(u,v)]
+		# Calculate final score by multiplying by weight (common #edges)
+		f_score=score*w
+		# Progress print
+		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}[w={w}]):f_score={f_score}")
+		# Add f_score count to dictionary for plotting
+		if f_score not in emb_dict:
+			emb_dict[f_score]=0
+		emb_dict[f_score]+=1
+		# If embeddedness=0: add edge to e_check
+		if f_score==0:
+			e_check.append((u,v))
+		# Counter
+		ctr+=1
 
-	# Otherwise continue plotting
+	return emb_dict, e_check
 
-	return
+# Finds second shortest path for nodes with embeddedness=0
+def get_tie_range(G,e_check):
+	tr_dict={}
+	# For all edges in e_check:
+	for u,v in e_check:
+		# Run DFS, find SSP
+		bfs=nk.distance.BFS(G,source=u,storePaths=True,target=v)
+		bfs.run()
+		# Get all paths (u,v), sort by length
+		paths=sorted(bfs.getPaths(v),key=len)
+		# Get second path if exists (otherwise ignore?)
+		if len(paths)>1:
+			tie_range=len(paths[1])
+			# Add to dictionary for plotting
+			if tie_range not in tr_dict:
+				tr_dict[tie_range]=0
+			tr_dict[tie_range]+=1
+
+	return tr_dict
+
 
 
 # Read node_b
@@ -319,14 +364,33 @@ for layer_name in net_names:
 		node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
 		
 
-	# Calculate embeddedness from triangles
+	# Calculate embeddedness from triangles (flat id)
 	if mode=="calc-embed":
-		# Need to only read flat (potentially with ids)
-		pass
+		# Calculate embeddedness distribution
+		print("Get embeddedness.")
+		emb_dict,e_check=get_embeddedness(G)
+
+		# Save embeddedness dict
+		print("Saving emb_dict")
+		with open(f"{log_path}/embeddedness_dist_2017.txt","w") as wf:
+			for key, value in emb_dict:
+				wf.write(f"{key}: {value}\n")
+
+		# For list of edges with embeddedness=0: get second SP
+		print("Get tie range.")
+		tr_dict=get_tie_range(G,e_check)
+
+		# Save tie range dict
+		print("Saving tr_dict")
+		with open(f"{log_path}/tie_range_dist_2017.txt","w") as wf:
+			for key, value in tr_dict:
+				wf.write(f"{key}: {value}\n")
+
+
 
 
 # Save result to node dataframe
-if mode!="fix-node":
+if mode!="fix-node" and mode!="calc-embed":
 	print("Saving node_b")
 	node_df.fillna(0.0,inplace=True)
 	node_df.to_csv(f"{log_path}/node_b_2017.csv")
