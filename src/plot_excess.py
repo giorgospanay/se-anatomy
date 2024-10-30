@@ -209,7 +209,7 @@ for i, row_value in enumerate(row_values):
 		ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
-		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range),cmap=cmap),ax=ax,location="top",label=tx_lbl)
+		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range,ncolors=len(cm_range)),cmap=cmap),ax=ax,location="top",label=tx_lbl)
 		cbar.set_ticks(ticks=tick_lbl,labels=val_lbl)
 
 #fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
