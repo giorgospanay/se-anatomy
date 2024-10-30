@@ -105,8 +105,9 @@ ax4b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.02,1,0.2),mode="expand")
 
 # Save entire figure
-#fig4.savefig(f"{plot_path}/fig4.png",bbox_inches='tight',dpi=300)
-fig4.savefig(f"{plot_path}/fig4.png",dpi=300)
+fig4.tight_layout()
+fig4.savefig(f"{plot_path}/fig4.png",bbox_inches='tight',dpi=300)
+#fig4.savefig(f"{plot_path}/fig4.png",dpi=300)
 
 # ------------------------------------------------------------------------
 
@@ -177,14 +178,11 @@ for i, row_value in enumerate(row_values):
 
 		# Plot each unique value in the current row's column
 		for idx,unique_val in enumerate(row_data.index):
-			print(f"id:{idx} val:{unique_val}")
 			# Get data for unique_val
 			plot_data=filter_data[filter_data[row_value]==unique_val]
 
 			# Find mean on x_col for every age
 			plot_mean=plot_data.groupby("age")[y_col].mean()
-			print(plot_mean)
-
 
 			# Plot line from heatmap
 			ax.set_xlim(left=0,right=90)
@@ -208,6 +206,7 @@ for i, row_value in enumerate(row_values):
 		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=norm1,cmap=cmap),ax=ax,location="top",label=tx_lbl)
 		cbar.set_ticks(ticks=tick_lbl,labels=val_lbl)
 
+# Save figure
 fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
 #fig5.savefig(f"{plot_path}/fig5.png",dpi=300)
 
