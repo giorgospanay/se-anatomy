@@ -37,11 +37,12 @@ print("Figure 3B")
 
 # ------------------------------------------------------------------------
 
+# Fig. 4
+print("Figure 4")
+
+fig4, ((ax4a),(ax4b)) = plt.subplots(nrows=2,ncols=1)
+
 # Fig. 4A: # nodes vs. closure score (lcc, excess)
-print("Figure 4A")
-
-fig4a, ax4a = plt.subplots()
-
 # Obtain histograms in 200 bins
 hist_lcc=node_df["lcc"].value_counts(bins=50).sort_index()
 hist_exc=node_df["excess_closure"].value_counts(bins=50).sort_index()
@@ -63,15 +64,12 @@ ax4a.set_ylabel("Number of nodes")
 ax4a.set_yscale("log")
 ax4a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
 
-fig4a.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
-fig4a.savefig(f"{plot_path}/fig4a.png",bbox_inches='tight',dpi=300)
+ax4a.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
+#fig4a.savefig(f"{plot_path}/fig4a.png",bbox_inches='tight',dpi=300)
 
-# ------------------------------------------------------------------------
 
 # Fig. 4B: closure score (lcc, excess) vs degree (plus percentiles)
-print("Figure 4B")
-
-fig4b, ax4b = plt.subplots()
+#fig4b, ax4b = plt.subplots()
 
 # Get stats for clustering coefficient
 result_lcc=node_df.groupby("deg_total")["lcc"].agg(
@@ -104,8 +102,10 @@ ax4b.set_xscale("log")
 
 ax4b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 
-fig4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
-fig4b.savefig(f"{plot_path}/fig4b.png",bbox_inches='tight',dpi=300)
+ax4b.legend(labels=["Clustering coefficient","Excess closure"],loc="upper center",alignment="center",ncols=2)
+
+# Save entire figure
+fig4.savefig(f"{plot_path}/fig4.png",bbox_inches='tight',dpi=300)
 
 # ------------------------------------------------------------------------
 
@@ -207,7 +207,7 @@ for i, row_value in enumerate(row_values):
 		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=norm1,cmap=cmap),ax=ax,location="top",label=tx_lbl)
 		cbar.set_ticks(ticks=tick_lbl,labels=val_lbl)
 
-#fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
-fig5.savefig(f"{plot_path}/fig5.png",dpi=300)
+fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
+#fig5.savefig(f"{plot_path}/fig5.png",dpi=300)
 
 # ------------------------------------------------------------------------
