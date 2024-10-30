@@ -41,7 +41,7 @@ hist_close=None
 
 print("Figure 1")
 
-fig1, (ax1a,ax1b) = plt.subplots(nrows=1,ncols=2)
+fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2)
 
 # Fig 1A: Plot degree histogram per layer
 # Get hists. Now showing year=2017:
