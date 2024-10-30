@@ -79,14 +79,12 @@ result_lcc=node_df.groupby("deg_total")["lcc"].agg(
 	percentile_25=lambda x: x.quantile(0.25),     # 25th percentile of B for each A
 	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
-print(result_lcc)
 # Get stats for excess closure
 result_exc=node_df.groupby("deg_total")["excess_closure"].agg(
 	mean_value='mean',                   		# Mean of B for each A
 	percentile_25=lambda x: x.quantile(0.25),     # 25th percentile of B for each A
 	percentile_75=lambda x: x.quantile(0.75)      # 75th percentile of B for each A
 )
-print(result_exc)
 
 # Get degree index
 result_index=result_lcc.index
@@ -132,7 +130,10 @@ for i, row_value in enumerate(row_values):
 	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
 	if row_value=="DeSO":
 		filter_data=filter_data[filter_data["DeSO"]!=0.0]
-	
+	# Same for eduction level
+	if row_value=="education_level":
+		filter_data=filter_data[filter_data["education_level"]!=0.0]
+
 	for j, (x_col, y_col) in enumerate(column_pairs):
 		ax = axes[i, j]
 
@@ -209,7 +210,7 @@ for i, row_value in enumerate(row_values):
 		ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
-		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.BoundaryNorm(cm_range,ncolors=len(cm_range)),cmap=cmap),ax=ax,location="top",label=tx_lbl)
+		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=norm1,cmap=cmap),ax=ax,location="top",label=tx_lbl)
 		cbar.set_ticks(ticks=tick_lbl,labels=val_lbl)
 
 #fig5.savefig(f"{plot_path}/fig5.png",bbox_inches='tight',dpi=300)
