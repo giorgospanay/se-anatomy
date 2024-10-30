@@ -84,7 +84,7 @@ ax1a.plot(hist_nbr,color="gold",marker=".",linestyle="dashdot")
 ax1a.plot(hist_work,color="grey",marker=".",linestyle="dashdot")
 
 # Save
-ax1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 #fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 # ---------------------------------------------------------------------------
@@ -288,7 +288,7 @@ ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
 
-ax2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 
 #fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
