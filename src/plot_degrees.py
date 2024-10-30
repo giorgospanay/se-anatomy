@@ -320,7 +320,7 @@ ax2b.set_xscale("log")
 ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2b.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
-ax2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2,,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=2,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 #fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 
 # Save
