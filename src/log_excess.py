@@ -373,7 +373,7 @@ for layer_name in net_names:
 		# Save embeddedness dict
 		print("Saving emb_dict")
 		with open(f"{log_path}/embeddedness_dist_2017.txt","w") as wf:
-			for key, value in emb_dict:
+			for key, value in emb_dict.items():
 				wf.write(f"{key}: {value}\n")
 
 		# For list of edges with embeddedness=0: get second SP
@@ -383,7 +383,7 @@ for layer_name in net_names:
 		# Save tie range dict
 		print("Saving tr_dict")
 		with open(f"{log_path}/tie_range_dist_2017.txt","w") as wf:
-			for key, value in tr_dict:
+			for key, value in tr_dict.items():
 				wf.write(f"{key}: {value}\n")
 
 
