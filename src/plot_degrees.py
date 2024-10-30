@@ -41,7 +41,7 @@ hist_close=None
 
 print("Figure 1")
 
-fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(10,10))
+fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(10,20))
 
 # Fig 1A: Plot degree histogram per layer
 # Get hists. Now showing year=2017:
@@ -190,7 +190,7 @@ ax1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=
 #fig1b, ax1b = plt.subplots()
 
 # Set inset axes
-l,b,w,h=[0.45,0.65,0.4,0.175]
+l,b,w,h=[0.55,0.75,0.4,0.175]
 ax1b=ax1a.inset_axes([l,b,w,h])
 
 zero_close=(node_df["deg_close"]==0.0).sum()
@@ -244,7 +244,7 @@ fig1.savefig(f"{plot_path}/fig1.png",bbox_inches='tight',dpi=300)
 # # ---------------------------------------------------------------------------
 
 print("Figure 2")
-fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(5,5))
+fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,20))
 
 # Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
 hist_close.reverse()
