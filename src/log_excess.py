@@ -171,19 +171,27 @@ def get_embeddedness(G):
 def get_tie_range(G,e_check):
 	tr_dict={}
 	# For all edges in e_check:
+	ctr=0
 	for u,v in e_check:
-		# Run DFS, find SSP
-		bfs=nk.distance.BFS(G,source=u,storePaths=True,target=v)
-		bfs.run()
-		# Get all paths (u,v), sort by length
-		paths=sorted(bfs.getPaths(v),key=len)
-		# Get second path if exists (otherwise ignore?)
-		if len(paths)>1:
+		# Remove edge first
+		G=G.removeEdge(u,v)
+		# Run SP (should be the shortest path now)
+		dijk=nk.distance.Dijkstra(G,u,storePaths=False,target=v)
+		dijk.run()
+		dist=dijk.distance(v)
+		# Progress print
+		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):dist={dist}")
+		# If >0, calculate.
+		if dist>1:
 			tie_range=len(paths[1])
 			# Add to dictionary for plotting
 			if tie_range not in tr_dict:
 				tr_dict[tie_range]=0
 			tr_dict[tie_range]+=1
+		# Restore edge
+		G=G.addEdge(u,v)
+		# Counter
+		ctr+=1
 
 	return tr_dict
 
