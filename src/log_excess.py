@@ -174,7 +174,7 @@ def get_tie_range(G,e_check):
 	ctr=0
 	for u,v in e_check:
 		# Remove edge first
-		G=G.removeEdge(u,v)
+		G.removeEdge(u,v)
 		# Run SP (should be the shortest path now)
 		dijk=nk.distance.Dijkstra(G,u,storePaths=False,target=v)
 		dijk.run()
@@ -189,7 +189,7 @@ def get_tie_range(G,e_check):
 				tr_dict[tie_range]=0
 			tr_dict[tie_range]+=1
 		# Restore edge
-		G=G.addEdge(u,v)
+		G.addEdge(u,v)
 		# Counter
 		ctr+=1
 
