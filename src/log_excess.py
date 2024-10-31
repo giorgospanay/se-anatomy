@@ -175,17 +175,17 @@ def get_tie_range(G,e_check):
 	for u,v in e_check:
 		# Remove edge first
 		G.removeEdge(u,v)
+		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):dist={dist}")
 		# Check if degree is now zero- in that case, add edge again and skip.
 		if G.degree(u)==0 or G.degree(v)==0: 
 			G.addEdge(u,v)
 			ctr+=1
 			continue
 		# Run SP (should be the shortest path now)
-		dijk=nk.distance.Dijkstra(G,u,storePaths=False,target=v)
-		dijk.run()
-		dist=dijk.distance(v)
-		# Progress print
-		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):dist={dist}")
+		bi_dijk=nk.distance.BidirectionalDijkstra(G,u,v)
+		bi_dijk.run()
+		dist=bi_dijk.getDistance(v)
+		
 		# If >0, calculate. Also check for inf (modeled as MAX_VALUE)
 		if dist>1 and dist<G.numberOfEdges():
 			tie_range=dist
