@@ -175,6 +175,11 @@ def get_tie_range(G,e_check):
 	for u,v in e_check:
 		# Remove edge first
 		G.removeEdge(u,v)
+		# Check if degree is now zero- in that case, add edge again and skip.
+		if G.degree(u)==0 or G.degree(v)==0: 
+			G.addEdge(u,v)
+			ctr+=1
+			continue
 		# Run SP (should be the shortest path now)
 		dijk=nk.distance.Dijkstra(G,u,storePaths=False,target=v)
 		dijk.run()
