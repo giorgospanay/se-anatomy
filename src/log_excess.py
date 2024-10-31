@@ -184,7 +184,7 @@ def get_tie_range(G,e_check):
 		# Run SP (should be the shortest path now)
 		bi_dijk=nk.distance.BidirectionalDijkstra(G,u,v)
 		bi_dijk.run()
-		dist=bi_dijk.getDistance(v)
+		dist=bi_dijk.getDistance()
 		
 		# If >0, calculate. Also check for inf (modeled as MAX_VALUE)
 		if dist>1 and dist<G.numberOfEdges():
