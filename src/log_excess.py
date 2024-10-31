@@ -175,7 +175,7 @@ def get_tie_range(G,e_check):
 	for u,v in e_check:
 		# Remove edge first
 		G.removeEdge(u,v)
-		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):dist={dist}")
+		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v})")
 		# Check if degree is now zero- in that case, add edge again and skip.
 		if G.degree(u)==0 or G.degree(v)==0: 
 			G.addEdge(u,v)
