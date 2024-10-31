@@ -181,9 +181,9 @@ def get_tie_range(G,e_check):
 		dist=dijk.distance(v)
 		# Progress print
 		if ctr%1000000==0: print(f"#{ctr//1000000}({u},{v}):dist={dist}")
-		# If >0, calculate.
-		if dist>1:
-			tie_range=len(paths[1])
+		# If >0, calculate. Also check for inf (modeled as MAX_VALUE)
+		if dist>1 and dist<G.numberOfEdges():
+			tie_range=dist
 			# Add to dictionary for plotting
 			if tie_range not in tr_dict:
 				tr_dict[tie_range]=0
@@ -307,8 +307,6 @@ for layer_name in net_names:
 				else:
 					print(f"Skipped index ({row[0]},{row[1]}).")
 
-
-
 			# # Set weights on G accordingly
 			# print("Set weights on G")
 			# for u,v in G.iterEdges():
@@ -393,8 +391,6 @@ for layer_name in net_names:
 		with open(f"{log_path}/tie_range_dist_2017.txt","w") as wf:
 			for key, value in tr_dict.items():
 				wf.write(f"{key}: {value}\n")
-
-
 
 
 # Save result to node dataframe
