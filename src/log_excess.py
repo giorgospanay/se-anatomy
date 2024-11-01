@@ -172,20 +172,24 @@ def get_tie_range(G,e_check):
 	tr_dict={}
 	# For all edges in e_check:
 	ctr=0
-	for u,v in e_check:
+
+	# Helper
+	def _tie_range(u,v,w,eid):
+		nonlocal G, ctr
+		# First check degree of u,v. If =1, skip.
+		if G.degree(u)==1 or G.degree(v)==1: continue
 		# Remove edge first
 		G.removeEdge(u,v)
 		if ctr%10000==0: print(f"#{ctr//10000}({u},{v})")
-		# # Check if degree is now zero- in that case, add edge again and skip.
-		# if G.degree(u)==0 or G.degree(v)==0: 
-		# 	G.addEdge(u,v)
-		# 	ctr+=1
-		# 	continue
+		# Check if degree is now zero- in that case, add edge again and skip.
+		if G.degree(u)==0 or G.degree(v)==0: 
+			G.addEdge(u,v)
+			ctr+=1
+			continue
 		# Run SP (should be the shortest path now)
-		bi_dijk=nk.distance.BidirectionalDijkstra(G,u,v)
-		bi_dijk.run()
-		dist=bi_dijk.getDistance()
-		
+		bi_bfs=nk.distance.BidirectionalBFS(G,u,v)
+		bi_bfs.run()
+		dist=bi_bfs.getDistance()
 		# If >0, calculate. Also check for inf (modeled as MAX_VALUE)
 		if dist>1 and dist<G.numberOfEdges():
 			tie_range=dist
@@ -198,7 +202,13 @@ def get_tie_range(G,e_check):
 		# Counter
 		ctr+=1
 
+	# Iterate over all edges and add them into new empty graph. Ignore multiedges
+	G.forEdges(_tie_range(u,v,w,eid))
+
 	return tr_dict
+
+# Try helper
+def _tie_range(u,v,w,id):
 
 
 
@@ -387,6 +397,20 @@ for layer_name in net_names:
 			for key, value in emb_dict.items():
 				wf.write(f"{key}: {value}\n")
 
+		# Save e_check:
+		with open(f"{log_path}/edgezero_dist_2017.txt","w") as wf:
+			for u,v in e_check:
+				wf.write(f"{u},{v}\n")
+
+	if mode=="calc-tr":
+		# Read e_check:
+		print("Get tie ranges from file")
+		e_check=[]
+		with open(f"{log_path}/edgezero_dist_2017.txt","r") as file:
+			lines=[line.rstrip().split(",") for line in file]
+			for ln in lines:
+				e_check.append((int(ln[0]),int(ln[1])))
+
 		# For list of edges with embeddedness=0: get second SP
 		print("Get tie range.")
 		tr_dict=get_tie_range(G,e_check)
@@ -399,7 +423,7 @@ for layer_name in net_names:
 
 
 # Save result to node dataframe
-if mode!="fix-node" and mode!="calc-embed":
+if mode!="fix-node" and mode!="calc-embed" and mode!="calc-tr":
 	print("Saving node_b")
 	node_df.fillna(0.0,inplace=True)
 	node_df.to_csv(f"{log_path}/node_b_2017.csv")
