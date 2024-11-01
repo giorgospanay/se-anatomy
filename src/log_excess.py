@@ -172,12 +172,16 @@ def get_tie_range(G,e_check):
 	tr_dict={}
 	# For all edges in e_check:
 	ctr=0
-
-	# Helper
-	def _tie_range(u,v,w,eid):
-		nonlocal G, ctr
+	ctr_skip=0
+	for u,v in e_check:
+		# Progress print for skipped
+		if ctr_skip%10000==0: print(f"Skipped#{ctr_skip//10000}.")
 		# First check degree of u,v. If =1, skip.
-		if G.degree(u)==1 or G.degree(v)==1: continue
+		if G.degree(u)==1 or G.degree(v)==1: 
+			G.addEdge(u,v)
+			ctr+=1
+			ctr_skip+=1
+			continue
 		# Remove edge first
 		G.removeEdge(u,v)
 		if ctr%10000==0: print(f"#{ctr//10000}({u},{v})")
@@ -190,6 +194,7 @@ def get_tie_range(G,e_check):
 		bi_bfs=nk.distance.BidirectionalBFS(G,u,v)
 		bi_bfs.run()
 		dist=bi_bfs.getDistance()
+		
 		# If >0, calculate. Also check for inf (modeled as MAX_VALUE)
 		if dist>1 and dist<G.numberOfEdges():
 			tie_range=dist
@@ -202,13 +207,7 @@ def get_tie_range(G,e_check):
 		# Counter
 		ctr+=1
 
-	# Iterate over all edges and add them into new empty graph. Ignore multiedges
-	G.forEdges(_tie_range(u,v,w,eid))
-
 	return tr_dict
-
-# Try helper
-def _tie_range(u,v,w,id):
 
 
 
