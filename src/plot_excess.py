@@ -29,11 +29,9 @@ node_df=pd.read_csv(f"{log_path}/node_final_2017.csv",index_col="PersonNr",heade
 
 # Fig. 3
 print("Figure 3")
-fig3, (ax3a,ax3b) = plt.subplots(nrows=1,ncols=2,figsize=(15,15))
+fig3, (ax3a,ax3b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 
-# Fig. 3A: Embeddedness (hist, bins of 4?)
-
-
+# Fig. 3A: Embeddedness histogram
 # Read embeddedness histogram logs.
 print("Reading embeddedness distribution.")
 emb_x=[]
@@ -42,8 +40,7 @@ with open(f"{log_path}/embeddedness_dist_2017.txt","r") as file:
 	lines=[line.rstrip().split(":") for line in file]
 	emb_x=[float(line[0]) for line in lines]
 	emb_y=[float(line[1]) for line in lines]
-	
-# Plot as histogram.
+# Plot bars
 ax3a.bar(emb_x,emb_y)
 
 # Legends and ticks
@@ -51,12 +48,19 @@ ax3a.set_xlabel("Embeddedness")
 ax3a.set_ylabel("Number of edges")
 
 
-#@TODO: fill in. Run again when done
 # Fig. 3B: Tie range, where embeddedness=0.
 
-# Read tie range histogram logs.
-
-# Plot the histogram
+# #@TODO: Uncomment when done
+# # Read tie range histogram logs.
+# print("Reading tie range distribution.")
+# tr_x=[]
+# tr_y=[]
+# with open(f"{log_path}/tie_range_dist_2017.txt","r") as file:
+# 	lines=[line.rstrip().split(":") for line in file]
+# 	tr_x=[float(line[0]) for line in lines]
+# 	tr_y=[float(line[1]) for line in lines]
+# # Plot bars
+# ax3b.bar(tr_x,tr_y)
 
 # Legends and ticks
 ax3b.set_xlabel("Tie range")
@@ -65,7 +69,6 @@ ax3b.set_ylabel("Count")
 
 # Save figure
 fig3.savefig(f"{plot_path}/fig3.png",bbox_inches='tight',dpi=300)
-
 
 # # ------------------------------------------------------------------------
 
