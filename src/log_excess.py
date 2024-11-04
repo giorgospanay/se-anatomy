@@ -174,7 +174,8 @@ def get_tie_range(G,e_check):
 	ctr=0
 	ctr_skip=0
 	for u,v in e_check:
-		# Progress print for skipped
+		# Progress print plus skipped
+		if ctr%10000==0: print(f"#{ctr//10000}({u},{v})")
 		if ctr_skip%10000==0: print(f"Skipped#{ctr_skip//10000}.")
 		# First check degree of u,v. If =1, skip.
 		if G.degree(u)==1 or G.degree(v)==1: 
@@ -184,7 +185,7 @@ def get_tie_range(G,e_check):
 			continue
 		# Remove edge first
 		G.removeEdge(u,v)
-		if ctr%10000==0: print(f"#{ctr//10000}({u},{v})")
+		
 		# Run SP (should be the shortest path now)
 		bi_bfs=nk.distance.BidirectionalBFS(G,u,v)
 		bi_bfs.run()
@@ -396,6 +397,7 @@ for layer_name in net_names:
 			for u,v in e_check:
 				wf.write(f"{u},{v}\n")
 
+	# Calculate tie range from edgelist echeck
 	if mode=="calc-tr":
 		# Read e_check:
 		print("Get tie ranges from file")
