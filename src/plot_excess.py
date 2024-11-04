@@ -38,7 +38,7 @@ fig3, (ax3a,ax3b) = plt.subplots(nrows=1,ncols=2,figsize=(15,15))
 print("Reading embeddedness distribution.")
 emb_x=[]
 emb_y=[]
-with open(f"{log_path}/embeddedness_dist_2017.txt","r") as wf:
+with open(f"{log_path}/embeddedness_dist_2017.txt","r") as file:
 	lines=[line.rstrip().split(":") for line in file]
 	emb_x=[float(line[0]) for line in lines]
 	emb_y=[float(line[1]) for line in lines]
