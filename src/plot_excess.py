@@ -188,7 +188,7 @@ for i, row_value in enumerate(row_values):
 		elif j==1:
 			cm_lbl="Blues"
 			y_min=0
-			y_max=0.035
+			y_max=0.35
 		elif j==2:
 			cm_lbl="Greens"
 			y_min=0.12
