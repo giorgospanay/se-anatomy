@@ -64,12 +64,13 @@ ax3b.bar(tr_x,tr_y)
 
 # Legends and ticks
 ax3b.set_xlabel("Tie range")
-ax3b.set_ylabel("Count")
+ax3b.set_ylabel("Count (log)")
 ax3b.set_yscale("log")
-ax3b.set_xticks([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
+ax3b.set_xticks([0,2,4,6,8,10,12,14])
 
 
 # Save figure
+fig3.tight_layout()
 fig3.savefig(f"{plot_path}/fig3.png",bbox_inches='tight',dpi=300)
 
 # ------------------------------------------------------------------------
@@ -92,8 +93,8 @@ x_lcc=hist_lcc.index.mid
 # ax4a.plot(x_lcc,hist_exc,color="lightcoral",marker=" ",linestyle="solid")
 
 # Fill under curves. Overlap for both?
-ax4a.fill_between(x_lcc,hist_lcc,color="lightskyblue",interpolate=True)
-ax4a.fill_between(x_lcc,hist_exc,color="lightcoral",interpolate=True)
+ax4a.fill_between(x_lcc,hist_lcc,color="blue",interpolate=True,alpha=0.3)
+ax4a.fill_between(x_lcc,hist_exc,color="red",interpolate=True,alpha=0.3)
 
 
 ax4a.set_xlabel("Closure")
