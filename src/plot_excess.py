@@ -130,8 +130,8 @@ ax4b.plot(result_lcc["mean_value"],color="blue",marker=",",linestyle="solid")
 # Plot excess closure histogram
 ax4b.plot(result_exc["mean_value"],color="red",marker=",",linestyle="solid")
 # Fill under curves
-ax4b.fill_between(result_index,result_lcc["percentile_25"],y2=result_lcc["percentile_75"],color="lightskyblue")
-ax4b.fill_between(result_index,result_exc["percentile_25"],y2=result_exc["percentile_75"],color="lightcoral")
+ax4b.fill_between(result_index,result_lcc["percentile_25"],y2=result_lcc["percentile_75"],color="blue",alpha=0.3)
+ax4b.fill_between(result_index,result_exc["percentile_25"],y2=result_exc["percentile_75"],color="red",alpha=0.3)
 
 
 ax4b.set_ylabel("Closure")
@@ -233,7 +233,7 @@ for i, row_value in enumerate(row_values):
 			plot_mean=plot_data.groupby("age")[y_col].mean()
 
 			# Plot line from heatmap
-			ax.set_xlim(left=0,right=90)
+			#ax.set_xlim(left=0,right=90)
 			ax.set_ylim(bottom=y_min,top=y_max)
 			ax.plot(plot_mean,color=cmap(norm1(idx)),marker=" ",label=f'{row_value}={unique_val}')
 			
@@ -249,7 +249,7 @@ for i, row_value in enumerate(row_values):
 		# Set labels
 		ax.set_xlabel("Age")
 		ax.set_ylabel(y_lbl)
-		ax.set_xticks([0,20,40,60,80])
+		#ax.set_xticks([0,20,40,60,80])
 		
 		# Add heatmap used as legend on top of figure
 		cbar=plt.colorbar(mpl.cm.ScalarMappable(norm=norm1,cmap=cmap),ax=ax,location="top",label=tx_lbl)
