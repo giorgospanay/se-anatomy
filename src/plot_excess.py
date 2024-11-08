@@ -51,16 +51,16 @@ ax3a.set_ylabel("Number of edges")
 # Fig. 3B: Tie range, where embeddedness=0.
 
 # #@TODO: Uncomment when done
-# # Read tie range histogram logs.
-# print("Reading tie range distribution.")
-# tr_x=[]
-# tr_y=[]
-# with open(f"{log_path}/tie_range_dist_2017.txt","r") as file:
-# 	lines=[line.rstrip().split(":") for line in file]
-# 	tr_x=[float(line[0]) for line in lines]
-# 	tr_y=[float(line[1]) for line in lines]
-# # Plot bars
-# ax3b.bar(tr_x,tr_y)
+# Read tie range histogram logs.
+print("Reading tie range distribution.")
+tr_x=[]
+tr_y=[]
+with open(f"{log_path}/tie_range_dist_2017.txt","r") as file:
+	lines=[line.rstrip().split(":") for line in file]
+	tr_x=[float(line[0]) for line in lines]
+	tr_y=[float(line[1]) for line in lines]
+# Plot bars
+ax3b.bar(tr_x,tr_y)
 
 # Legends and ticks
 ax3b.set_xlabel("Tie range")
@@ -161,8 +161,10 @@ column_pairs = [("age","deg_total"),("age","excess_closure"),("age","closeness")
 for i, row_value in enumerate(row_values):
 	# Filter data for each row label
 	filter_data=node_df[node_df[row_value].notna()]
-	# Leave age<=90
-	filter_data=filter_data[filter_data["age"]<=90]
+
+	## Uncomment again if necessary for clarity
+	# # Leave age<=90
+	# filter_data=filter_data[filter_data["age"]<=90]
 
 	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
 	if row_value=="DeSO":
