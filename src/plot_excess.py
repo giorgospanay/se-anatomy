@@ -65,6 +65,8 @@ ax3b.bar(tr_x,tr_y)
 # Legends and ticks
 ax3b.set_xlabel("Tie range")
 ax3b.set_ylabel("Count")
+ax3b.set_yscale("log")
+ax3b.set_xticks([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
 
 
 # Save figure
