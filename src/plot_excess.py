@@ -196,7 +196,7 @@ for i, row_value in enumerate(row_values):
 			y_max=0.35
 		elif j==2:
 			cm_lbl="Greens"
-			y_min=0.12
+			y_min=0.05
 			y_max=0.19
 
 		# Get labels to be used
