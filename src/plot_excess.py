@@ -166,7 +166,7 @@ for i, row_value in enumerate(row_values):
 
 	## Uncomment again if necessary for clarity
 	# # Leave age<=90
-	filter_data=filter_data[filter_data["age"]>=20 & filter_data["age"]<=85]
+	filter_data=filter_data[(filter_data["age"]>=20) & (filter_data["age"]<=85)]
 
 	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
 	if row_value=="DeSO":
