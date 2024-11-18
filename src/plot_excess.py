@@ -50,7 +50,6 @@ ax3a.set_ylabel("Number of edges")
 
 # Fig. 3B: Tie range, where embeddedness=0.
 
-# #@TODO: Uncomment when done
 # Read tie range histogram logs.
 print("Reading tie range distribution.")
 tr_x=[]
@@ -81,7 +80,7 @@ print("Figure 4")
 fig4, ((ax4a),(ax4b)) = plt.subplots(nrows=2,ncols=1)
 
 # Fig. 4A: # nodes vs. closure score (lcc, excess)
-# Obtain histograms in 200 bins
+# Obtain histograms
 hist_lcc=node_df["lcc"].value_counts(bins=50).sort_index()
 hist_exc=node_df["excess_closure"].value_counts(bins=50).sort_index()
 
@@ -167,7 +166,7 @@ for i, row_value in enumerate(row_values):
 
 	## Uncomment again if necessary for clarity
 	# # Leave age<=90
-	# filter_data=filter_data[filter_data["age"]<=90]
+	filter_data=filter_data[filter_data["age"]>=20 & filter_data["age"]<=85]
 
 	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
 	if row_value=="DeSO":
