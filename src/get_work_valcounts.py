@@ -37,9 +37,9 @@ print(data.columns)
 
 
 
-
-filter_data=data[~data["LopNr_KU1CfarNr"].isin(["0000","9999"])]
-print(f"Filtered Lisa length: {len(filter_data.index)}")
+filter_data=data
+#filter_data=data[~data["LopNr_KU1CfarNr"].isin(["0000","9999"])]
+#print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
 val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
