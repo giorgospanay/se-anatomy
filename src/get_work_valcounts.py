@@ -27,8 +27,8 @@ Index(['Unnamed: 0', 'LopNr', 'LopNr_FamId', 'LopNr_PeOrgNr', 'LopNr_CfarNr',
 """
 
 #read in data 
-#data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA"])
-data = pd.read_csv(lisa_path)
+data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA"])
+#data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
 
