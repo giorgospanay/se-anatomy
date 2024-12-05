@@ -11,19 +11,19 @@ deso_path="../../mat_lev_deso_2017.csv"
 
 """
 Index(['Unnamed: 0', 'LopNr', 'LopNr_FamId', 'LopNr_PeOrgNr', 'LopNr_CfarNr',
-       'LopNr_ArbstId', 'LopNr_KU3CfarNr', 'LopNr_KU2CfarNr',
-       'LopNr_KU1CfarNr', 'LopNr_KU3PeOrgNr', 'LopNr_KU2PeOrgNr',
-       'LopNr_KU1PeOrgNr', 'Alder', 'AstKommun', 'AstLan', 'AstNr_LISA',
-       'Barn0_3', 'Barn11_15', 'Barn16_17', 'Barn18_19', 'Barn20plus',
-       'Barn4_6', 'Barn7_10', 'Distriktskod', 'ExamAr', 'ExamKommun',
-       'LopNr_Fastlopnr_fastbet', 'FodelseAr', 'Kommun', 'Kon', 'KU1AstKommun',
-       'KU1AstLan', 'KU1AstNr', 'KU1Ink', 'KU1YrkStalln', 'KU2AstKommun',
-       'KU2AstLan', 'KU2AstNr', 'KU2Ink', 'KU2YrkStalln', 'KU3AstKommun',
-       'KU3AstLan', 'KU3AstNr', 'KU3Ink', 'KU3YrkStalln', 'Lan',
-       'Raks_EtablGrad', 'Raks_EtablGrans', 'Raks_Forvink',
-       'Raks_Huvudanknytning', 'Raks_SummaInk', 'Sun2000Grp', 'Sun2000Inr',
-       'Sun2000niva', 'Sun2000niva_old', 'SyssStat11', 'YrkStalln',
-       'YrkStallnKomb'],
+	   'LopNr_ArbstId', 'LopNr_KU3CfarNr', 'LopNr_KU2CfarNr',
+	   'LopNr_KU1CfarNr', 'LopNr_KU3PeOrgNr', 'LopNr_KU2PeOrgNr',
+	   'LopNr_KU1PeOrgNr', 'Alder', 'AstKommun', 'AstLan', 'AstNr_LISA',
+	   'Barn0_3', 'Barn11_15', 'Barn16_17', 'Barn18_19', 'Barn20plus',
+	   'Barn4_6', 'Barn7_10', 'Distriktskod', 'ExamAr', 'ExamKommun',
+	   'LopNr_Fastlopnr_fastbet', 'FodelseAr', 'Kommun', 'Kon', 'KU1AstKommun',
+	   'KU1AstLan', 'KU1AstNr', 'KU1Ink', 'KU1YrkStalln', 'KU2AstKommun',
+	   'KU2AstLan', 'KU2AstNr', 'KU2Ink', 'KU2YrkStalln', 'KU3AstKommun',
+	   'KU3AstLan', 'KU3AstNr', 'KU3Ink', 'KU3YrkStalln', 'Lan',
+	   'Raks_EtablGrad', 'Raks_EtablGrans', 'Raks_Forvink',
+	   'Raks_Huvudanknytning', 'Raks_SummaInk', 'Sun2000Grp', 'Sun2000Inr',
+	   'Sun2000niva', 'Sun2000niva_old', 'SyssStat11', 'YrkStalln',
+	   'YrkStallnKomb'],
 """
 
 #read in data 
@@ -47,6 +47,9 @@ val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
 print(val_counts)
 
 val_counts2=val_counts[val_counts>1]
+
+with open(f'{log_path}/filtered_counts.txt', 'w') as f:
+	f.write(filtered_counts.to_string())
 
 print(val_counts2)
 
