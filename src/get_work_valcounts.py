@@ -51,10 +51,10 @@ group_a=data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
 print(group_a)
 
 
-val_counts2=val_counts[val_counts<=1]
+val_counts2=val_counts[val_counts>1]
 
-# with open(f'{log_path}/filtered_counts.txt', 'w') as f:
-# 	f.write(val_counts2.to_string())
+with open(f'{log_path}/filtered_counts.txt', 'w') as f:
+	f.write(val_counts2.to_string())
 
 print(val_counts2)
 
