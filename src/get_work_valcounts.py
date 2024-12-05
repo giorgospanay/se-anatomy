@@ -49,7 +49,6 @@ print(val_counts)
 group_a=data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
 
 print(group_a)
-print(group_a.sum())
 
 
 val_counts2=val_counts[val_counts<=1]
