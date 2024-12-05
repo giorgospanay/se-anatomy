@@ -38,6 +38,8 @@ print(data.columns)
 
 filter_data=data[~data["LopNr_CfarNr"].isin(["0000","9999"])]
 
+print(filter_data)
+
 # get value counts for companies
 #com_vals=data["LopNr_CfarNr"].value_counts()
 com2_numw=filter_data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
