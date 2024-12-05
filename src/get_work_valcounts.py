@@ -36,13 +36,12 @@ print(data.columns)
 # print(f"Deso length: {len(data_deso.index)}")
 
 
-val_counts=data["LopNr_CfarNr"].value_counts()
+val_counts=data["LopNr_CfarNr"].value_counts().sum()
 
 print(val_counts)
 
-filt_counts=val_counts[val_counts>1].sum()
 
-print(filt_counts)
+
 
 
 #filter_data=data[~data["LopNr_CfarNr"].isin(["0000","9999"])]
