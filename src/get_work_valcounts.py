@@ -49,7 +49,7 @@ print(val_counts)
 val_counts2=val_counts[val_counts>1]
 
 with open(f'{log_path}/filtered_counts.txt', 'w') as f:
-	f.write(filtered_counts.to_string())
+	f.write(val_counts2.to_string())
 
 print(val_counts2)
 
