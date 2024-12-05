@@ -41,7 +41,7 @@ print(data.columns)
 
 # get value counts for companies
 #com_vals=data["LopNr_CfarNr"].value_counts()
-data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1).sum()
+print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1).sum())
 #print(com2_numw.value_counts())
 #print(com2_numw.value_counts().sum())
 
