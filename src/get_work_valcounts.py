@@ -39,26 +39,29 @@ print(data.columns)
 
 #filter_data=data
 filter_data=data[~data["AstKommun"].astype(int).isin([0,9999])]
+filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
-val_counts=filter_data["LopNr_CfarNr"].value_counts()
+# val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
 
-print(val_counts)
+# print(val_counts)
 
-group_a=data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
+group_a=filter_data.groupby(["LopNr_KU1CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
+
+#.filter(lambda x: len(x)>1)
 
 print(group_a)
 
 
-val_counts2=val_counts[val_counts>1]
+# val_counts2=val_counts[val_counts>1]
 
-with open(f'{log_path}/filtered_counts.txt', 'w') as f:
-	f.write(val_counts2.to_string())
+# with open(f'{log_path}/filtered_counts.txt', 'w') as f:
+# 	f.write(val_counts2.to_string())
 
-print(val_counts2)
+# print(val_counts2)
 
-print(val_counts2.sum())
+# print(val_counts2.sum())
 
 # get value counts for companies
 #com_vals=data["LopNr_CfarNr"].value_counts()
