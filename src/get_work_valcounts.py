@@ -27,7 +27,7 @@ Index(['Unnamed: 0', 'LopNr', 'LopNr_FamId', 'LopNr_PeOrgNr', 'LopNr_CfarNr',
 """
 
 #read in data 
-data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA"])
+data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA","AstKommun"])
 #data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
@@ -37,9 +37,9 @@ print(data.columns)
 
 
 
-filter_data=data
-#filter_data=data[~data["LopNr_KU1CfarNr"].isin(["0000","9999"])]
-#print(f"Filtered Lisa length: {len(filter_data.index)}")
+#filter_data=data
+filter_data=data[~data["AstKommun"].isin(["0000","9999"])]
+print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
 val_counts=filter_data["LopNr_CfarNr"].value_counts()
