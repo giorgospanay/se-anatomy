@@ -36,16 +36,13 @@ print(data.columns)
 # print(f"Deso length: {len(data_deso.index)}")
 
 
-val_counts=data["LopNr_CfarNr"].value_counts().sum()
+
+
+filter_data=data[~data["LopNr_CfarNr"].isin(["0000","9999"])]
+
+val_counts=filter_data["LopNr_CfarNr"].value_counts()
 
 print(val_counts)
-
-
-
-
-
-#filter_data=data[~data["LopNr_CfarNr"].isin(["0000","9999"])]
-#print(filter_data)
 
 # get value counts for companies
 #com_vals=data["LopNr_CfarNr"].value_counts()
