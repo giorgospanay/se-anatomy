@@ -38,7 +38,7 @@ print(data.columns)
 
 
 #filter_data=data
-filter_data=data[~data["AstKommun"].isin(["0000","9999"])]
+filter_data=data[~data["AstKommun"].astype(int).isin([0,9999])]
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
