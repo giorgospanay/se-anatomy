@@ -44,6 +44,10 @@ val_counts=filter_data["LopNr_CfarNr"].value_counts()
 
 print(val_counts)
 
+val_counts2=val_counts[val_counts>1]
+
+print(val_counts2)
+
 # get value counts for companies
 #com_vals=data["LopNr_CfarNr"].value_counts()
 #print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1) )
