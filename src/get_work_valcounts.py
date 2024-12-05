@@ -46,14 +46,16 @@ val_counts=filter_data["LopNr_CfarNr"].value_counts()
 
 print(val_counts)
 
-print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1) )
-print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1).sum())
+group_a=data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
+
+print(group_a)
+print(group_a.sum())
 
 
-val_counts2=val_counts[val_counts>1]
+val_counts2=val_counts[val_counts<=1]
 
-with open(f'{log_path}/filtered_counts.txt', 'w') as f:
-	f.write(val_counts2.to_string())
+# with open(f'{log_path}/filtered_counts.txt', 'w') as f:
+# 	f.write(val_counts2.to_string())
 
 print(val_counts2)
 
