@@ -26,6 +26,20 @@ Index(['Unnamed: 0', 'LopNr', 'LopNr_FamId', 'LopNr_PeOrgNr', 'LopNr_CfarNr',
 	   'YrkStallnKomb'],
 """
 
+def convert_to_remote(value):
+    try:
+        int_value = int(value)
+        if 99980 <= int_value <= 99999:
+            if int_value in [99995, 99997]:
+                return str(value)
+            else:
+                return "Remote"
+        else:
+            return str(value)
+    except ValueError:
+        # Value is not convertible to an integer
+        return str(value)
+
 #read in data 
 data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA","AstKommun"])
 #data = pd.read_csv(lisa_path)
@@ -43,11 +57,13 @@ filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
+filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to_remote)
+
 # val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
 
 # print(val_counts)
 
-group_a=filter_data.groupby(["LopNr_KU1CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
+group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
 
 #.filter(lambda x: len(x)>1)
 
