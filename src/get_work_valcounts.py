@@ -53,6 +53,12 @@ group_a=filter_data.groupby(["LopNr_KU1CfarNr","AstNr_LISA"]).agg({"AstKommun":"
 
 print(group_a)
 
+# Filter
+f_ga=group_a[group_a>1]
+
+print(f_ga)
+print(f_ga.sum())
+
 
 # val_counts2=val_counts[val_counts>1]
 
