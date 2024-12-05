@@ -45,10 +45,10 @@ print(filter_data)
 com2_numw=filter_data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
 print(com2_numw)
 
-com2_sumw=com2_numw.value_counts().sum()
-
-# Get value counts for companies where value >1
+com2_sumw=com2_numw.value_counts()
 print(com2_sumw)
+print(com2_sumw.sum())
+
 
 
 
