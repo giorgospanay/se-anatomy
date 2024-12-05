@@ -11,17 +11,17 @@ deso_path="../../mat_lev_deso_2017.csv"
 
 
 #read in data 
-#data = pd.read_csv(lisa_path, usecols=["CfarNr", "Alder", "AstNr_LISA"])
-data = pd.read_csv(lisa_path)
+data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr", "LopNr_AstNr_LISA", "LopNr_KU1CfarNr"])
+#data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
-print(data.columns)
+#print(data.columns)
 
 # data_deso = pd.read_csv(deso_path)
 # print(f"Deso length: {len(data_deso.index)}")
 
 
 # get value counts for companies
-print(data["CfarNr"].value_counts())
+print(data["LopNr_CfarNr"].value_counts())
 
 
 # get value counts for workplaces?
