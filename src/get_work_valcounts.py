@@ -38,6 +38,8 @@ print(data.columns)
 
 val_counts=data["LopNr_CfarNr"].value_counts()
 
+print(val_counts)
+
 filt_counts=val_counts[val_counts>1].sum()
 
 print(filt_counts)
