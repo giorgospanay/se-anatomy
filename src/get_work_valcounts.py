@@ -42,9 +42,13 @@ filter_data=data
 #print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
-val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
+val_counts=filter_data["LopNr_CfarNr"].value_counts()
 
 print(val_counts)
+
+print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1) )
+print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1).sum())
+
 
 val_counts2=val_counts[val_counts>1]
 
