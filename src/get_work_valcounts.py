@@ -9,9 +9,25 @@ obj_path=csv_path
 lisa_path="../../mat_lev_lisa_2017.csv"
 deso_path="../../mat_lev_deso_2017.csv"
 
+"""
+Index(['Unnamed: 0', 'LopNr', 'LopNr_FamId', 'LopNr_PeOrgNr', 'LopNr_CfarNr',
+       'LopNr_ArbstId', 'LopNr_KU3CfarNr', 'LopNr_KU2CfarNr',
+       'LopNr_KU1CfarNr', 'LopNr_KU3PeOrgNr', 'LopNr_KU2PeOrgNr',
+       'LopNr_KU1PeOrgNr', 'Alder', 'AstKommun', 'AstLan', 'AstNr_LISA',
+       'Barn0_3', 'Barn11_15', 'Barn16_17', 'Barn18_19', 'Barn20plus',
+       'Barn4_6', 'Barn7_10', 'Distriktskod', 'ExamAr', 'ExamKommun',
+       'LopNr_Fastlopnr_fastbet', 'FodelseAr', 'Kommun', 'Kon', 'KU1AstKommun',
+       'KU1AstLan', 'KU1AstNr', 'KU1Ink', 'KU1YrkStalln', 'KU2AstKommun',
+       'KU2AstLan', 'KU2AstNr', 'KU2Ink', 'KU2YrkStalln', 'KU3AstKommun',
+       'KU3AstLan', 'KU3AstNr', 'KU3Ink', 'KU3YrkStalln', 'Lan',
+       'Raks_EtablGrad', 'Raks_EtablGrans', 'Raks_Forvink',
+       'Raks_Huvudanknytning', 'Raks_SummaInk', 'Sun2000Grp', 'Sun2000Inr',
+       'Sun2000niva', 'Sun2000niva_old', 'SyssStat11', 'YrkStalln',
+       'YrkStallnKomb'],
+"""
 
 #read in data 
-#data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr", "LopNr_AstNr_LISA", "LopNr_KU1CfarNr"])
+#data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA"])
 data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
@@ -21,7 +37,15 @@ print(data.columns)
 
 
 # get value counts for companies
-print(data["LopNr_CfarNr"].value_counts())
+#com_vals=data["LopNr_CfarNr"].value_counts()
+com2_numw=data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1)
+print(com2_numw)
+
+com2_sumw=com2_numw.value_counts().sum()
+
+# Get value counts for companies where value >1
+print(com2_sumw)
+
 
 
 # get value counts for workplaces?
