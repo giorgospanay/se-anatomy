@@ -78,7 +78,7 @@ print(filter_data)
 
 # print(val_counts)
 
-group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
+group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"lambda x: value_counts(x,sort=True)"})
 
 #.filter(lambda x: len(x)>1)
 
