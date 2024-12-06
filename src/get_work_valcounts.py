@@ -55,16 +55,22 @@ data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 
 
 #filter_data=data
+
+# Remove filtered kommuns
 filter_data=data[~data["AstKommun"].astype(int).isin([0,9999])]
 filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 print(f"Filtered Lisa length: {len(filter_data.index)}")
-
-
+# Convert to remote locations
 filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to_remote)
+
+# Also remove outlier workplace
+filter_data=filter_data[filter_data["LopNr_CfarNr"]!="946097.0"]
+
 
 # Print users with deg=0, see what they look like
 # Try further filtering for deg=0
 filter_data=filter_data[filter_data["deg_work"]==0]
+print(f"Filtered deg=0 Lisa length: {len(filter_data.index)}")
 print(filter_data)
 
 
