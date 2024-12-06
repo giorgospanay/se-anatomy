@@ -41,13 +41,16 @@ def convert_to_remote(value):
         return str(value)
 
 #read in data 
-data = pd.read_csv(lisa_path, usecols=["LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA","AstKommun"])
+data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA","AstKommun"])
 #data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
 
-# data_deso = pd.read_csv(deso_path)
-# print(f"Deso length: {len(data_deso.index)}")
+
+# Read work attrbs per user
+data_attb=pd.read_csv(f"{log_path}/node_final_2017.csv",index_col="PersonNr",usecols=["PersonNr","deg_work"],header=0)
+# Merge with user
+data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 
 
 
@@ -58,6 +61,12 @@ print(f"Filtered Lisa length: {len(filter_data.index)}")
 
 
 filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to_remote)
+
+# Print users with deg=0, see what they look like
+# Try further filtering for deg=0
+filter_data=filter_data[filter_data["deg_work"]==0]
+print(filter_data)
+
 
 # val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
 
@@ -76,28 +85,10 @@ print(f_ga)
 print(f_ga.sum())
 
 
-# val_counts2=val_counts[val_counts>1]
-
-# with open(f'{log_path}/filtered_counts.txt', 'w') as f:
-# 	f.write(val_counts2.to_string())
-
-# print(val_counts2)
-
-# print(val_counts2.sum())
-
-# get value counts for companies
-#com_vals=data["LopNr_CfarNr"].value_counts()
-#print(data.groupby("LopNr_CfarNr").filter(lambda x: len(x)>1) )
-#print(com2_numw.value_counts())
-#print(com2_numw.value_counts().sum())
-
-#com2_sumw=com2_numw.value_counts()
-#print(com2_sumw)
-#print(com2_sumw.sum())
 
 
 
 
-# get value counts for workplaces?
+
 
 
