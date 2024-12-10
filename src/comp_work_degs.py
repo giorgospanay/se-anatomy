@@ -63,8 +63,10 @@ print(f"Making new degrees a column:")
 work_df = pd.DataFrame(deg_dict,columns=["PersonNr","deg_work_2"])
 work_df.set_index("PersonNr",inplace=True)
 
+print(work_df)
+
 print(f"Merging dataframes.")
-node_df=node_df.merge(work_df,left_on="PersonNr",right_on="PersonNr")
+node_df=node_df.merge(work_df,how="inner")
 
 print(node_df)
 
