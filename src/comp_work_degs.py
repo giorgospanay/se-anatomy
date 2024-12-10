@@ -62,7 +62,7 @@ node_df=pd.read_csv(f"{log_path}/node_final_2017.csv",usecols=["PersonNr","deg_w
 	index_col="PersonNr",header=0)
 
 print(f"Making new degrees a column:")
-work_df = pd.DataFrame.from_dict(deg_dict,orient="index",columns=["PersonNr","deg_work_2"])
+work_df = pd.DataFrame.from_dict(deg_dict,orient="index",columns=["deg_work_2"])
 work_df.set_index("PersonNr",inplace=True)
 
 print(work_df)
