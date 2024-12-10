@@ -35,7 +35,7 @@ print(f"Reading {layer_name}.")
 G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
 
 # Get degrees for each node
-degs=nk.centrality.DegreeCentrality.run().scores()
+degs=nk.centrality.DegreeCentrality.run(G).scores()
 
 # Sort into dictionary
 deg_dict={}
@@ -68,3 +68,4 @@ print(node_df)
 
 # # If we need sorted deg. dist later:
 # deg_dist=sorted(degs, reverse=True)
+
