@@ -34,7 +34,9 @@ layer_name="work"
 print(f"Reading {layer_name}.")
 G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
 
+
 # Get degrees for each node
+print(f"Calculating degrees.")
 degs=nk.centrality.DegreeCentrality.run(G).scores()
 print(degs)
 
