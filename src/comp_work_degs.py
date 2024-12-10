@@ -54,13 +54,15 @@ for u in G.iterNodes():
 	degs.append(d_val)
 	deg_dict[u+1]=d_val
 
+print(degs)
+
 # Now compare to deg_work from node attribute
 print(f"Reading node_attb dataframe. Only use work col")
 node_df=pd.read_csv(f"{log_path}/node_final_2017.csv",usecols=["PersonNr","deg_work"],
 	index_col="PersonNr",header=0)
 
 print(f"Making new degrees a column:")
-work_df = pd.DataFrame(deg_dict,columns=["PersonNr","deg_work_2"])
+work_df = pd.DataFrame.from_dict(deg_dict,orient="index",columns=["PersonNr","deg_work_2"])
 work_df.set_index("PersonNr",inplace=True)
 
 print(work_df)
