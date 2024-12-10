@@ -68,7 +68,7 @@ work_df = pd.DataFrame.from_dict(deg_dict,orient="index",columns=["deg_work_2"])
 print(work_df)
 
 print(f"Merging dataframes.")
-node_df=node_df.merge(work_df,how="inner")
+node_df=node_df.merge(work_df,left_index=True,right_index=True)
 
 print(node_df)
 
