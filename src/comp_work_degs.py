@@ -47,7 +47,7 @@ degs=[]
 # Sort into dictionary
 deg_dict={}
 for u in G.iterNodes():
-	print(f"Node {u} tested:")
+	#print(f"Node {u} tested:")
 	d_val=G.degree(u)
 
 	# Add degree into list and dict
