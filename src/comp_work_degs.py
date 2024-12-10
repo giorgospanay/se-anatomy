@@ -37,15 +37,22 @@ G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpa
 
 # Get degrees for each node
 print(f"Calculating degrees.")
-degs=nk.centrality.DegreeCentrality.run(G).scores()
-print(degs)
+
+# Do manually?
+degs=[]
+
+# degs=nk.centrality.DegreeCentrality.run(G).scores()
+# print(degs)
 
 # Sort into dictionary
 deg_dict={}
 for u in G.iterNodes():
-	# if u+1 not in deg_dict:
-	# 	deg_dict[u+1]=0
-	deg_dict[u+1]=degs[u]
+	print(f"Node {u} tested:")
+	d_val=G.degree(u)
+
+	# Add degree into list and dict
+	degs.append(d_val)
+	deg_dict[u+1]=d_val
 
 # Now compare to deg_work from node attribute
 print(f"Reading node_attb dataframe. Only use work col")
