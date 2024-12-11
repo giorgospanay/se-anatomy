@@ -96,12 +96,18 @@ print(filter_data)
 
 
 # Get valu
-group_a=filter_data[["LopNr_CfarNr","AstNr_LISA"]].stack().value_counts().unstack()
+#group_a=filter_data[["LopNr_CfarNr","AstNr_LISA"]].stack().value_counts()
 
 #group_a=filter_data[["LopNr_CfarNr","AstNr_LISA","AstKommun"]].groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
 
 #.filter(lambda x: len(x)>1)
 
+group=filter_data[["LopNr_CfarNr","AstNr_LISA"]]
+group.set_index(["LopNr_CfarNr","AstNr_LISA"],inplace=True)
+
+print(group)
+
+group_a=group.value_counts()
 print(group_a)
 
 # Filter
