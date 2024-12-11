@@ -92,14 +92,14 @@ print(filter_data)
 
 # print(val_counts)
 
-group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"],dropna=False).agg({"AstKommun":"value_counts"})
+group_a=filter_data[["LopNr_CfarNr","AstNr_LISA","AstKommun"]].groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
 
 #.filter(lambda x: len(x)>1)
 
 print(group_a)
 
 # Filter
-f_ga=group_a[group_a<=1]
+f_ga=group_a[group_a>1]
 
 print(f_ga)
 print(f_ga.sum())
