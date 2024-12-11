@@ -56,6 +56,10 @@ data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 
 #filter_data=data
 
+# Remove duplicated indices if exist
+data=data[~data.index.duplicated(keep='first')]
+print(f"Filtered dups length: {len(data.index)}")
+
 # Remove filtered kommuns
 filter_data=data[~data["AstKommun"].astype(int).isin([0,9999])]
 filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
@@ -78,7 +82,7 @@ print(filter_data)
 
 # print(val_counts)
 
-group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"lambda x: value_counts(x,sort=True)"})
+group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
 
 #.filter(lambda x: len(x)>1)
 
