@@ -81,8 +81,13 @@ print(filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).value_counts())
 filter_data=filter_data[filter_data["LopNr_CfarNr"].astype(int)!=946067]
 print(f"Filtered after 946067 length: {len(filter_data.index)}")
 
+
+# Print users with workplace=Remote, see what they look like
+filter_data=filter_data[filter_data["AstNr_LISA"]=="Remote"]
+print(filter_data)
+
+
 # Print users with deg=0, see what they look like
-# Try further filtering for deg=0
 filter_data=filter_data[filter_data["deg_work"]==0]
 print(f"Filtered deg=0 Lisa length: {len(filter_data.index)}")
 print(filter_data)
