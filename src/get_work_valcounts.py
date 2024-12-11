@@ -72,7 +72,7 @@ filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to
 print(filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).value_counts())
 
 # Also remove outlier workplace
-filter_data=filter_data[filter_data["LopNr_CfarNr"]==946067.0]
+filter_data=filter_data[~filter_data["LopNr_CfarNr"]==946067.0]
 print(f"Filtered after 946067 length: {len(filter_data.index)}")
 
 # Print users with deg=0, see what they look like
