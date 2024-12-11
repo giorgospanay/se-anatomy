@@ -82,9 +82,9 @@ filter_data=filter_data[filter_data["LopNr_CfarNr"].astype(int)!=946067]
 print(f"Filtered after 946067 length: {len(filter_data.index)}")
 
 
-# Print users with workplace=Remote, see what they look like
-filter_data=filter_data[filter_data["AstNr_LISA"]=="Remote"]
-print(filter_data)
+# # Print users with workplace=Remote, see what they look like
+# filter_data=filter_data[filter_data["AstNr_LISA"]=="Remote"]
+# print(filter_data)
 
 
 # Print users with deg=0, see what they look like
@@ -93,11 +93,12 @@ print(f"Filtered deg=0 Lisa length: {len(filter_data.index)}")
 print(filter_data)
 
 
-# val_counts=filter_data["LopNr_KU1CfarNr"].value_counts()
 
-# print(val_counts)
 
-group_a=filter_data[["LopNr_CfarNr","AstNr_LISA","AstKommun"]].groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
+# Get valu
+group_a=filter_data[["LopNr_CfarNr","AstNr_LISA"]].apply(set,axis=1).value_counts()
+
+#group_a=filter_data[["LopNr_CfarNr","AstNr_LISA","AstKommun"]].groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
 
 #.filter(lambda x: len(x)>1)
 
