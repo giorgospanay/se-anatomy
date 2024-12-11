@@ -52,7 +52,7 @@ data_attb=pd.read_csv(f"{log_path}/node_final_2017.csv",index_col="PersonNr",use
 # Merge with user
 data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 
-
+print(data)
 
 #filter_data=data
 
@@ -69,7 +69,7 @@ filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to
 
 # Also remove outlier workplace
 filter_data=filter_data[filter_data["LopNr_CfarNr"]!="946097.0"]
-
+print(f"Filtered after 946907 length: {len(filter_data.index)}")
 
 # Print users with deg=0, see what they look like
 # Try further filtering for deg=0
