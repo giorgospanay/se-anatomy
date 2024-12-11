@@ -41,7 +41,7 @@ def convert_to_remote(value):
         return str(value)
 
 #read in data 
-data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","AstNr_LISA","AstKommun"])
+data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","LopNr_ArbstId","AstNr_LISA","AstKommun"])
 #data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
@@ -53,6 +53,12 @@ data_attb=pd.read_csv(f"{log_path}/node_final_2017.csv",index_col="PersonNr",use
 data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 
 print(data)
+
+
+# Drop arbstid=Na
+data.dropna(subset=["LopNr_ArbstId"],inplace=True)
+print(f"Remove filtered arbstid: {len(data.index)}")
+
 
 #filter_data=data
 
