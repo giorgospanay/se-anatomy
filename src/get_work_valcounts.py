@@ -72,8 +72,8 @@ filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to
 print(filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).value_counts())
 
 # Also remove outlier workplace
-filter_data=filter_data[filter_data["LopNr_CfarNr"]!=946097]
-print(f"Filtered after 946907 length: {len(filter_data.index)}")
+filter_data=filter_data[filter_data["LopNr_CfarNr"]==946067.0]
+print(f"Filtered after 946067 length: {len(filter_data.index)}")
 
 # Print users with deg=0, see what they look like
 # Try further filtering for deg=0
@@ -93,7 +93,7 @@ group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"val
 print(group_a)
 
 # Filter
-f_ga=group_a[group_a>1]
+f_ga=group_a[group_a<=1]
 
 print(f_ga)
 print(f_ga.sum())
