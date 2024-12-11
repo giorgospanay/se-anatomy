@@ -41,7 +41,7 @@ def convert_to_remote(value):
         return str(value)
 
 #read in data 
-data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","LopNr_KU1CfarNr","AstNr_LISA","AstKommun"])
+data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","AstNr_LISA","AstKommun"])
 #data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
@@ -86,7 +86,7 @@ print(filter_data)
 
 # print(val_counts)
 
-group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
+group_a=filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"],dropna=False).agg({"AstKommun":"value_counts"})
 
 #.filter(lambda x: len(x)>1)
 
