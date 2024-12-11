@@ -96,7 +96,7 @@ print(filter_data)
 
 
 # Get valu
-group_a=filter_data[["LopNr_CfarNr","AstNr_LISA"]].apply(set,axis=1).value_counts()
+group_a=filter_data[["LopNr_CfarNr","AstNr_LISA"]].stack().value_counts()
 
 #group_a=filter_data[["LopNr_CfarNr","AstNr_LISA","AstKommun"]].groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
 
