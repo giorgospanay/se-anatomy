@@ -200,6 +200,8 @@ zero_edu=(node_df["deg_edu"]==0.0).sum()
 zero_nbr=(node_df["deg_nbr"]==0.0).sum()
 zero_work=(node_df["deg_work"]==0.0).sum()
 
+print(f"zero_work: {zero_work}")
+
 # # Debug
 # print(f"f:{zero_fam}, e:{zero_edu}, n:{zero_nbr}, w:{zero_work}")
 
