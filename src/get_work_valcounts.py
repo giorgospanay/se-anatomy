@@ -67,6 +67,10 @@ print(f"Filtered Lisa length: {len(filter_data.index)}")
 # Convert to remote locations
 filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to_remote)
 
+
+# Print dataset valcounts
+print(filter_data.groupby(["LopNr_CfarNr","AstNr_LISA"]).value_counts())
+
 # Also remove outlier workplace
 filter_data=filter_data[filter_data["LopNr_CfarNr"]!=946097]
 print(f"Filtered after 946907 length: {len(filter_data.index)}")
