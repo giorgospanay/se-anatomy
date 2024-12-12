@@ -128,4 +128,3 @@ if mode=="calc-degs":
 	node_df.to_csv(f"{log_path}/filtered_node_a_2017.csv")
 
 
-
