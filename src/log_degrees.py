@@ -110,7 +110,7 @@ for layer_name in layer_names:
 		# Otherwise add as column
 		else:
 			layer_df=pd.DataFrame.from_dict(deg_dict,orient="index",columns=[f"deg_{layer_short}"])
-			node_df=node_df.merge(layer_df,left_index=True,right_index=True)
+			node_df=node_df.merge(layer_df,how="outer",left_index=True,right_index=True)
 
 
 		# Also make degree distribution:
