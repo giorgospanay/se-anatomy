@@ -150,7 +150,7 @@ if mode=="calc":
 	node_df.to_csv(f"{log_path}/node_a_2017.csv")
 
 # If mode=remake, drop 0.0.
-elif mod=="remake":
+elif mode=="remake":
 	node_df=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",header=0)
 	if "deg_total" not in node_df:
 		node_df.columns=["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"]
