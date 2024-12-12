@@ -78,12 +78,14 @@ for layer_name in layer_names:
 		# Sort into dictionary
 		deg_dict={}
 		for u in G.iterNodes():
-			#print(f"Node {u} tested:")
-			d_val=G.degree(u)
+			# Sanity check
+			if G.hasNode(u):
+				#print(f"Node {u} tested:")
+				d_val=G.degree(u)
 
-			# Add degree into list and dict
-			degs.append(d_val)
-			deg_dict[u+1]=d_val
+				# Add degree into list and dict
+				degs.append(d_val)
+				deg_dict[u+1]=d_val
 
 		
 		# Set short layer name
