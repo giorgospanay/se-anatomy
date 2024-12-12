@@ -31,6 +31,12 @@ if len(args)>=1:
 
 layer_names=["close_family","extended_family","household","neighbourhood","education","work"]
 node_df=None
+lisa_df=None
+
+if mode=="make-edge":
+	# Now compare to deg_work from node attribute
+	print(f"Reading LISA dataframe")
+	lisa_df=pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr"])
 
 for layer_name in layer_names:
 
@@ -39,7 +45,6 @@ for layer_name in layer_names:
 		# Reading layer
 		print(f"Reading {layer_name}.")
 		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")
-
 
 		# Now compare to deg_work from node attribute
 		print(f"Reading LISA dataframe")
@@ -53,13 +58,13 @@ for layer_name in layer_names:
 		print(f"Saving to csv & edgelist.")
 		df.to_csv(f"{csv_path}/filtered_{layer_name}_2017.csv")
 		# Save to edgelist
-		df.to_csv(f"{csv_path}/filtered_edgelist_family2017.csv",sep=" ",index=False,header=False)
+		df.to_csv(f"{csv_path}/filtered_edgelist_{layer_name}_2017.csv",sep=" ",index=False,header=False)
 
 	# Mode calc degree
 	elif mode=="calc-degs":
 
 		print(f"Reading {layer_name} from edgelist.")
-		G=nk.readGraph(f"{csv_path}/filtered_edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
+		G=nk.readGraph(f"{csv_path}/filtered_edgelist_{layer_name}_2017.csv",nk.Format.EdgeListSpaceOne)
 
 		# Get degrees for each node
 		print(f"Calculating degrees, making dict.")
