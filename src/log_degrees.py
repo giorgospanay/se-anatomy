@@ -28,8 +28,11 @@ if len(args)>=1:
 		top=args[1]
 
 
-
+# Set top as single layer
 layer_names=["close_family","extended_family","household","neighbourhood","education","work"]
+if top!="":
+	layer_names=[top]
+
 node_df=None
 lisa_df=None
 
