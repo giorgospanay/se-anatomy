@@ -48,7 +48,7 @@ for layer_name in layer_names:
 	if mode=="make-edge":
 		# Reading layer
 		print(f"Reading {layer_name}.")
-		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")
+		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")[["PersonNr","PersonNr2"]]
 
 		# Mask out everything not in lisa_members
 		print(f"Dropping non-LISA members.")
