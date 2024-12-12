@@ -34,9 +34,10 @@ node_df=None
 lisa_df=None
 
 if mode=="make-edge":
-	# Now compare to deg_work from node attribute
+	# Read from node attribute to compare
 	print(f"Reading LISA dataframe")
 	lisa_df=pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr"])
+	lisa_members=list(lisa_df.index)
 
 for layer_name in layer_names:
 
@@ -46,14 +47,10 @@ for layer_name in layer_names:
 		print(f"Reading {layer_name}.")
 		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")
 
-		# Now compare to deg_work from node attribute
-		print(f"Reading LISA dataframe")
-		lisa_df=pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr"])
-
-		print(f"Merging dataframes.")
-		df=lisa_df.merge(df,how="inner",left_index=True,right_index=True)
-		df.drop(["LopNr_CfarNr"],axis=1,inplace=True)
-
+		# Mask out everything not in lisa_members
+		print(f"Dropping non-LISA members.")
+		df=df[~df["PersonNr"].isin(lisa_members) & ~df["PersonNr2"].isin(lisa_members)]
+		
 		# Save to csv
 		print(f"Saving to csv & edgelist.")
 		df.to_csv(f"{csv_path}/filtered_{layer_name}_2017.csv")
