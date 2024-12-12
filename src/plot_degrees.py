@@ -47,7 +47,7 @@ fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 # Get hists. Now showing year=2017:
 with open(f"{log_path}/filtered_histogram_close_family_2017.txt","r") as h_wf:
 	hist_close = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/filtered_histogram_extended_family2017.txt","r") as h_wf:
+with open(f"{log_path}/filtered_histogram_extended_family_2017.txt","r") as h_wf:
 	hist_ext = [line.rstrip() for line in h_wf]
 with open(f"{log_path}/filtered_histogram_household_2017.txt","r") as h_wf:
 	hist_house = [line.rstrip() for line in h_wf]
