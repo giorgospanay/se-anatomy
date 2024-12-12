@@ -66,7 +66,7 @@ hist_house=ast.literal_eval(hist_house[0])
 hist_edu=ast.literal_eval(hist_edu[0])
 hist_nbr=ast.literal_eval(hist_nbr[0])
 hist_work=ast.literal_eval(hist_work[0])
-hist_flat=ast.literal_eval(hist_flat[0])
+#hist_flat=ast.literal_eval(hist_flat[0])
 
 # Fig. 1A: Plot each histogram (individual layers) as line
 ax1a.set_ylabel("Frequency")
