@@ -155,7 +155,7 @@ else:
 	#node_df=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",index_col="PersonNr",header=0)
 	
 	if "deg_total" not in node_df:
-		node_df.columns(["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"])
+		node_df.columns=["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"]
 		node_df.set_index("PersonNr",inplace=True)
 		# Add new line to calculate total degree for all nodes
 		node_df["deg_total"]=node_df["deg_close"]+node_df["deg_ext"]+node_df["deg_house"]+node_df["deg_edu"]+node_df["deg_nbr"]+node_df["deg_work"]
