@@ -121,7 +121,6 @@ for layer_name in layer_names:
 			h_wf.write(f"{freq_d}\n")
 
 
-
 # If degrees calculated: save node_df
 if mode=="calc-degs":
 	print("Saving node_df.")
