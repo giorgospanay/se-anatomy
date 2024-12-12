@@ -116,7 +116,7 @@ for layer_name in layer_names:
 		deg_d,freq_d=np.unique(deg_dict,return_counts=True)
 		# ...and save to file as with old log_degs
 		with open(f"{log_path}/filtered_histogram_{layer_name}_2017.txt","w") as h_wf:
-			h_wf.write(f"{hist}\n")
+			h_wf.write(f"{freq_d}\n")
 
 
 
