@@ -119,8 +119,7 @@ for layer_name in layer_names:
 			layer_df=pd.DataFrame.from_dict(deg_dict,orient="index",columns=[f"deg_{layer_short}"])
 			node_df=node_df.merge(layer_df,how="outer",left_index=True,right_index=True)
 
-		node_df.columns=["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"]
-		node_df.fillna(0.0)
+		
 
 		# Also make degree distribution:
 		deg_dist=sorted(degs,reverse=True)
@@ -133,6 +132,8 @@ for layer_name in layer_names:
 # If degrees calculated: save node_df
 if mode=="calc-degs":
 	print("Saving node_df.")
+	#node_df.columns=["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"]
+	node_df.fillna(0.0)
 	node_df.to_csv(f"{log_path}/filtered_node_a_2017.csv")
 
 
