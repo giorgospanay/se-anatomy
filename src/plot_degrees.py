@@ -167,8 +167,8 @@ elif mode=="remake":
 		lisa_df=pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr"])
 		lisa_members=list(lisa_df.index)
 		# Drop df lines not in LISA
-		node_df.drop(node_df.loc[~node_df.index.isin(lisa_members)],inplace=True)
-
+		#node_df.drop(node_df.loc[~node_df.index.isin(lisa_members)],inplace=True)
+		node_df=node_df.loc[[~node_df.index.isin(lisa_members)]]
 
 		## Drop 0 lines
 		#node_df.drop(node_df[node_df["deg_total"]==0].index,inplace=True)
