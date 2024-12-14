@@ -181,6 +181,9 @@ elif mode=="remake":
 # If no mode set, read file from csv
 else:
 	node_df=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",header=0)
+
+node_df=node_df[node_df["deg_total"]==0.0]
+print(node_df)
 	
 	
 
