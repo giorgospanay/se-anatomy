@@ -161,6 +161,8 @@ elif mode=="remake":
 		# Add new line to calculate total degree for all nodes
 		node_df["deg_total"]=node_df["deg_close"]+node_df["deg_ext"]+node_df["deg_house"]+node_df["deg_edu"]+node_df["deg_nbr"]+node_df["deg_work"]
 
+		# Read LISA dataframe. Drop lines not in lisa?
+
 		## Drop 0 lines
 		#node_df.drop(node_df[node_df["deg_total"]==0].index,inplace=True)
 

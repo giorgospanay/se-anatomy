@@ -50,6 +50,9 @@ for layer_name in layer_names:
 		print(f"Reading {layer_name}.")
 		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")[["PersonNr","PersonNr2"]]
 
+		# Print size for stats
+		print(f"{layer_name} size: {len(df.index)}")
+
 		# Mask out everything not in lisa_members
 		print(f"Dropping non-LISA members.")
 		df=df.drop(df[~df["PersonNr"].isin(lisa_members) | ~df["PersonNr2"].isin(lisa_members)].index)
@@ -88,6 +91,8 @@ for layer_name in layer_names:
 				# Add degree into list and dict
 				degs.append(d_val)
 				deg_dict[u+1]=d_val
+			else:
+				deg_dict[u+1]=0.0
 
 		
 		# Set short layer name
@@ -114,6 +119,8 @@ for layer_name in layer_names:
 			layer_df=pd.DataFrame.from_dict(deg_dict,orient="index",columns=[f"deg_{layer_short}"])
 			node_df=node_df.merge(layer_df,how="outer",left_index=True,right_index=True)
 
+		node_df.columns=["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"]
+		node_df.fillna(0.0)
 
 		# Also make degree distribution:
 		deg_dist=sorted(degs,reverse=True)
