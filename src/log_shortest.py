@@ -219,7 +219,7 @@ if mode!="calc-node":
 	# Read node info df here
 	if mode=="calc-close":
 		print("Read node_a")
-		node_df=pd.read_csv(f"{log_path}/node_a_2017.csv",index_col="PersonNr",header=0)
+		node_df=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",index_col="PersonNr",header=0)
 		node_df.fillna(0.0,inplace=True)
 
 	df=None
@@ -238,7 +238,7 @@ if mode!="calc-node":
 				#df=pd.read_csv(f"{csv_path}/close_family2017.csv")
 				pass
 			else:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_close_family2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/filtered_edgelist_close_family_2017.csv",directed=False)
 
 		elif net_name=="family":
 			print("Reading in Family 2017:: C+E+H")
@@ -262,9 +262,9 @@ if mode!="calc-node":
 			## Switch to pyteexgraph code for other modes
 			# 		
 			if "flatten" in mode:
-				df=pd.read_csv(f"{csv_path}/family2017.csv")
+				df=pd.read_csv(f"{csv_path}/filtered_family_2017.csv")
 			else:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_family2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/filtered_edgelist_family_2017.csv",directed=False)
 
 			# if mode=="flatten":
 			# 	# Do networkX here for triangle calc.
@@ -279,7 +279,7 @@ if mode!="calc-node":
 			
 			if "flatten" in mode:
 				# Read alone for triangles
-				n_df=pd.read_csv(f"{csv_path}/neighbourhood2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				n_df=pd.read_csv(f"{csv_path}/filtered_neighbourhood_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(n_df,source="PersonNr",target="PersonNr2")
@@ -289,22 +289,22 @@ if mode!="calc-node":
 					print("Flatten.")
 					df=pd_flatten_layers(df,n_df)[["PersonNr","PersonNr2"]]
 					# Save us from future calculations!!
-					df.to_csv(f"{csv_path}/flat_fn2017.csv")
-					df.to_csv(f"{csv_path}/edgelist_flat_fn2017.csv",sep=" ",index=False,header=False)
+					df.to_csv(f"{csv_path}/filtered_flat_fn_2017.csv")
+					df.to_csv(f"{csv_path}/filtered_edgelist_flat_fn_2017.csv",sep=" ",index=False,header=False)
 
 				if mode=="flatten-id":
 					# Read and flatten every family-based layer first
 					print("Reading close family")
-					df_id=pd.read_csv(f"{csv_path}/close_family2017.csv")
+					df_id=pd.read_csv(f"{csv_path}/filtered_close_family_2017.csv")
 					print("Flattening with extended family")
-					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/extended_family2017.csv"),l1_id="close_family",l2_id="extended_family")
+					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv"),l1_id="close_family",l2_id="extended_family")
 					print("Flattening with household")
-					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/household2017.csv"),l2_id="household")
+					df_id=pd_concat_layers(df_id,pd.read_csv(f"{csv_path}/filtered_household_2017.csv"),l2_id="household")
 
 					print("Flatten with ids.")
 					df_id=pd_concat_layers(df_id,n_df,l2_id="neighbourhood")
 					# Save us from future calculations!!
-					df_id.to_csv(f"{csv_path}/flat_fn_id2017.csv")
+					df_id.to_csv(f"{csv_path}/filtered_flat_fn_id_2017.csv")
 			else:
 				## NetworkX:
 				#G_id=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_fn_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]],source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
@@ -314,14 +314,14 @@ if mode!="calc-node":
 
 				## pyteexgraph:
 				#G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fn2017.csv",directed=False)
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fn2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/filtered_edgelist_flat_fn_2017.csv",directed=False)
 
 		elif net_name=="flat_fne":
 			print("Reading in Education 2017")
 
 			if "flatten" in mode:
 				# Read alone for triangles
-				e_df=pd.read_csv(f"{csv_path}/education2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				e_df=pd.read_csv(f"{csv_path}/filtered_education_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(e_df,source="PersonNr",target="PersonNr2")
 					# print("Get triangles.")
@@ -330,14 +330,14 @@ if mode!="calc-node":
 					print("Flatten.")
 					df=pd_flatten_layers(df,e_df)[["PersonNr","PersonNr2"]]
 					# Save us from future calculations!!
-					df.to_csv(f"{csv_path}/flat_fne2017.csv")
-					df.to_csv(f"{csv_path}/edgelist_flat_fne2017.csv",sep=" ",index=False,header=False)
+					df.to_csv(f"{csv_path}/filtered_flat_fne_2017.csv")
+					df.to_csv(f"{csv_path}/filtered_edgelist_flat_fne_2017.csv",sep=" ",index=False,header=False)
 
 				if mode=="flatten-id":
 					print("Flatten with ids.")
 					df_id=pd_concat_layers(df_id,e_df,l2_id="education")
 					# Save us from future calculations!!
-					df_id.to_csv(f"{csv_path}/flat_fne_id2017.csv")
+					df_id.to_csv(f"{csv_path}/filtered_flat_fne_id_2017.csv")
 			else:
 				## NetworkX:
 				#df_id=pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
@@ -347,14 +347,14 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_fne_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_fne2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/filtered_edgelist_flat_fne_2017.csv",directed=False)
 
 		elif net_name=="flat_all":
 			print("Reading in Work 2017")
 
 			if "flatten" in mode:
 				# Read work alone for triangles
-				w_df=pd.read_csv(f"{csv_path}/work2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
+				w_df=pd.read_csv(f"{csv_path}/filtered_work_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})
 				if mode=="flatten":
 					# G=nx.from_pandas_edgelist(w_df,source="PersonNr",target="PersonNr2")
 					# print("Get triangles.")
@@ -363,14 +363,14 @@ if mode!="calc-node":
 					print("Flatten.")
 					df=pd_flatten_layers(df,w_df)[["PersonNr","PersonNr2"]]
 					# Save us from future calculations!!
-					df.to_csv(f"{csv_path}/flat_all2017.csv")
-					df.to_csv(f"{csv_path}/edgelist_flat_all2017.csv",sep=" ",index=False,header=False)
+					df.to_csv(f"{csv_path}/filtered_flat_all_2017.csv")
+					df.to_csv(f"{csv_path}/filtered_edgelist_flat_all_2017.csv",sep=" ",index=False,header=False)
 
 				if mode=="flatten-id":
 					print("Flatten with ids.")
 					df_id=pd_concat_layers(df_id,w_df,l2_id="work")
 					# Save us from future calculations!!
-					df_id.to_csv(f"{csv_path}/flat_all_id2017.csv")
+					df_id.to_csv(f"{csv_path}/filtered_flat_all_id_2017.csv")
 			else:
 				## NetworkX
 				#df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
@@ -380,7 +380,7 @@ if mode!="calc-node":
 				#G_id=ig.Graph.DataFrame(pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]], directed=False)
 
 				## pyteexgraph:
-				G_id=teex.Graph(filename=f"{csv_path}/edgelist_flat_all2017.csv",directed=False)
+				G_id=teex.Graph(filename=f"{csv_path}/filtered_edgelist_flat_all_2017.csv",directed=False)
 
 				if mode=="calc-close":
 					# Calculate WCC
@@ -396,12 +396,12 @@ if mode!="calc-node":
 						closeness=G_id.closenessCentrality(scope=teex.Scope.LWCC,sample_fraction=int(0.0003*gc_size))
 						print(closeness)
 
-						with open(f"{log_path}/closeness_vals.txt","w") as wf:
+						with open(f"{log_path}/filtered_closeness_vals.txt","w") as wf:
 							for val in closeness:
 								wf.write(f"{val}\n")
 					else:
 						closeness=[]
-						with open (f"{log_path}/closeness_vals.txt","r") as rf:
+						with open (f"{log_path}/filtered_closeness_vals.txt","r") as rf:
 							closeness=[float(line.rstrip()) if line.rstrip()!="inf" else 0.0 for line in rf]
 						# Add values of closeness into df
 						node_df["closeness"]=pd.Series(dict(zip(range(1,len(closeness)+1),closeness)))
@@ -521,7 +521,7 @@ if mode!="calc-node":
 	if mode=="calc-close":
 		# Print out new node csv
 		node_df.fillna(0.0)
-		node_df.to_csv(f"{log_path}/node_b_2017.csv")
+		node_df.to_csv(f"{log_path}/filtered_node_b_2017.csv")
 
 	if mode=="calc-table":
 		# Print out Table 2
@@ -531,14 +531,14 @@ if mode!="calc-node":
 # For flat:
 if mode=="calc-node":
 	# Read node_b
-	node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+	node_df=pd.read_csv(f"{log_path}/filtered_node_b_2017.csv",index_col="PersonNr",header=0)
 
 	# Read flat_all (no id)
 	
 	## Uncomment to revert to nx
 	# G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"}),source="PersonNr",target="PersonNr2")
 	print("Read all")
-	G=pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
+	G=pd.read_csv(f"{csv_path}/filtered_flat_all_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 	
 	# Calculate approx closeness centrality (sample size: 0.03% of GC)
 	print("Get approx closeness centrality (flat).")
@@ -553,7 +553,7 @@ if mode=="calc-node":
 
 	# Read flat_all with ids
 	print("Read flat id")
-	df_id=pd.read_csv(f"{csv_path}/flat_all_id2017.csv")
+	df_id=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv")
 	G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
 	# flat_id: excess closure
@@ -580,6 +580,6 @@ if mode=="calc-node":
 
 	
 	# Also print out new node csv
-	node_df.to_csv(f"{log_path}/node_c_2017.csv")
+	node_df.to_csv(f"{log_path}/filtered_node_c_2017.csv")
 
 

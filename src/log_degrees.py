@@ -52,7 +52,10 @@ for layer_name in layer_names:
 
 		# Mask out everything not in lisa_members
 		print(f"Dropping non-LISA members.")
-		df=df.drop(df[~df["PersonNr"].isin(lisa_members) & ~df["PersonNr2"].isin(lisa_members)].index)
+		df=df.drop(df[~df["PersonNr"].isin(lisa_members) | ~df["PersonNr2"].isin(lisa_members)].index)
+
+		print(lisa_members)
+		print(df)
 
 		# Save to csv
 		print(f"Saving to csv & edgelist.")

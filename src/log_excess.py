@@ -209,7 +209,7 @@ def get_tie_range(G,e_check):
 
 # Read node_b
 print("Reading node_b")
-node_df=pd.read_csv(f"{log_path}/node_b_2017.csv",index_col="PersonNr",header=0)
+node_df=pd.read_csv(f"{log_path}/filtered_node_b_2017.csv",index_col="PersonNr",header=0)
 node_df.fillna(0.0,inplace=True)
 
 # Set net-names
@@ -245,21 +245,21 @@ if mode=="fix-node":
 
 	print("Saving:")
 	node_full.fillna(0.0,inplace=True)
-	node_full.to_csv(f"{log_path}/node_final_2017.csv")
+	node_full.to_csv(f"{log_path}/filtered_node_final_2017.csv")
 
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-	flag_weighted_saved=True
+	flag_weighted_saved=False
 	G=None
 	# Read weighted graph if saved already
 	if (mode=="calc-excess" or mode=="calc-embed") and flag_weighted_saved:
 		# Make Networkit graph from weighted edgelist.
-		G=nk.readGraph(f"{csv_path}/flat_all_id_w2017.csv",nk.Format.METIS)
+		G=nk.readGraph(f"{csv_path}/filtered_flat_all_id_w2017.csv",nk.Format.METIS)
 
 	else:
 		# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
-		G=nk.readGraph(f"{csv_path}/edgelist_{layer_name}2017.csv",nk.Format.EdgeListSpaceOne)
+		G=nk.readGraph(f"{csv_path}/filtered_edgelist_{layer_name}_2017.csv",nk.Format.EdgeListSpaceOne)
 	
 	# Manually remove duplicate edges
 	print("Removing duplicate edges.")
@@ -286,17 +286,17 @@ for layer_name in net_names:
 			if not grouping_flag:
 				# Read flat_all with ids
 				print("Reading flat_all_id:")
-				df=pd.read_csv(f"{csv_path}/flat_all_id2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+				df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
 
 				# Find number of layers where edge exists
 				print("Find n_layers")
 				df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
 				df=df[["PersonNr","PersonNr2","n_layers"]]
 				df=df.set_index(["PersonNr","PersonNr2"])
-				df.to_csv(f"{csv_path}/flat_all_id_nl2017.csv")
+				df.to_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
 			else:
 				print("Reading, setting index, sorting.")
-				df=pd.read_csv(f"{csv_path}/flat_all_id_nl2017.csv")
+				df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
 				# df=df.set_index(["PersonNr","PersonNr2"])
 				# df=df.sort_index()
 
@@ -335,7 +335,7 @@ for layer_name in net_names:
 
 			# Save G for future usage
 			print("Saving G (weighted):")
-			nk.writeGraph(G,f"{csv_path}/flat_all_id_w2017.csv",nk.Format.METIS)
+			nk.writeGraph(G,f"{csv_path}/filtered_flat_all_id_w_2017.csv",nk.Format.METIS)
 
 	# Calculate triangles for individual layers
 	if mode=="calc-tri":
@@ -388,12 +388,12 @@ for layer_name in net_names:
 
 		# Save embeddedness dict
 		print("Saving emb_dict")
-		with open(f"{log_path}/embeddedness_dist_2017.txt","w") as wf:
+		with open(f"{log_path}/filtered_embeddedness_dist_2017.txt","w") as wf:
 			for key, value in emb_dict.items():
 				wf.write(f"{key}: {value}\n")
 
 		# Save e_check:
-		with open(f"{log_path}/edgezero_dist_2017.txt","w") as wf:
+		with open(f"{log_path}/filtered_edgezero_dist_2017.txt","w") as wf:
 			for u,v in e_check:
 				wf.write(f"{u},{v}\n")
 
@@ -402,7 +402,7 @@ for layer_name in net_names:
 		# Read e_check:
 		print("Get tie ranges from file")
 		e_check=[]
-		with open(f"{log_path}/edgezero_dist_2017.txt","r") as file:
+		with open(f"{log_path}/filtered_edgezero_dist_2017.txt","r") as file:
 			lines=[line.rstrip().split(",") for line in file]
 			for ln in lines:
 				e_check.append((int(ln[0]),int(ln[1])))
@@ -413,7 +413,7 @@ for layer_name in net_names:
 
 		# Save tie range dict
 		print("Saving tr_dict")
-		with open(f"{log_path}/tie_range_dist_2017.txt","w") as wf:
+		with open(f"{log_path}/filtered_tie_range_dist_2017.txt","w") as wf:
 			for key, value in tr_dict.items():
 				wf.write(f"{key}: {value}\n")
 
@@ -422,6 +422,6 @@ for layer_name in net_names:
 if mode!="fix-node" and mode!="calc-embed" and mode!="calc-tr":
 	print("Saving node_b")
 	node_df.fillna(0.0,inplace=True)
-	node_df.to_csv(f"{log_path}/node_b_2017.csv")
+	node_df.to_csv(f"{log_path}/filtered_node_b_2017.csv")
 
 
