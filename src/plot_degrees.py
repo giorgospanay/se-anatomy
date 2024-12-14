@@ -157,7 +157,9 @@ elif mode=="remake":
 		node_df.columns=["PersonNr","deg_close","deg_ext","deg_house","deg_nbr","deg_edu","deg_work"]
 		node_df.set_index("PersonNr",inplace=True)
 
-		node_df.fillna(0,inplace=True)
+		print(node_df)
+
+		node_df.fillna(0.0,inplace=True)
 
 		# Add new line to calculate total degree for all nodes
 		node_df["deg_total"]=node_df["deg_close"]+node_df["deg_ext"]+node_df["deg_house"]+node_df["deg_edu"]+node_df["deg_nbr"]+node_df["deg_work"]
