@@ -317,9 +317,9 @@ hist_close.sort_index(ascending=False,inplace=True)
 deg_close=list(reversed(range(len(hist_close))))
 cs_close=np.cumsum(hist_close)
 
-hist_edu.sort_index(ascending=False,inplace=True)
-deg_edu=list(reversed(range(len(hist_edu))))
-cs_edu=np.cumsum(hist_edu)
+hist_ext.sort_index(ascending=False,inplace=True)
+deg_ext=list(reversed(range(len(hist_ext))))
+cs_ext=np.cumsum(hist_ext)
 
 hist_house.sort_index(ascending=False,inplace=True)
 deg_house=list(reversed(range(len(hist_house))))
