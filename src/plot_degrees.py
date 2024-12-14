@@ -45,29 +45,41 @@ print("Figure 1")
 fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 
 # Fig 1A: Plot degree histogram per layer
-# Get hists. Now showing year=2017:
-with open(f"{log_path}/filtered_histogram_close_family_2017.txt","r") as h_wf:
-	hist_close = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/filtered_histogram_extended_family_2017.txt","r") as h_wf:
-	hist_ext = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/filtered_histogram_household_2017.txt","r") as h_wf:
-	hist_house = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/filtered_histogram_education_2017.txt","r") as h_wf:
-	hist_edu = [line.rstrip() for line in h_wf]
-with open(f"{log_path}/filtered_histogram_neighbourhood_2017.txt","r") as h_wf:
-	hist_nbr= [line.rstrip() for line in h_wf]
-with open(f"{log_path}/filtered_histogram_work_2017.txt","r") as h_wf:
-	hist_work = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/filtered_histogram_flat_2017.txt","r") as h_wf:
-# 	hist_flat = [line.rstrip() for line in h_wf]
 
-hist_close=ast.literal_eval(hist_close[0])
-hist_ext=ast.literal_eval(hist_ext[0])
-hist_house=ast.literal_eval(hist_house[0])
-hist_edu=ast.literal_eval(hist_edu[0])
-hist_nbr=ast.literal_eval(hist_nbr[0])
-hist_work=ast.literal_eval(hist_work[0])
-#hist_flat=ast.literal_eval(hist_flat[0])
+# # Get hists. Now showing year=2017:
+# with open(f"{log_path}/filtered_histogram_close_family_2017.txt","r") as h_wf:
+# 	hist_close = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_extended_family_2017.txt","r") as h_wf:
+# 	hist_ext = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_household_2017.txt","r") as h_wf:
+# 	hist_house = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_education_2017.txt","r") as h_wf:
+# 	hist_edu = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_neighbourhood_2017.txt","r") as h_wf:
+# 	hist_nbr= [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_work_2017.txt","r") as h_wf:
+# 	hist_work = [line.rstrip() for line in h_wf]
+# # with open(f"{log_path}/filtered_histogram_flat_2017.txt","r") as h_wf:
+# # 	hist_flat = [line.rstrip() for line in h_wf]
+# hist_close=ast.literal_eval(hist_close[0])
+# hist_ext=ast.literal_eval(hist_ext[0])
+# hist_house=ast.literal_eval(hist_house[0])
+# hist_edu=ast.literal_eval(hist_edu[0])
+# hist_nbr=ast.literal_eval(hist_nbr[0])
+# hist_work=ast.literal_eval(hist_work[0])
+# #hist_flat=ast.literal_eval(hist_flat[0])
+
+
+# Get histograms
+hist_close=node_df["deg_close"].value_counts().sort_index()
+hist_ext=node_df["deg_ext"].value_counts().sort_index()
+hist_house=node_df["deg_house"].value_counts().sort_index()
+hist_nbr=node_df["deg_nbr"].value_counts().sort_index()
+hist_edu=node_df["deg_edu"].value_counts().sort_index()
+hist_work=node_df["deg_work"].value_counts().sort_index()
+
+
+
 
 # Fig. 1A: Plot each histogram (individual layers) as line
 ax1a.set_ylabel("Frequency")
@@ -279,29 +291,50 @@ print("Figure 2")
 fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 
 # Fig. 2A: Cumulative inverse degree distribution. Plot as line histograms
-hist_close.reverse()
+# hist_close.reverse()
+# deg_close=list(reversed(range(len(hist_close))))
+# cs_close=np.cumsum(hist_close)
+# hist_ext.reverse()
+# deg_ext=list(reversed(range(len(hist_ext))))
+# cs_ext=np.cumsum(hist_ext)
+# hist_house.reverse()
+# deg_house=list(reversed(range(len(hist_house))))
+# cs_house=np.cumsum(hist_house)
+# hist_edu.reverse()
+# deg_edu=list(reversed(range(len(hist_edu))))
+# cs_edu=np.cumsum(hist_edu)
+# hist_nbr.reverse()
+# deg_nbr=list(reversed(range(len(hist_nbr))))
+# cs_nbr=np.cumsum(hist_nbr)
+# hist_work.reverse()
+# deg_work=list(reversed(range(len(hist_work))))
+# cs_work=np.cumsum(hist_work)
+
+
+hist_close.sort_index(ascending=False,inplace=True)
 deg_close=list(reversed(range(len(hist_close))))
 cs_close=np.cumsum(hist_close)
 
-hist_ext.reverse()
-deg_ext=list(reversed(range(len(hist_ext))))
-cs_ext=np.cumsum(hist_ext)
-
-hist_house.reverse()
-deg_house=list(reversed(range(len(hist_house))))
-cs_house=np.cumsum(hist_house)
-
-hist_edu.reverse()
+hist_edu.sort_index(ascending=False,inplace=True)
 deg_edu=list(reversed(range(len(hist_edu))))
 cs_edu=np.cumsum(hist_edu)
 
-hist_nbr.reverse()
+hist_house.sort_index(ascending=False,inplace=True)
+deg_house=list(reversed(range(len(hist_house))))
+cs_house=np.cumsum(hist_house)
+
+hist_nbr.sort_index(ascending=False,inplace=True)
 deg_nbr=list(reversed(range(len(hist_nbr))))
 cs_nbr=np.cumsum(hist_nbr)
 
-hist_work.reverse()
+hist_edu.sort_index(ascending=False,inplace=True)
+deg_edu=list(reversed(range(len(hist_edu))))
+cs_edu=np.cumsum(hist_edu)
+
+hist_work.sort_index(ascending=False,inplace=True)
 deg_work=list(reversed(range(len(hist_work))))
 cs_work=np.cumsum(hist_work)
+
 
 
 ax2a.plot(deg_close,cs_close,color="darkslategrey",marker=".",linestyle="dashdot")
@@ -310,6 +343,9 @@ ax2a.plot(deg_house,cs_house,color="crimson",marker=".",linestyle="dashdot")
 ax2a.plot(deg_edu,cs_edu,color="teal",marker=".",linestyle="dashdot")
 ax2a.plot(deg_nbr,cs_nbr,color="gold",marker=".",linestyle="dashdot")
 ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
+
+
+
 
 ax2a.set_xlabel("Degree")
 ax2a.set_ylabel("Sample with k > Degree")
