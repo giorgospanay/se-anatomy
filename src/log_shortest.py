@@ -262,7 +262,26 @@ if mode!="calc-node":
 			## Switch to pyteexgraph code for other modes
 			# 		
 			if "flatten" in mode:
-				df=pd.read_csv(f"{csv_path}/filtered_family_2017.csv")
+
+				# Flag
+				made_flag=False
+
+				if made_flag:
+					df=pd.read_csv(f"{csv_path}/filtered_family_2017.csv")
+				else:
+					# Read and flatten every family-based layer first
+					print("Reading close family")
+					df_id=pd.read_csv(f"{csv_path}/filtered_close_family_2017.csv")[["PersonNr","PersonNr2"]]
+					print("Flattening with extended family")
+					df_id=pd_flatten_layers(df_id,pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv"))[["PersonNr","PersonNr2"]]
+					print("Flattening with household")
+					df_id=pd_flatten_layers(df_id,pd.read_csv(f"{csv_path}/filtered_household_2017.csv"))[["PersonNr","PersonNr2"]]
+
+					# Save us from future calculations!!
+					df.to_csv(f"{csv_path}/filtered_family_2017.csv")
+					df.to_csv(f"{csv_path}/filtered_edgelist_family_2017.csv",sep=" ",index=False,header=False)
+
+
 			else:
 				G_id=teex.Graph(filename=f"{csv_path}/filtered_edgelist_family_2017.csv",directed=False)
 
