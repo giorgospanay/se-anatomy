@@ -14,6 +14,7 @@ csv_path="../results2"
 log_path="../result_logs"
 plot_path="../result_plots"
 obj_path=csv_path
+lisa_path="../../mat_lev_lisa_2017.csv"
 
 
 # Read cmd args
@@ -168,7 +169,7 @@ elif mode=="remake":
 		# Drop df lines not in LISA
 		node_df.drop(node_df.loc[~df.index.isin(lisa_members)],inplace=True)
 
-		
+
 		## Drop 0 lines
 		#node_df.drop(node_df[node_df["deg_total"]==0].index,inplace=True)
 
