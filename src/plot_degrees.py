@@ -167,7 +167,7 @@ elif mode=="remake":
 		lisa_df=pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr"])
 		lisa_members=list(lisa_df.index)
 		# Drop df lines not in LISA
-		node_df.drop(node_df.loc[~df.index.isin(lisa_members)],inplace=True)
+		node_df.drop(node_df.loc[~node_df.index.isin(lisa_members)],inplace=True)
 
 
 		## Drop 0 lines
@@ -177,7 +177,7 @@ elif mode=="remake":
 
 # If no mode set, read file from csv
 else:
-	node_df=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",index_col="PersonNr",header=0)
+	node_df=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",header=0)
 	
 	
 
