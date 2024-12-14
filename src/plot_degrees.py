@@ -40,67 +40,9 @@ degs_close=None
 hist_close=None
 
 
-print("Figure 1")
-
-fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
-
-# Fig 1A: Plot degree histogram per layer
-
-# # Get hists. Now showing year=2017:
-# with open(f"{log_path}/filtered_histogram_close_family_2017.txt","r") as h_wf:
-# 	hist_close = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/filtered_histogram_extended_family_2017.txt","r") as h_wf:
-# 	hist_ext = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/filtered_histogram_household_2017.txt","r") as h_wf:
-# 	hist_house = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/filtered_histogram_education_2017.txt","r") as h_wf:
-# 	hist_edu = [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/filtered_histogram_neighbourhood_2017.txt","r") as h_wf:
-# 	hist_nbr= [line.rstrip() for line in h_wf]
-# with open(f"{log_path}/filtered_histogram_work_2017.txt","r") as h_wf:
-# 	hist_work = [line.rstrip() for line in h_wf]
-# # with open(f"{log_path}/filtered_histogram_flat_2017.txt","r") as h_wf:
-# # 	hist_flat = [line.rstrip() for line in h_wf]
-# hist_close=ast.literal_eval(hist_close[0])
-# hist_ext=ast.literal_eval(hist_ext[0])
-# hist_house=ast.literal_eval(hist_house[0])
-# hist_edu=ast.literal_eval(hist_edu[0])
-# hist_nbr=ast.literal_eval(hist_nbr[0])
-# hist_work=ast.literal_eval(hist_work[0])
-# #hist_flat=ast.literal_eval(hist_flat[0])
-
-
-# Get histograms
-hist_close=node_df["deg_close"].value_counts().sort_index()
-hist_ext=node_df["deg_ext"].value_counts().sort_index()
-hist_house=node_df["deg_house"].value_counts().sort_index()
-hist_nbr=node_df["deg_nbr"].value_counts().sort_index()
-hist_edu=node_df["deg_edu"].value_counts().sort_index()
-hist_work=node_df["deg_work"].value_counts().sort_index()
-
-
-
-
-# Fig. 1A: Plot each histogram (individual layers) as line
-ax1a.set_ylabel("Frequency")
-ax1a.set_xlabel("Degree")
-ax1a.set_yscale("log")
-ax1a.set_xscale("log")
-ax1a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
-ax1a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
-
-ax1a.plot(hist_close,color="darkslategrey",marker=".",linestyle="dashdot")
-ax1a.plot(hist_ext,color="steelblue",marker=".",linestyle="dashdot")
-ax1a.plot(hist_house,color="crimson",marker=".",linestyle="dashdot")
-ax1a.plot(hist_edu,color="teal",marker=".",linestyle="dashdot")
-ax1a.plot(hist_nbr,color="gold",marker=".",linestyle="dashdot")
-ax1a.plot(hist_work,color="grey",marker=".",linestyle="dashdot")
-
-# Save
-ax1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.01,1,0.2),mode="expand")
-#fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
-
 # ---------------------------------------------------------------------------
+
+print("Reading node_df.")
 
 node_df=None
 
@@ -196,8 +138,68 @@ else:
 
 node_df=node_df[node_df["deg_total"]!=0.0]
 print(node_df)
-	
-	
+
+# ------------------------------------------------------------------------
+
+print("Figure 1")
+
+fig1, (ax1a,ax1c) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
+
+# Fig 1A: Plot degree histogram per layer
+
+# # Get hists. Now showing year=2017:
+# with open(f"{log_path}/filtered_histogram_close_family_2017.txt","r") as h_wf:
+# 	hist_close = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_extended_family_2017.txt","r") as h_wf:
+# 	hist_ext = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_household_2017.txt","r") as h_wf:
+# 	hist_house = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_education_2017.txt","r") as h_wf:
+# 	hist_edu = [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_neighbourhood_2017.txt","r") as h_wf:
+# 	hist_nbr= [line.rstrip() for line in h_wf]
+# with open(f"{log_path}/filtered_histogram_work_2017.txt","r") as h_wf:
+# 	hist_work = [line.rstrip() for line in h_wf]
+# # with open(f"{log_path}/filtered_histogram_flat_2017.txt","r") as h_wf:
+# # 	hist_flat = [line.rstrip() for line in h_wf]
+# hist_close=ast.literal_eval(hist_close[0])
+# hist_ext=ast.literal_eval(hist_ext[0])
+# hist_house=ast.literal_eval(hist_house[0])
+# hist_edu=ast.literal_eval(hist_edu[0])
+# hist_nbr=ast.literal_eval(hist_nbr[0])
+# hist_work=ast.literal_eval(hist_work[0])
+# #hist_flat=ast.literal_eval(hist_flat[0])
+
+
+# Get histograms
+hist_close=node_df["deg_close"].value_counts().sort_index()
+hist_ext=node_df["deg_ext"].value_counts().sort_index()
+hist_house=node_df["deg_house"].value_counts().sort_index()
+hist_nbr=node_df["deg_nbr"].value_counts().sort_index()
+hist_edu=node_df["deg_edu"].value_counts().sort_index()
+hist_work=node_df["deg_work"].value_counts().sort_index()
+
+
+
+
+# Fig. 1A: Plot each histogram (individual layers) as line
+ax1a.set_ylabel("Frequency")
+ax1a.set_xlabel("Degree")
+ax1a.set_yscale("log")
+ax1a.set_xscale("log")
+ax1a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+ax1a.set_yticks([1,10,100,1000,10000,100000,1000000],labels=["1","10","100","1K","10K","100K","1M"])
+
+ax1a.plot(hist_close,color="darkslategrey",marker=".",linestyle="dashdot")
+ax1a.plot(hist_ext,color="steelblue",marker=".",linestyle="dashdot")
+ax1a.plot(hist_house,color="crimson",marker=".",linestyle="dashdot")
+ax1a.plot(hist_edu,color="teal",marker=".",linestyle="dashdot")
+ax1a.plot(hist_nbr,color="gold",marker=".",linestyle="dashdot")
+ax1a.plot(hist_work,color="grey",marker=".",linestyle="dashdot")
+
+# Save
+ax1a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.01,1,0.2),mode="expand")
+#fig1a.savefig(f"{plot_path}/fig1a.png",bbox_inches='tight',dpi=300)
 
 
 # ---------------------------------------------------------------------------
