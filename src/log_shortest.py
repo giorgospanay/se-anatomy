@@ -275,10 +275,10 @@ if mode!="calc-node":
 					df=pd.read_csv(f"{csv_path}/filtered_close_family_2017.csv")[["PersonNr","PersonNr2"]]
 					print(df)
 					print("Flattening with extended family")
-					df=pd_flatten_layers(df_id,pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv"))[["PersonNr","PersonNr2"]]
+					df=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv"))[["PersonNr","PersonNr2"]]
 					print(df)
 					print("Flattening with household")
-					df=pd_flatten_layers(df_id,pd.read_csv(f"{csv_path}/filtered_household_2017.csv"))[["PersonNr","PersonNr2"]]
+					df=pd_flatten_layers(df,pd.read_csv(f"{csv_path}/filtered_household_2017.csv"))[["PersonNr","PersonNr2"]]
 					print(df)
 
 					# Save us from future calculations!!
