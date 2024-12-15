@@ -11,6 +11,7 @@ csv_path="../results2"
 log_path="../result_logs"
 plot_path="../result_plots"
 obj_path=csv_path
+lisa_path="../../mat_lev_lisa_2017.csv"
 
 
 # Read cmd args

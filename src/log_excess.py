@@ -15,6 +15,7 @@ csv_path="../results2"
 log_path="../result_logs"
 plot_path="../result_plots"
 obj_path=csv_path
+lisa_path="../../mat_lev_lisa_2017.csv"
 
 
 # Read cmd args
@@ -251,6 +252,7 @@ if mode=="fix-node":
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
 	flag_weighted_saved=False
+
 	G=None
 	# Read weighted graph if saved already
 	if (mode=="calc-excess" or mode=="calc-embed") and flag_weighted_saved:
@@ -281,7 +283,7 @@ for layer_name in net_names:
 			G=nk.graphtools.toWeighted(G)
 
 			# Set flag for grouping done here
-			grouping_flag=True
+			grouping_flag=False
 
 			if not grouping_flag:
 				# Read flat_all with ids

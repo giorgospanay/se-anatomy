@@ -24,6 +24,7 @@ csv_path="../results2"
 log_path="../result_logs"
 plot_path="../result_plots"
 obj_path=csv_path
+lisa_path="../../mat_lev_lisa_2017.csv"
 
 
 # Read cmd args
@@ -272,10 +273,13 @@ if mode!="calc-node":
 					# Read and flatten every family-based layer first
 					print("Reading close family")
 					df=pd.read_csv(f"{csv_path}/filtered_close_family_2017.csv")[["PersonNr","PersonNr2"]]
+					print(df)
 					print("Flattening with extended family")
 					df=pd_flatten_layers(df_id,pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv"))[["PersonNr","PersonNr2"]]
+					print(df)
 					print("Flattening with household")
 					df=pd_flatten_layers(df_id,pd.read_csv(f"{csv_path}/filtered_household_2017.csv"))[["PersonNr","PersonNr2"]]
+					print(df)
 
 					# Save us from future calculations!!
 					df.to_csv(f"{csv_path}/filtered_family_2017.csv")
@@ -408,7 +412,7 @@ if mode!="calc-node":
 					gc_size=G_id.nodes(teex.Scope.LWCC)
 
 					# Change ugly flag here if already calculated
-					closeness_calculated=True
+					closeness_calculated=False
 					
 					if not closeness_calculated:
 						# Calculate closeness centrality for LWCC
