@@ -412,7 +412,7 @@ if mode!="calc-node":
 					gc_size=G_id.nodes(teex.Scope.LWCC)
 
 					# Change ugly flag here if already calculated
-					closeness_calculated=False
+					closeness_calculated=True
 					
 					if not closeness_calculated:
 						# Calculate closeness centrality for LWCC
@@ -424,10 +424,15 @@ if mode!="calc-node":
 								wf.write(f"{val}\n")
 					else:
 						closeness=[]
+
+						# Remove 0 vals from node_df
+						node_df=node_df[node_df["deg_total"]!=0.0]
+
+
 						with open (f"{log_path}/filtered_closeness_vals.txt","r") as rf:
 							closeness=[float(line.rstrip()) if line.rstrip()!="inf" else 0.0 for line in rf]
 						# Add values of closeness into df
-						node_df["closeness"]=pd.Series(dict(zip(range(1,len(closeness)+1),closeness)))
+						node_df["closeness"]=pd.Series(dict(zip(node_df.index,closeness)))
 
 
 
