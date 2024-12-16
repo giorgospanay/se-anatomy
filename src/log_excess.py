@@ -251,7 +251,7 @@ if mode=="fix-node":
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-	flag_weighted_saved=False
+	flag_weighted_saved=True
 
 	G=None
 	# Read weighted graph if saved already
