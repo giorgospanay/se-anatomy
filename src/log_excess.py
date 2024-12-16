@@ -283,7 +283,7 @@ for layer_name in net_names:
 			G=nk.graphtools.toWeighted(G)
 
 			# Set flag for grouping done here
-			grouping_flag=False
+			grouping_flag=True
 
 			if not grouping_flag:
 				# Read flat_all with ids
@@ -298,7 +298,7 @@ for layer_name in net_names:
 				df.to_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
 			else:
 				print("Reading, setting index, sorting.")
-				df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
+				df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv",header=0)
 				# df=df.set_index(["PersonNr","PersonNr2"])
 				# df=df.sort_index()
 
