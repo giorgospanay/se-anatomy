@@ -257,7 +257,7 @@ for layer_name in net_names:
 	# Read weighted graph if saved already
 	if (mode=="calc-excess" or mode=="calc-embed") and flag_weighted_saved:
 		# Make Networkit graph from weighted edgelist.
-		G=nk.readGraph(f"{csv_path}/filtered_flat_all_id_w2017.csv",nk.Format.METIS)
+		G=nk.readGraph(f"{csv_path}/filtered_flat_all_id_w_2017.csv",nk.Format.METIS)
 
 	else:
 		# Make Networkit graph from edgelist. Format EdgeListSpaceOne (sep=" ",firstNode=1)
