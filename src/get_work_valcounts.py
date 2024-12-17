@@ -48,7 +48,7 @@ print(data.columns)
 
 
 # Read work attrbs per user
-data_attb=pd.read_csv(f"{log_path}/node_final_2017.csv",index_col="PersonNr",usecols=["PersonNr","deg_work"],header=0)
+data_attb=pd.read_csv(f"{log_path}/filtered_node_final_2017.csv",index_col="PersonNr",usecols=["PersonNr","deg_work"],header=0)
 # Merge with user
 data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 
