@@ -41,7 +41,8 @@ def convert_to_remote(value):
         return str(value)
 
 #read in data 
-data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","LopNr_ArbstId","AstNr_LISA","AstKommun"])
+#data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_CfarNr","LopNr_ArbstId","AstNr_LISA","AstKommun"])
+data = pd.read_csv(lisa_path,index_col="LopNr",usecols=["LopNr","LopNr_PeOrgNr","LopNr_ArbstId","AstNr_LISA","AstKommun"])
 #data = pd.read_csv(lisa_path)
 print(f"Lisa length: {len(data.index)}")
 print(data.columns)
@@ -68,14 +69,18 @@ print(f"Filtered dups length: {len(data.index)}")
 
 # Remove filtered kommuns
 filter_data=data[~data["AstKommun"].astype(int).isin([0,9999])]
-filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
+#filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
+filter_data=filter_data[filter_data["LopNr_PeOrgNr"]!="-"]
+
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 # Convert to remote locations
 filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to_remote)
 
 
 # Also remove outlier workplace
-filter_data=filter_data[filter_data["LopNr_CfarNr"].astype(int)!=946067]
+#filter_data=filter_data[filter_data["LopNr_CfarNr"].astype(int)!=946067]
+filter_data=filter_data[filter_data["LopNr_PeOrgNr"].astype(int)!=946067]
+
 print(f"Filtered after 946067 length: {len(filter_data.index)}")
 
 
@@ -92,15 +97,14 @@ print(filter_data)
 
 
 
-# Get valu
-#group_a=filter_data[["LopNr_CfarNr","AstNr_LISA"]].stack().value_counts()
+# Replace index
 
-#group_a=filter_data[["LopNr_CfarNr","AstNr_LISA","AstKommun"]].groupby(["LopNr_CfarNr","AstNr_LISA"]).agg({"AstKommun":"value_counts"})
+# group=filter_data[["LopNr_CfarNr","AstNr_LISA"]].reset_index()
+# group.set_index(["LopNr_CfarNr","AstNr_LISA"],inplace=True)
 
-#.filter(lambda x: len(x)>1)
+group=filter_data[["LopNr_PeOrgNr","AstNr_LISA"]].reset_index()
+group.set_index(["LopNr_PeOrgNr","AstNr_LISA"],inplace=True)
 
-group=filter_data[["LopNr_CfarNr","AstNr_LISA"]].reset_index()
-group.set_index(["LopNr_CfarNr","AstNr_LISA"],inplace=True)
 
 print(group)
 
