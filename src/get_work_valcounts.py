@@ -91,9 +91,8 @@ print(filter_data.value_counts())
 # Read work attrbs per user
 data_attb=pd.read_csv(f"{log_path}/filtered_node_final_2017.csv",index_col="PersonNr",usecols=["PersonNr","deg_work"],header=0)
 # Merge with user
-data=data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
-
-print(data)
+filter_data=filter_data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
+print(filter_data)
 
 
 # Print users with deg=0, see what they look like
