@@ -108,7 +108,7 @@ print(filter_data)
 
 
 print(filter_data[["LopNr_CfarNr","AstNr_LISA"]])
-print(filter_data[["LopNr_CfarNr","AstNr_LISA"]].value_counts())
+print(filter_data[["LopNr_CfarNr","AstNr_LISA"]].groupby("AstNr_LISA"))
 
 
 
