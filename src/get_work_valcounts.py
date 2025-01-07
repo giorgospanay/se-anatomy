@@ -69,8 +69,12 @@ filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 #filter_data=filter_data[filter_data["LopNr_PeOrgNr"]!="-"]
 
 
-print(filter_data[["AstNr_LISA"]].value_counts())
+print(filter_data[["AstNr_LISA"]].value_counts(dropna=False))
 
+print(filter_data[filter_data["LopNr_CfarNr"].isna()])
+print(filter_data[filter_data["AstNr_LISA"].isna()])
+print(filter_data[filter_data["AstKommun"].isna()])
+print(filter_data[filter_data["LopNr_ArbstId"].isna()])
 
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 # Convert to remote locations
@@ -109,7 +113,7 @@ filter_data.sort_values("LopNr_CfarNr",inplace=True)
 
 print(filter_data[["LopNr_CfarNr","AstNr_LISA"]])
 
-dat=filter_data[["LopNr_CfarNr","AstNr_LISA"]].groupby(by="AstNr_LISA")
+dat=filter_data[["LopNr_CfarNr","AstNr_LISA"]].groupby(by="AstNr_LISA",dropna=False)
 print(dat)
 
 
