@@ -72,6 +72,8 @@ filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 
 print(filter_data[filter_data["AstNr_LISA"].isna()])
 
+print(filter_data[["AstNr_LISA"]].value_counts())
+
 
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 # Convert to remote locations
