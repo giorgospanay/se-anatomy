@@ -99,10 +99,10 @@ filter_data=filter_data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 print(filter_data)
 
 
-# Print users with deg=0, see what they look like
-filter_data=filter_data[filter_data["deg_work"]==0]
-print(f"Filtered deg=0 Lisa length: {len(filter_data.index)}")
-print(filter_data)
+# # Print users with deg=0, see what they look like
+# filter_data=filter_data[filter_data["deg_work"]==0]
+# print(f"Filtered deg=0 Lisa length: {len(filter_data.index)}")
+# print(filter_data)
 
 
 filter_data.sort_values("LopNr_CfarNr",inplace=True)
