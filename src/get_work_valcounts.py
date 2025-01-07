@@ -68,6 +68,11 @@ filter_data=data[~data["AstKommun"].astype(int).isin([0,9999])]
 filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 #filter_data=filter_data[filter_data["LopNr_PeOrgNr"]!="-"]
 
+
+
+print(filter_data[filter_data["AstNr"].isna()])
+
+
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 # Convert to remote locations
 filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to_remote)
