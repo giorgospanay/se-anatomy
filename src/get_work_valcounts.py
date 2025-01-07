@@ -69,9 +69,6 @@ filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 #filter_data=filter_data[filter_data["LopNr_PeOrgNr"]!="-"]
 
 
-
-print(filter_data[filter_data["AstNr_LISA"].isna()])
-
 print(filter_data[["AstNr_LISA"]].value_counts())
 
 
@@ -110,8 +107,12 @@ print(filter_data)
 
 
 
-# Replace index
+print(filter_data[["LopNr_CfarNr","AstNr_LISA"]])
+print(filter_data[["LopNr_CfarNr","AstNr_LISA"]].value_counts())
 
+
+
+# Replace index
 group=filter_data[["LopNr_CfarNr","AstNr_LISA"]].reset_index()
 group.set_index(["LopNr_CfarNr","AstNr_LISA"],inplace=True)
 
