@@ -73,9 +73,9 @@ print(filter_data[["AstNr_LISA"]].value_counts(dropna=False))
 
 
 
-gc = filter_data[["LopNr_CfarNr"]].groupby("LopNr_CfarNr",as_index=False).indices
+gc = filter_data[["LopNr_CfarNr"]].groupby("LopNr_CfarNr",as_index=False).groups
 for group in gc:
-	print(f"{group}: {gc[group]}")
+	print(f"{group}: {gc[group]} (size: {len(gc[group])})")
 
 
 
