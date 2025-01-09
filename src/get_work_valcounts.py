@@ -73,7 +73,7 @@ print(filter_data[["AstNr_LISA"]].value_counts(dropna=False))
 
 
 
-gc = data.groupby('LopNr_CfarNr')["LopNr"].apply(set).to_dict()
+gc = filter_data[["LopNr_CfarNr"]].groupby('LopNr_CfarNr').apply(set).to_dict()
 for group in gc:
 	print(f"{group}: {gc[group]}")
 
