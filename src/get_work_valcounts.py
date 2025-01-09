@@ -71,10 +71,13 @@ filter_data=filter_data[filter_data["LopNr_CfarNr"]!="-"]
 
 print(filter_data[["AstNr_LISA"]].value_counts(dropna=False))
 
-print(filter_data[filter_data["LopNr_CfarNr"].isna()])
-print(filter_data[filter_data["AstNr_LISA"].isna()])
-print(filter_data[filter_data["AstKommun"].isna()])
-print(filter_data[filter_data["LopNr_ArbstId"].isna()])
+
+
+gc = data.groupby('LopNr_CfarNr')["LopNr"].apply(set).to_dict()
+for group in gc:
+	print(f"{group}: {gc[group]}")
+
+
 
 print(f"Filtered Lisa length: {len(filter_data.index)}")
 # Convert to remote locations
