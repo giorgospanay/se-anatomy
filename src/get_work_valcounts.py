@@ -114,7 +114,7 @@ filter_data.sort_values("LopNr_CfarNr",inplace=True)
 #print(filter_data[["LopNr_CfarNr","AstNr_LISA"]])
 print(filter_data)
 
-dat=filter_data[["LopNr_CfarNr","AstNr_LISA"]].groupby(by="AstNr_LISA",dropna=False)
+dat=filter_data.groupby(by="AstNr_LISA",dropna=False).agg(size=("a","size"),avg_b=("b","mean"))
 print(dat)
 
 
