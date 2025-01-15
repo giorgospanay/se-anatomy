@@ -251,7 +251,7 @@ if mode=="fix-node":
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-	flag_weighted_saved=True
+	flag_weighted_saved=False
 
 	G=None
 	# Read weighted graph if saved already
@@ -283,7 +283,7 @@ for layer_name in net_names:
 			G=nk.graphtools.toWeighted(G)
 
 			# Set flag for grouping done here
-			grouping_flag=True
+			grouping_flag=False
 
 			if not grouping_flag:
 				# Read flat_all with ids
