@@ -71,7 +71,7 @@ filter_data=filter_data[filter_data["LopNr_PeOrgNr"]!="-"]
 
 print(filter_data[["AstNr_LISA"]].value_counts(dropna=False))
 
-
+print(filter_data["AstKommun"])
 
 #gc = filter_data[["LopNr_CfarNr","AstNr_LISA"]].groupby(["LopNr_CfarNr","AstNr_LISA"],as_index=False).groups
 gc = filter_data[["LopNr_PeOrgNr","AstNr_LISA"]].groupby(["LopNr_PeOrgNr","AstNr_LISA"],as_index=False).groups
