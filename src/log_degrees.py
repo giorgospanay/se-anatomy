@@ -48,7 +48,7 @@ for layer_name in layer_names:
 	if mode=="make-edge":
 		# Reading layer
 		print(f"Reading {layer_name}.")
-		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")[["PersonNr","PersonNr2"]]
+		df=pd.read_csv(f"{csv_path}/{layer_name}2017.csv")[["PersonNr","PersonNr2"]].astype({"PersonNr":"int","PersonNr2":"int"})
 
 		# Print size for stats
 		print(f"{layer_name} size: {len(df.index)}")
