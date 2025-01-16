@@ -412,7 +412,7 @@ if mode!="calc-node":
 					gc_size=G_id.nodes(teex.Scope.LWCC)
 
 					# Change ugly flag here if already calculated
-					closeness_calculated=False
+					closeness_calculated=True
 					
 					if not closeness_calculated:
 						# Calculate closeness centrality for LWCC
@@ -556,58 +556,58 @@ if mode!="calc-node":
 		table_2.to_csv(f"{plot_path}/table_2.csv",index=False)
 
 
-# For flat:
-if mode=="calc-node":
-	# Read node_b
-	node_df=pd.read_csv(f"{log_path}/filtered_node_b_2017.csv",index_col="PersonNr",header=0)
+# # For flat:
+# if mode=="calc-node":
+# 	# Read node_b
+# 	node_df=pd.read_csv(f"{log_path}/filtered_node_b_2017.csv",index_col="PersonNr",header=0)
 
-	# Read flat_all (no id)
+# 	# Read flat_all (no id)
 	
-	## Uncomment to revert to nx
-	# G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"}),source="PersonNr",target="PersonNr2")
-	print("Read all")
-	G=pd.read_csv(f"{csv_path}/filtered_flat_all_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
+# 	## Uncomment to revert to nx
+# 	# G=nx.from_pandas_edgelist(pd.read_csv(f"{csv_path}/flat_all2017.csv").astype({"PersonNr":"int","PersonNr2":"int"}),source="PersonNr",target="PersonNr2")
+# 	print("Read all")
+# 	G=pd.read_csv(f"{csv_path}/filtered_flat_all_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2","layer_id"]]
 	
-	# Calculate approx closeness centrality (sample size: 0.03% of GC)
-	print("Get approx closeness centrality (flat).")
-	node_df["closeness"]=pd.Series(find_closeness_centrality_target(G,n_samples=int(len(components[0])*0.0003)))
-	# flat: clustering coefficient
-	print("Get local clustering coefficient (flat).")
-	node_df["lcc"]=pd.Series(nx.clustering(G))
+# 	# Calculate approx closeness centrality (sample size: 0.03% of GC)
+# 	print("Get approx closeness centrality (flat).")
+# 	node_df["closeness"]=pd.Series(find_closeness_centrality_target(G,n_samples=int(len(components[0])*0.0003)))
+# 	# flat: clustering coefficient
+# 	print("Get local clustering coefficient (flat).")
+# 	node_df["lcc"]=pd.Series(nx.clustering(G))
 
-	# Collect garbage
-	df=None
-	G=None
+# 	# Collect garbage
+# 	df=None
+# 	G=None
 
-	# Read flat_all with ids
-	print("Read flat id")
-	df_id=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv")
-	G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
+# 	# Read flat_all with ids
+# 	print("Read flat id")
+# 	df_id=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv")
+# 	G_id=nx.from_pandas_edgelist(df_id,source="PersonNr",target="PersonNr2", edge_attr=["layer_id"], create_using=nx.MultiGraph())
 
-	# flat_id: excess closure
-	print("Get excess closure")
-	node_df["sum_tri"]=node_df["tri_fam"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
-	print("Get tie pairs")
-	node_df["tie_pairs"]=pd.Series(find_tie_pairs(G_id))
+# 	# flat_id: excess closure
+# 	print("Get excess closure")
+# 	node_df["sum_tri"]=node_df["tri_fam"]+node_df["tri_nbr"]+node_df["tri_edu"]+node_df["tri_work"]
+# 	print("Get tie pairs")
+# 	node_df["tie_pairs"]=pd.Series(find_tie_pairs(G_id))
 
-	def _cpure(row):
-		tpure=row[0]
-		tpairs=row[1]
-		if tpure==0 or tpairs==0: return 0
-		else: return tpure/tpairs
+# 	def _cpure(row):
+# 		tpure=row[0]
+# 		tpairs=row[1]
+# 		if tpure==0 or tpairs==0: return 0
+# 		else: return tpure/tpairs
 
-	def _excess(row):
-		c_unique=row[0]
-		c_pure=row[1]
-		if c_pure==1: return 0
-		else: return (c_unique-c_pure)/(1-c_pure)
+# 	def _excess(row):
+# 		c_unique=row[0]
+# 		c_pure=row[1]
+# 		if c_pure==1: return 0
+# 		else: return (c_unique-c_pure)/(1-c_pure)
 
-	print("Get excess closure")
-	node_df["c_pure"]=node_df[["sum_tri","tie_pairs"]].apply(_cpure,axis=1)
-	node_df["excess"]=node_df[["lcc","c_pure"]].apply(_excess,axis=1)
+# 	print("Get excess closure")
+# 	node_df["c_pure"]=node_df[["sum_tri","tie_pairs"]].apply(_cpure,axis=1)
+# 	node_df["excess"]=node_df[["lcc","c_pure"]].apply(_excess,axis=1)
 
 	
-	# Also print out new node csv
-	node_df.to_csv(f"{log_path}/filtered_node_c_2017.csv")
+# 	# Also print out new node csv
+# 	node_df.to_csv(f"{log_path}/filtered_node_c_2017.csv")
 
 
