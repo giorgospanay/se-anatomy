@@ -265,7 +265,7 @@ if mode!="calc-node":
 			if "flatten" in mode:
 
 				# Flag
-				made_flag=True
+				made_flag=False
 
 				if made_flag:
 					df=pd.read_csv(f"{csv_path}/filtered_family_2017.csv")
