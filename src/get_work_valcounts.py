@@ -76,8 +76,13 @@ print(filter_data["AstKommun"])
 #gc = filter_data[["LopNr_CfarNr","AstNr_LISA"]].groupby(["LopNr_CfarNr","AstNr_LISA"],as_index=False).groups
 gc = filter_data[["LopNr_PeOrgNr","AstNr_LISA"]].groupby(["LopNr_PeOrgNr","AstNr_LISA"],as_index=False).groups
 
+
+sum_vals=0
 for group in gc:
-	print(f"{group}: {gc[group].values} (size: {len(gc[group])})")
+	#print(f"{group}: {gc[group].values} (size: {len(gc[group])})")
+	if len(gc[group]==1): sum_vals+=1
+
+print(f"Sum 1: {sum_vals}")
 
 
 
