@@ -102,7 +102,7 @@ filter_data["AstNr_LISA"]=filter_data["AstNr_LISA"].astype(str).apply(convert_to
 
 
 # # Read work attrbs per user
-# data_attb=pd.read_csv(f"{log_path}/filtered_node_final_2017.csv",index_col="PersonNr",usecols=["PersonNr","deg_work"],header=0)
+# data_attb=pd.read_csv(f"{log_path}/filtered_node_a_2017.csv",index_col="PersonNr",usecols=["PersonNr","deg_work"],header=0)
 # # Merge with user
 # filter_data=filter_data.merge(data_attb,left_on="LopNr",right_on="PersonNr")
 # print(filter_data)
