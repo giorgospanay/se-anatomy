@@ -248,6 +248,21 @@ if mode=="fix-node":
 	node_full.fillna(0.0,inplace=True)
 	node_full.to_csv(f"{log_path}/filtered_node_final_2017.csv")
 
+# Special mode with grouping: 
+if mode=="fix-group":
+	net_names=[]
+	# Read flat_all with ids
+	print("Reading flat_all_id:")
+	df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+
+	# Find number of layers where edge exists
+	print("Find n_layers")
+	df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
+	df=df[["PersonNr","PersonNr2","n_layers"]]
+	df=df.set_index(["PersonNr","PersonNr2"])
+	df.to_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
+
+
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
@@ -283,7 +298,7 @@ for layer_name in net_names:
 			G=nk.graphtools.toWeighted(G)
 
 			# Set flag for grouping done here
-			grouping_flag=False
+			grouping_flag=True
 
 			if not grouping_flag:
 				# Read flat_all with ids
@@ -421,7 +436,7 @@ for layer_name in net_names:
 
 
 # Save result to node dataframe
-if mode!="fix-node" and mode!="calc-embed" and mode!="calc-tr":
+if mode!="fix-node" and mode!="calc-embed" and mode!="calc-tr" and mode!="fix-group":
 	print("Saving node_b")
 	node_df.fillna(0.0,inplace=True)
 	node_df.to_csv(f"{log_path}/filtered_node_b_2017.csv")
