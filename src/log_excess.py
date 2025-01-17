@@ -233,6 +233,20 @@ if mode=="fix-excess":
 	# Fix excess closure exceptions: if negative, set to 0. If over 1, set to 1.
 	node_df["excess_closure"]=node_df[["actual_tri","pure_tri","tie_pairs"]].apply(_excess,axis=1)
 
+# Special mode with grouping: 
+if mode=="fix-group":
+	net_names=[]
+	# Read flat_all with ids
+	print("Reading flat_all_id:")
+	df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
+
+	# Find number of layers where edge exists
+	print("Find n_layers")
+	df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
+	df=df[["PersonNr","PersonNr2","n_layers"]]
+	df=df.set_index(["PersonNr","PersonNr2"])
+	df.to_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
+
 # Special lists for fix-node: add node_df attributes. No need to iterate layers
 if mode=="fix-node":
 	net_names=[]
@@ -248,25 +262,11 @@ if mode=="fix-node":
 	node_full.fillna(0.0,inplace=True)
 	node_full.to_csv(f"{log_path}/filtered_node_final_2017.csv")
 
-# Special mode with grouping: 
-if mode=="fix-group":
-	net_names=[]
-	# Read flat_all with ids
-	print("Reading flat_all_id:")
-	df=pd.read_csv(f"{csv_path}/filtered_flat_all_id_2017.csv").astype({"PersonNr":"int","PersonNr2":"int"})[["PersonNr","PersonNr2"]]
-
-	# Find number of layers where edge exists
-	print("Find n_layers")
-	df["n_layers"] = df.groupby(["PersonNr","PersonNr2"])["PersonNr"].transform('size')
-	df=df[["PersonNr","PersonNr2","n_layers"]]
-	df=df.set_index(["PersonNr","PersonNr2"])
-	df.to_csv(f"{csv_path}/filtered_flat_all_id_nl_2017.csv")
-
 
 # For normal modes:
 for layer_name in net_names:
 	print(f"Reading in {layer_name}:")
-	flag_weighted_saved=False
+	flag_weighted_saved=True
 
 	G=None
 	# Read weighted graph if saved already
