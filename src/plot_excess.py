@@ -167,7 +167,7 @@ for i, row_value in enumerate(row_values):
 
 	## Uncomment again if necessary for clarity
 	# # Leave age<=90
-	filter_data=filter_data[(filter_data["age"]>=16) & (filter_data["age"]<=100)]
+	filter_data=filter_data[(filter_data["age"]>=15) & (filter_data["age"]<=90)]
 
 	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
 	if row_value=="DeSO":
@@ -189,15 +189,15 @@ for i, row_value in enumerate(row_values):
 		if j==0:
 			cm_lbl="Reds"
 			y_min=0
-			y_max=100
+			y_max=120
 		elif j==1:
 			cm_lbl="Blues"
 			y_min=0
-			y_max=0.30
+			y_max=0.25
 		elif j==2:
 			cm_lbl="Greens"
-			y_min=0.00
-			y_max=0.60
+			y_min=0.17
+			y_max=0.23
 
 		# Get labels to be used
 		tx_lbl=""
@@ -235,6 +235,7 @@ for i, row_value in enumerate(row_values):
 			# Plot line from heatmap
 			#ax.set_xlim(left=0,right=90)
 			ax.set_ylim(bottom=y_min,top=y_max)
+			ax.set_xlim(left=10,right=90)
 			ax.plot(plot_mean,color=cmap(norm1(idx)),marker=" ",label=f'{row_value}={unique_val}')
 			
 		# Set labels
