@@ -167,7 +167,7 @@ for i, row_value in enumerate(row_values):
 
 	## Uncomment again if necessary for clarity
 	# # Leave age<=90
-	filter_data=filter_data[(filter_data["age"]>=20) & (filter_data["age"]<=85)]
+	filter_data=filter_data[(filter_data["age"]>=16) & (filter_data["age"]<=100)]
 
 	# If row=DeSO: also filter out NaN (0.0). Corresponds to R
 	if row_value=="DeSO":
@@ -189,15 +189,15 @@ for i, row_value in enumerate(row_values):
 		if j==0:
 			cm_lbl="Reds"
 			y_min=0
-			y_max=50
+			y_max=100
 		elif j==1:
 			cm_lbl="Blues"
 			y_min=0
-			y_max=0.35
+			y_max=0.30
 		elif j==2:
 			cm_lbl="Greens"
-			y_min=0.05
-			y_max=0.19
+			y_min=0.00
+			y_max=0.60
 
 		# Get labels to be used
 		tx_lbl=""
