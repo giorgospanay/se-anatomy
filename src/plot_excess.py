@@ -26,52 +26,52 @@ if len(args)>=1:
 print("Reading node_final")
 node_df=pd.read_csv(f"{log_path}/filtered_node_final_2017.csv",index_col="PersonNr",header=0)
 
-# ------------------------------------------------------------------------
+# # ------------------------------------------------------------------------
 
-# Fig. 3
-print("Figure 3")
-fig3, (ax3a,ax3b) = plt.subplots(nrows=1,ncols=2,figsize=(8,5))
+# # Fig. 3
+# print("Figure 3")
+# fig3, (ax3a,ax3b) = plt.subplots(nrows=1,ncols=2,figsize=(8,5))
 
-# Fig. 3A: Embeddedness histogram
-# Read embeddedness histogram logs.
-print("Reading embeddedness distribution.")
-emb_x=[]
-emb_y=[]
-with open(f"{log_path}/filtered_embeddedness_dist_2017.txt","r") as file:
-	lines=[line.rstrip().split(":") for line in file]
-	emb_x=[float(line[0]) for line in lines]
-	emb_y=[float(line[1]) for line in lines]
-# Plot bars
-ax3a.bar(emb_x,emb_y)
+# # Fig. 3A: Embeddedness histogram
+# # Read embeddedness histogram logs.
+# print("Reading embeddedness distribution.")
+# emb_x=[]
+# emb_y=[]
+# with open(f"{log_path}/filtered_embeddedness_dist_2017.txt","r") as file:
+# 	lines=[line.rstrip().split(":") for line in file]
+# 	emb_x=[float(line[0]) for line in lines]
+# 	emb_y=[float(line[1]) for line in lines]
+# # Plot bars
+# ax3a.bar(emb_x,emb_y)
 
-# Legends and ticks
-ax3a.set_xlabel("Embeddedness")
-ax3a.set_ylabel("Number of edges")
-
-
-# Fig. 3B: Tie range, where embeddedness=0.
-
-# Read tie range histogram logs.
-print("Reading tie range distribution.")
-tr_x=[]
-tr_y=[]
-with open(f"{log_path}/filtered_tie_range_dist_2017.txt","r") as file:
-	lines=[line.rstrip().split(":") for line in file]
-	tr_x=[float(line[0]) for line in lines]
-	tr_y=[float(line[1]) for line in lines]
-# Plot bars
-ax3b.bar(tr_x,tr_y)
-
-# Legends and ticks
-ax3b.set_xlabel("Tie range")
-ax3b.set_ylabel("Count (log)")
-ax3b.set_yscale("log")
-ax3b.set_xticks([0,2,4,6,8,10,12,14])
+# # Legends and ticks
+# ax3a.set_xlabel("Embeddedness")
+# ax3a.set_ylabel("Number of edges")
 
 
-# Save figure
-fig3.tight_layout()
-fig3.savefig(f"{plot_path}/fig3.png",bbox_inches='tight',dpi=300)
+# # Fig. 3B: Tie range, where embeddedness=0.
+
+# # Read tie range histogram logs.
+# print("Reading tie range distribution.")
+# tr_x=[]
+# tr_y=[]
+# with open(f"{log_path}/filtered_tie_range_dist_2017.txt","r") as file:
+# 	lines=[line.rstrip().split(":") for line in file]
+# 	tr_x=[float(line[0]) for line in lines]
+# 	tr_y=[float(line[1]) for line in lines]
+# # Plot bars
+# ax3b.bar(tr_x,tr_y)
+
+# # Legends and ticks
+# ax3b.set_xlabel("Tie range")
+# ax3b.set_ylabel("Count (log)")
+# ax3b.set_yscale("log")
+# ax3b.set_xticks([0,2,4,6,8,10,12,14])
+
+
+# # Save figure
+# fig3.tight_layout()
+# fig3.savefig(f"{plot_path}/fig3.png",bbox_inches='tight',dpi=300)
 
 # # ------------------------------------------------------------------------
 
