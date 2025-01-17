@@ -189,11 +189,11 @@ for i, row_value in enumerate(row_values):
 		if j==0:
 			cm_lbl="Reds"
 			y_min=0
-			y_max=120
+			y_max=125
 		elif j==1:
 			cm_lbl="Blues"
 			y_min=0
-			y_max=0.25
+			y_max=0.30
 		elif j==2:
 			cm_lbl="Greens"
 			y_min=0.17
