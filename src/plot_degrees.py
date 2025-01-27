@@ -234,7 +234,7 @@ ax1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=
 #fig1b, ax1b = plt.subplots()
 
 # Set inset axes
-l,b,w,h=[0.55,0.75,0.4,0.175]
+l,b,w,h=[0.6,0.75,0.4,0.175]
 ax1b=ax1a.inset_axes([l,b,w,h])
 
 zero_close=(node_df["deg_close"]==0.0).sum()
@@ -272,8 +272,8 @@ node_df["nz_layers"]=6-np.count_nonzero(node_df[["deg_close","deg_ext","deg_hous
 
 ax1d.hist(node_df["nz_layers"],color="black")
 
-ax1d.set_yticks([0,2000000,4000000,6000000],labels=["0","2M","4M","6M"])
-ax1d.set_xticks([0,3,6])
+ax1d.set_yticks([0,2000000,4000000],labels=["0","2M","4M"])
+ax1d.set_xticks([0,5])
 #ax1d.tick_params(axis="x",labelbottom=False)
 
 # Save
@@ -402,173 +402,173 @@ table_1a=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_wor
 # Save correlation table to csv
 table_1a.to_csv(f"{plot_path}/table_1a.csv")
 
-# --------------------------------------------------------------------------
+# # --------------------------------------------------------------------------
 
-# Table 1B: Layer overlap percentage
-print("Table 1B")
-# Load each layer. Calculate intersection of each pair of distinct layers
-#   as percentage:: L1.intersect(L2).edges / L1.edges.
+# # Table 1B: Layer overlap percentage
+# print("Table 1B")
+# # Load each layer. Calculate intersection of each pair of distinct layers
+# #   as percentage:: L1.intersect(L2).edges / L1.edges.
 
-inter_close=[]
-inter_ext=[]
-inter_house=[]
-inter_edu=[]
-inter_nbr=[]
-inter_work=[]
+# inter_close=[]
+# inter_ext=[]
+# inter_house=[]
+# inter_edu=[]
+# inter_nbr=[]
+# inter_work=[]
 
-# Close family 2017:
-close_df=pd.read_csv(f"{csv_path}/filtered_close_family_2017.csv",usecols=["PersonNr","PersonNr2"])
-# Extended family 2017:
-ext_df=pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv",usecols=["PersonNr","PersonNr2"])
-# Household 2017:
-house_df=pd.read_csv(f"{csv_path}/filtered_household_2017.csv",usecols=["PersonNr","PersonNr2"])
-# Education 2017:
-edu_df=pd.read_csv(f"{csv_path}/filtered_education_2017.csv",usecols=["PersonNr","PersonNr2"])
-# Neighbourhood 2017:
-nbr_df=pd.read_csv(f"{csv_path}/filtered_neighbourhood_2017.csv",usecols=["PersonNr","PersonNr2"])
-# Work 2017:
-work_df=pd.read_csv(f"{csv_path}/filtered_work_2017.csv",usecols=["PersonNr","PersonNr2"])
-
-
-# Intersection C/C
-inter_close.append(1.0)
-# Intersection C/E
-inter_ce=pd.merge(close_df,ext_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_close.append(len(inter_ce)/len(close_df))
-inter_ext.append(len(inter_ce)/len(ext_df))
-# Intersection C/H
-inter_ch=pd.merge(close_df,house_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_close.append(len(inter_ch)/len(close_df))
-inter_house.append(len(inter_ch)/len(house_df))
-# Intersection C/N
-inter_cn=pd.merge(close_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_close.append(len(inter_cn)/len(close_df))
-inter_nbr.append(len(inter_cn)/len(nbr_df))
-# Intersection C/S
-inter_cs=pd.merge(close_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_close.append(len(inter_cs)/len(close_df))
-inter_edu.append(len(inter_cs)/len(edu_df))
-# Intersection C/W
-inter_cw=pd.merge(close_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_close.append(len(inter_cw)/len(close_df))
-inter_work.append(len(inter_cw)/len(work_df))
-
-# Garbage
-close_df=None
-inter_ce=None
-inter_ch=None
-inter_cs=None
-inter_cn=None
-inter_cw=None
-gc.collect()
-
-#############################################
-
-# Intersection E/E
-inter_ext.append(1.0)
-# Intersection E/H
-inter_eh=pd.merge(ext_df,house_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_ext.append(len(inter_eh)/len(ext_df))
-inter_house.append(len(inter_eh)/len(house_df))
-# Intersection E/N
-inter_en=pd.merge(ext_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_ext.append(len(inter_en)/len(ext_df))
-inter_nbr.append(len(inter_en)/len(nbr_df))
-# Intersection E/S
-inter_es=pd.merge(ext_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_ext.append(len(inter_es)/len(ext_df))
-inter_edu.append(len(inter_es)/len(edu_df))
-# Intersection E/W
-inter_ew=pd.merge(ext_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_ext.append(len(inter_ew)/len(ext_df))
-inter_work.append(len(inter_ew)/len(work_df))
-
-# Garbage
-ext_df=None
-inter_eh=None
-inter_es=None
-inter_en=None
-inter_ew=None
-gc.collect()
+# # Close family 2017:
+# close_df=pd.read_csv(f"{csv_path}/filtered_close_family_2017.csv",usecols=["PersonNr","PersonNr2"])
+# # Extended family 2017:
+# ext_df=pd.read_csv(f"{csv_path}/filtered_extended_family_2017.csv",usecols=["PersonNr","PersonNr2"])
+# # Household 2017:
+# house_df=pd.read_csv(f"{csv_path}/filtered_household_2017.csv",usecols=["PersonNr","PersonNr2"])
+# # Education 2017:
+# edu_df=pd.read_csv(f"{csv_path}/filtered_education_2017.csv",usecols=["PersonNr","PersonNr2"])
+# # Neighbourhood 2017:
+# nbr_df=pd.read_csv(f"{csv_path}/filtered_neighbourhood_2017.csv",usecols=["PersonNr","PersonNr2"])
+# # Work 2017:
+# work_df=pd.read_csv(f"{csv_path}/filtered_work_2017.csv",usecols=["PersonNr","PersonNr2"])
 
 
-#############################################
+# # Intersection C/C
+# inter_close.append(1.0)
+# # Intersection C/E
+# inter_ce=pd.merge(close_df,ext_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_close.append(len(inter_ce)/len(close_df))
+# inter_ext.append(len(inter_ce)/len(ext_df))
+# # Intersection C/H
+# inter_ch=pd.merge(close_df,house_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_close.append(len(inter_ch)/len(close_df))
+# inter_house.append(len(inter_ch)/len(house_df))
+# # Intersection C/N
+# inter_cn=pd.merge(close_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_close.append(len(inter_cn)/len(close_df))
+# inter_nbr.append(len(inter_cn)/len(nbr_df))
+# # Intersection C/S
+# inter_cs=pd.merge(close_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_close.append(len(inter_cs)/len(close_df))
+# inter_edu.append(len(inter_cs)/len(edu_df))
+# # Intersection C/W
+# inter_cw=pd.merge(close_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_close.append(len(inter_cw)/len(close_df))
+# inter_work.append(len(inter_cw)/len(work_df))
 
-# Intersection H/H
-inter_house.append(1.0)
-# Intersection H/N
-inter_hn=pd.merge(house_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_house.append(len(inter_hn)/len(house_df))
-inter_nbr.append(len(inter_hn)/len(nbr_df))
-# Intersection H/S
-inter_hs=pd.merge(house_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_house.append(len(inter_hs)/len(house_df))
-inter_edu.append(len(inter_hs)/len(edu_df))
-# Intersection H/W
-inter_hw=pd.merge(house_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_house.append(len(inter_hw)/len(house_df))
-inter_work.append(len(inter_hw)/len(work_df))
+# # Garbage
+# close_df=None
+# inter_ce=None
+# inter_ch=None
+# inter_cs=None
+# inter_cn=None
+# inter_cw=None
+# gc.collect()
 
-# Garbage
-house_df=None
-inter_hs=None
-inter_hn=None
-inter_hw=None
-gc.collect()
+# #############################################
 
+# # Intersection E/E
+# inter_ext.append(1.0)
+# # Intersection E/H
+# inter_eh=pd.merge(ext_df,house_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_ext.append(len(inter_eh)/len(ext_df))
+# inter_house.append(len(inter_eh)/len(house_df))
+# # Intersection E/N
+# inter_en=pd.merge(ext_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_ext.append(len(inter_en)/len(ext_df))
+# inter_nbr.append(len(inter_en)/len(nbr_df))
+# # Intersection E/S
+# inter_es=pd.merge(ext_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_ext.append(len(inter_es)/len(ext_df))
+# inter_edu.append(len(inter_es)/len(edu_df))
+# # Intersection E/W
+# inter_ew=pd.merge(ext_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_ext.append(len(inter_ew)/len(ext_df))
+# inter_work.append(len(inter_ew)/len(work_df))
 
-#############################################
-
-# Intersection N/N
-inter_nbr.append(1.0)
-# Intersection N/S
-inter_ns=pd.merge(nbr_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_nbr.append(len(inter_ns)/len(nbr_df))
-inter_edu.append(len(inter_ns)/len(edu_df))
-# Intersection N/W
-inter_nw=pd.merge(nbr_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_nbr.append(len(inter_nw)/len(nbr_df))
-inter_work.append(len(inter_nw)/len(work_df))
-
-# Garbage
-nbr_df=None
-inter_ns=None
-inter_nw=None
-gc.collect()
+# # Garbage
+# ext_df=None
+# inter_eh=None
+# inter_es=None
+# inter_en=None
+# inter_ew=None
+# gc.collect()
 
 
-#############################################
+# #############################################
 
-# Intersection S/S
-inter_edu.append(1.0)
-# Intersection S/W
-inter_sw=pd.merge(edu_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
-inter_edu.append(len(inter_sw)/len(edu_df))
-inter_work.append(len(inter_sw)/len(work_df))
+# # Intersection H/H
+# inter_house.append(1.0)
+# # Intersection H/N
+# inter_hn=pd.merge(house_df,nbr_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_house.append(len(inter_hn)/len(house_df))
+# inter_nbr.append(len(inter_hn)/len(nbr_df))
+# # Intersection H/S
+# inter_hs=pd.merge(house_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_house.append(len(inter_hs)/len(house_df))
+# inter_edu.append(len(inter_hs)/len(edu_df))
+# # Intersection H/W
+# inter_hw=pd.merge(house_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_house.append(len(inter_hw)/len(house_df))
+# inter_work.append(len(inter_hw)/len(work_df))
 
-# Garbage
-edu_df=None
-inter_sw=None
-gc.collect()
+# # Garbage
+# house_df=None
+# inter_hs=None
+# inter_hn=None
+# inter_hw=None
+# gc.collect()
 
-#############################################
 
-# Intersection Work / Work
-inter_work.append(1.0)
+# #############################################
 
-work_df=None
-gc.collect()
+# # Intersection N/N
+# inter_nbr.append(1.0)
+# # Intersection N/S
+# inter_ns=pd.merge(nbr_df,edu_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_nbr.append(len(inter_ns)/len(nbr_df))
+# inter_edu.append(len(inter_ns)/len(edu_df))
+# # Intersection N/W
+# inter_nw=pd.merge(nbr_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_nbr.append(len(inter_nw)/len(nbr_df))
+# inter_work.append(len(inter_nw)/len(work_df))
 
-# Create dataframe
-#table_1b=pd.DataFrame(columns=["F","E","N","W"])
-c_df=pd.DataFrame({"C":[inter_close[0]],"E":[inter_close[1]],"H":[inter_close[2]],"N":[inter_close[3]],"S":[inter_close[4]],"W":[inter_close[5]]})
-e_df=pd.DataFrame({"C":[inter_ext[0]],"E":[inter_ext[1]],"H":[inter_ext[2]],"N":[inter_ext[3]],"S":[inter_ext[4]],"W":[inter_ext[5]]})
-h_df=pd.DataFrame({"C":[inter_house[0]],"E":[inter_house[1]],"H":[inter_house[2]],"N":[inter_house[3]],"S":[inter_house[4]],"W":[inter_house[5]]})
-n_df=pd.DataFrame({"C":[inter_nbr[0]],"E":[inter_nbr[1]],"H":[inter_nbr[2]],"N":[inter_nbr[3]],"S":[inter_nbr[4]],"W":[inter_nbr[5]]})
-s_df=pd.DataFrame({"C":[inter_edu[0]],"E":[inter_edu[1]],"H":[inter_edu[2]],"N":[inter_edu[3]],"S":[inter_edu[4]],"W":[inter_edu[5]]})
-w_df=pd.DataFrame({"C":[inter_work[0]],"E":[inter_work[1]],"H":[inter_work[2]],"N":[inter_work[3]],"S":[inter_work[4]],"W":[inter_work[5]]})
-table_1b=pd.concat([c_df,e_df,h_df,n_df,s_df,w_df],axis=0)
+# # Garbage
+# nbr_df=None
+# inter_ns=None
+# inter_nw=None
+# gc.collect()
 
-# Save dataframe
-table_1b.to_csv(f"{plot_path}/table_1b.csv",index=False)
+
+# #############################################
+
+# # Intersection S/S
+# inter_edu.append(1.0)
+# # Intersection S/W
+# inter_sw=pd.merge(edu_df,work_df,how="inner",on=["PersonNr","PersonNr2"])
+# inter_edu.append(len(inter_sw)/len(edu_df))
+# inter_work.append(len(inter_sw)/len(work_df))
+
+# # Garbage
+# edu_df=None
+# inter_sw=None
+# gc.collect()
+
+# #############################################
+
+# # Intersection Work / Work
+# inter_work.append(1.0)
+
+# work_df=None
+# gc.collect()
+
+# # Create dataframe
+# #table_1b=pd.DataFrame(columns=["F","E","N","W"])
+# c_df=pd.DataFrame({"C":[inter_close[0]],"E":[inter_close[1]],"H":[inter_close[2]],"N":[inter_close[3]],"S":[inter_close[4]],"W":[inter_close[5]]})
+# e_df=pd.DataFrame({"C":[inter_ext[0]],"E":[inter_ext[1]],"H":[inter_ext[2]],"N":[inter_ext[3]],"S":[inter_ext[4]],"W":[inter_ext[5]]})
+# h_df=pd.DataFrame({"C":[inter_house[0]],"E":[inter_house[1]],"H":[inter_house[2]],"N":[inter_house[3]],"S":[inter_house[4]],"W":[inter_house[5]]})
+# n_df=pd.DataFrame({"C":[inter_nbr[0]],"E":[inter_nbr[1]],"H":[inter_nbr[2]],"N":[inter_nbr[3]],"S":[inter_nbr[4]],"W":[inter_nbr[5]]})
+# s_df=pd.DataFrame({"C":[inter_edu[0]],"E":[inter_edu[1]],"H":[inter_edu[2]],"N":[inter_edu[3]],"S":[inter_edu[4]],"W":[inter_edu[5]]})
+# w_df=pd.DataFrame({"C":[inter_work[0]],"E":[inter_work[1]],"H":[inter_work[2]],"N":[inter_work[3]],"S":[inter_work[4]],"W":[inter_work[5]]})
+# table_1b=pd.concat([c_df,e_df,h_df,n_df,s_df,w_df],axis=0)
+
+# # Save dataframe
+# table_1b.to_csv(f"{plot_path}/table_1b.csv",index=False)
 

@@ -66,7 +66,7 @@ ax3b.bar(tr_x,tr_y)
 ax3b.set_xlabel("Tie range")
 ax3b.set_ylabel("Count (log)")
 ax3b.set_yscale("log")
-ax3b.set_xticks([0,2,4,6,8,10,12,14])
+ax3b.set_xticks([2,4,6,8,10])
 
 
 # Save figure
