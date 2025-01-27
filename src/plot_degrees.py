@@ -234,7 +234,7 @@ ax1c.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=
 #fig1b, ax1b = plt.subplots()
 
 # Set inset axes
-l,b,w,h=[0.6,0.75,0.4,0.175]
+l,b,w,h=[0.575,0.75,0.4,0.175]
 ax1b=ax1a.inset_axes([l,b,w,h])
 
 zero_close=(node_df["deg_close"]==0.0).sum()
@@ -243,8 +243,6 @@ zero_house=(node_df["deg_house"]==0.0).sum()
 zero_edu=(node_df["deg_edu"]==0.0).sum()
 zero_nbr=(node_df["deg_nbr"]==0.0).sum()
 zero_work=(node_df["deg_work"]==0.0).sum()
-
-print(f"zero_work: {zero_work}")
 
 # # Debug
 # print(f"f:{zero_fam}, e:{zero_edu}, n:{zero_nbr}, w:{zero_work}")
@@ -270,7 +268,15 @@ ax1d=ax1c.inset_axes([l,b,w,h])
 
 node_df["nz_layers"]=6-np.count_nonzero(node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work"]]==0.0,axis=1)
 
-ax1d.hist(node_df["nz_layers"],color="black")
+
+# Calculate non-zeroes for histogram
+nz_arr=[(node_df["nz_layers"]==i).sum() for i in range(7)]
+
+ax1d.bar(range(7),nz_arr,color="black")
+
+
+# Old hist
+#ax1d.hist(node_df["nz_layers"],color="black")
 
 ax1d.set_yticks([0,2000000,4000000],labels=["0","2M","4M"])
 ax1d.set_xticks([0,5])
