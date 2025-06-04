@@ -322,9 +322,8 @@ fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 
 def get_tail_slope(hist_a,deg_a,cs_a):
 	total = cs_a.iloc[-1]  # total number of nodes
+	deg_a = np.array(deg_a)
 	deg_a=deg_a[deg_a>0]
-
-	# Convert to CCDF values
 	ccdf_a = cs_a / total
 
 	# Convert to log-log space
