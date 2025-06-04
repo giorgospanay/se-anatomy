@@ -321,7 +321,7 @@ fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 
 
 def get_tail_slope(hist_a,deg_a,cs_a):
-	total=cs_a.iloc[-1]  # total number of nodes
+	total=cs_a.iloc[-1] 
 	deg_a=np.array(deg_a)
 	deg_a=deg_a[deg_a>0]
 	cs_a=np.array(cs_a)
@@ -351,6 +351,10 @@ def get_tail_slope(hist_a,deg_a,cs_a):
 
 	# Fit linear regression to tail
 	slope, intercept, r_value, _, _ = linregress(tail_log_deg, tail_log_ccdf)
+
+	print(tail_log_deg)
+	print(tail_log_ccdf)
+	print(f"slope={slope} intercept={intercept} r={r_value}")
 
 	# Get fit line in raw scale
 	x_fit=np.logspace(np.min(tail_log_deg),np.max(tail_log_deg),100)
