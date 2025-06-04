@@ -488,7 +488,7 @@ ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_
 hist_total.sort_index(ascending=False,inplace=True)
 deg_total=list(reversed(range(len(hist_total))))
 cs_total=np.cumsum(hist_total)
-slope_total,inter_total,x_total,y_total=get_tail_slope2(hist_total,deg_total,cs_total)
+slope_total,inter_total,x_total,y_total,logdeg_total,logp_total=get_tail_slope2(hist_total,deg_total,cs_total)
 
 
 print(f"Slope: T={slope_total},{inter_total}")
@@ -498,7 +498,9 @@ print(f"Slope: T={slope_total},{inter_total}")
 # deg_flat=list(reversed(range(len(hist_flat))))
 # cs_flat=np.cumsum(hist_flat)
 
-ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
+#ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
+ax2b.plot(logdeg_total,logp_total,color="black",marker=".",linestyle="dashdot")
+
 ax2b.plot(x_total,y_total,color="black",marker="none",linestyle="dashed")
 
 #ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
