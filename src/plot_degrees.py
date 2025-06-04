@@ -326,12 +326,13 @@ def get_tail_slope(hist_a,deg_a,cs_a):
 	deg_a=deg_a[deg_a>0]
 	cs_a=np.array(cs_a)
 	cs_a=cs_a[cs_a>0]
+	ccdf_a=cs_a/total
 
 	min_len = min(len(deg_a), len(ccdf_a))
 	deg_a = deg_a[:min_len]
 	ccdf_a = ccdf_a[:min_len]
 
-	ccdf_a=cs_a/total
+	
 
 	# Convert to log-log space
 	log_deg = np.log10(deg_a)
