@@ -319,142 +319,53 @@ fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 # deg_work=list(reversed(range(len(hist_work))))
 # cs_work=np.cumsum(hist_work)
 
+def get_inverse_cdf(df,tail_threshold=10):
+	degrees = df.dropna().astype(int)
+	degree_counts = degrees.value_counts().sort_index()
+	sorted_degrees = degree_counts.index
 
-def get_tail_slope(hist_a,deg_a,cs_a):
-	total=cs_a.iloc[-1] 
-	print(f"total={total}")
-	deg_a=np.array(deg_a)
-	deg_a=deg_a[deg_a>0]
-	cs_a=np.array(cs_a)
-	cs_a=cs_a[cs_a>0]
-	ccdf_a=cs_a/total
+	# Inverse cumulative distribution
+	icdf = np.cumsum(degree_counts[::-1])[::-1]
+	icdf = icdf / icdf.iloc[0]  # Normalize
 
+	# Estimate tail slope (fit in log-log space)
+	tail = sorted_degrees[sorted_degrees >= tail_threshold]
+	icdf_tail = icdf[tail]
+	log_k = np.log(tail)
+	log_p = np.log(icdf_tail)
 
+	slope, intercept, r_value, p_value, std_err = linregress(log_k, log_p)
 
-	print(len(deg_a))
-	print(deg_a[0])
-	print(len(cs_a))
-	print(cs_a[0])
-	print(len(ccdf_a))
-	print(ccdf_a[0])
+	# Plot fit
+	#plt.loglog(sorted_degrees, icdf, marker='o', linestyle='none')
+	#plt.plot(tail, np.exp(intercept) * tail**slope, linestyle='--', label=f"Slope = {slope:.2f}")
 
-
-	# Convert to log-log space
-	log_deg = np.log10(deg_a)
-	log_ccdf = np.log10(ccdf_a)
-
-	# Remove -inf entries from log(0)
-	valid = np.isfinite(log_deg) & np.isfinite(log_ccdf)
-	log_deg = log_deg[valid]
-	log_ccdf = log_ccdf[valid]
-
-	# Select tail (e.g., last 10%)
-	tail_frac = 0.1
-	tail_start = int((1-tail_frac)*len(log_deg))
-	tail_log_deg = log_deg[tail_start:]
-	tail_log_ccdf = log_ccdf[tail_start:]
-
-	# Fit linear regression to tail
-	slope, intercept, r_value, _, _ = linregress(tail_log_deg, tail_log_ccdf)
-
-	print(tail_log_deg)
-	print(tail_log_ccdf)
-	print(f"slope={slope} intercept={intercept} r={r_value}")
-
-	# Get fit line in raw scale
-	x_fit=np.logspace(np.min(tail_log_deg),np.max(tail_log_deg),100)
-	y_fit=10**(intercept+slope*np.log10(x_fit))
-
-	return slope,intercept,x_fit,y_fit
-
-def get_tail_slope2(hist_close,deg_close,cs_close):
-	# Assume hist_close is already sorted in descending degree order
-	total_nodes = hist_close.sum()
-
-	# Find where cumulative sum exceeds 5% of total
-	cutoff_index = np.argmax(cs_close >= 0.05 * total_nodes)
-
-	# Extract tail portion
-	tail_degrees = np.array(deg_close[cutoff_index:])
-	tail_counts = np.array(hist_close.iloc[cutoff_index:])
-
-	# Now calculate the tail slope using log-log linear regression
-	valid = (tail_degrees > 0) & (tail_counts > 0)  # avoid log(0)
-	log_k = np.log(tail_degrees[valid])
-	log_pk = np.log(tail_counts[valid])
-
-	# Fit linear regression: log P(k) = a * log k + b
-	slope, intercept, _ , _ , _ = linregress(log_k, log_pk)
+	return sorted_degrees, icdf, slope, intercept, tail
 
 
+# hist_close.sort_index(ascending=False,inplace=True)
+# deg_close=list(reversed(range(len(hist_close))))
+# cs_close=np.cumsum(hist_close)
 
+# hist_ext.sort_index(ascending=False,inplace=True)
+# deg_ext=list(reversed(range(len(hist_ext))))
+# cs_ext=np.cumsum(hist_ext)
 
-	# Ensure hist_close is sorted in ascending degree order
-	hist_sorted = hist_close.sort_index()
-	degrees = hist_sorted.index.to_numpy()
-	counts = hist_sorted.to_numpy()
+# hist_house.sort_index(ascending=False,inplace=True)
+# deg_house=list(reversed(range(len(hist_house))))
+# cs_house=np.cumsum(hist_house)
 
-	# Inverse cumulative: P_≥(k)
-	cum_counts = np.cumsum(counts[::-1])[::-1]
-	P_ge_k = cum_counts / cum_counts[0]  # Normalize
+# hist_nbr.sort_index(ascending=False,inplace=True)
+# deg_nbr=list(reversed(range(len(hist_nbr))))
+# cs_nbr=np.cumsum(hist_nbr)
 
+# hist_edu.sort_index(ascending=False,inplace=True)
+# deg_edu=list(reversed(range(len(hist_edu))))
+# cs_edu=np.cumsum(hist_edu)
 
-
-	# Filter out zero entries (if any)
-	valid = (degrees > 0) & (P_ge_k > 0)
-	log_degrees = np.log(degrees[valid])
-	log_P_ge_k = np.log(P_ge_k[valid])
-
-	print(P_ge_k)
-	print(log_degrees)
-	print(log_P_ge_k)
-
-	# Use the same degrees from the tail for fitting
-	tail_degrees_fit = degrees[valid][degrees[valid] >= tail_degrees[-1]]
-
-	# Compute fitted line in log-log space
-	log_fit_x = np.log(tail_degrees_fit)
-	log_fit_y = slope * log_fit_x + intercept
-
-	print(log_fit_x)
-	print(log_fit_y)
-
-	return slope, intercept, log_fit_x, log_fit_y, log_degrees, log_P_ge_k
-
-
-hist_close.sort_index(ascending=False,inplace=True)
-deg_close=list(reversed(range(len(hist_close))))
-cs_close=np.cumsum(hist_close)
-slope_close,inter_close,x_close,y_close,logdeg_close,logp_close=get_tail_slope2(hist_close,deg_close,cs_close)
-
-hist_ext.sort_index(ascending=False,inplace=True)
-deg_ext=list(reversed(range(len(hist_ext))))
-cs_ext=np.cumsum(hist_ext)
-slope_ext,inter_ext,x_ext,y_ext,logdeg_ext,logp_ext=get_tail_slope2(hist_ext,deg_ext,cs_ext)
-
-hist_house.sort_index(ascending=False,inplace=True)
-deg_house=list(reversed(range(len(hist_house))))
-cs_house=np.cumsum(hist_house)
-slope_house,inter_house,x_house,y_house,logdeg_house,logp_house=get_tail_slope2(hist_house,deg_house,cs_house)
-
-hist_nbr.sort_index(ascending=False,inplace=True)
-deg_nbr=list(reversed(range(len(hist_nbr))))
-cs_nbr=np.cumsum(hist_nbr)
-slope_nbr,inter_nbr,x_nbr,y_nbr,logdeg_nbr,logp_nbr=get_tail_slope2(hist_nbr,deg_nbr,cs_nbr)
-
-hist_edu.sort_index(ascending=False,inplace=True)
-deg_edu=list(reversed(range(len(hist_edu))))
-cs_edu=np.cumsum(hist_edu)
-slope_edu,inter_edu,x_edu,y_edu,logdeg_edu,logp_edu=get_tail_slope2(hist_edu,deg_edu,cs_edu)
-
-hist_work.sort_index(ascending=False,inplace=True)
-deg_work=list(reversed(range(len(hist_work))))
-cs_work=np.cumsum(hist_work)
-slope_work,inter_work,x_work,y_work,logdeg_work,logp_work=get_tail_slope2(hist_work,deg_work,cs_work)
-
-# Print slopes here
-print(f"Slopes: C={slope_close},{inter_close} E={slope_ext},{inter_ext} H={slope_house},{inter_house} \n N={slope_nbr},{inter_nbr} S={slope_edu},{inter_edu} W={slope_work},{inter_work}")
-
+# hist_work.sort_index(ascending=False,inplace=True)
+# deg_work=list(reversed(range(len(hist_work))))
+# cs_work=np.cumsum(hist_work)
 
 # ax2a.plot(deg_close,cs_close,color="darkslategrey",marker=".",linestyle="dashdot")
 # ax2a.plot(deg_ext,cs_ext,color="steelblue",marker=".",linestyle="dashdot")
@@ -463,23 +374,32 @@ print(f"Slopes: C={slope_close},{inter_close} E={slope_ext},{inter_ext} H={slope
 # ax2a.plot(deg_nbr,cs_nbr,color="gold",marker=".",linestyle="dashdot")
 # ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
 
-ax2a.plot(logdeg_close,logp_close,color="darkslategrey",marker=".",linestyle="dashdot")
-ax2a.plot(logdeg_ext,logp_ext,color="steelblue",marker=".",linestyle="dashdot")
-ax2a.plot(logdeg_house,logp_house,color="crimson",marker=".",linestyle="dashdot")
-ax2a.plot(logdeg_edu,logp_edu,color="teal",marker=".",linestyle="dashdot")
-ax2a.plot(logdeg_nbr,logp_nbr,color="gold",marker=".",linestyle="dashdot")
-ax2a.plot(logdeg_work,logp_work,color="grey",marker=".",linestyle="dashdot")
+
+deg_close,icdf_close,slope_close,intc_close,tail_close=get_inverse_cdf(node_df["deg_close"],tail_threshold=4)
+deg_ext,icdf_ext,slope_ext,intc_ext,tail_ext=get_inverse_cdf(node_df["deg_ext"],tail_threshold=4)
+deg_house,icdf_house,slope_house,intc_house,tail_house=get_inverse_cdf(node_df["deg_house"],tail_threshold=4)
+deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=30)
+deg_edu,icdf_edu,slope_edu,intc_edu,tail_edu=get_inverse_cdf(node_df["deg_edu"],tail_threshold=30)
+deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=30)
+
+
+ax2a.plot(deg_close,icdf_close,color="darkslategrey",marker=".",linestyle="dashdot")
+ax2a.plot(deg_ext,icdf_ext,color="steelblue",marker=".",linestyle="dashdot")
+ax2a.plot(deg_house,icdf_house,color="crimson",marker=".",linestyle="dashdot")
+ax2a.plot(deg_edu,icdf_edu,color="teal",marker=".",linestyle="dashdot")
+ax2a.plot(deg_nbr,icdf_nbr,color="gold",marker=".",linestyle="dashdot")
+ax2a.plot(deg_work,icdf_work,color="grey",marker=".",linestyle="dashdot")
 
 # Also plot slopes
-ax2a.plot(x_close,y_close,color="darkslategrey",marker="none",linestyle="dashed")
-ax2a.plot(x_ext,y_ext,color="steelblue",marker="none",linestyle="dashed")
-ax2a.plot(x_house,y_house,color="crimson",marker="none",linestyle="dashed")
-ax2a.plot(x_edu,y_edu,color="teal",marker="none",linestyle="dashed")
-ax2a.plot(x_nbr,y_nbr,color="gold",marker="none",linestyle="dashed")
-ax2a.plot(x_work,y_work,color="grey",marker="none",linestyle="dashed")
+ax2a.plot(tail_close,np.exp(intc_close)*(tail_close**slope_close),color="darkslategrey",marker="none",linestyle="dashed")
+ax2a.plot(tail_ext,np.exp(intc_ext)*(tail_ext**slope_ext),color="steelblue",marker="none",linestyle="dashed")
+ax2a.plot(tail_house,np.exp(intc_house)*(tail_house**slope_house),color="crimson",marker="none",linestyle="dashed")
+ax2a.plot(tail_edu,np.exp(intc_edu)*(tail_edu**slope_edu),color="teal",marker="none",linestyle="dashed")
+ax2a.plot(tail_nbr,np.exp(intc_nbr)*(tail_nbr**slope_nbr),color="gold",marker="none",linestyle="dashed")
+ax2a.plot(tail_work,np.exp(intc_work)*(tail_work**slope_work),color="grey",marker="none",linestyle="dashed")
 
 ax2a.set_xlabel("Degree")
-ax2a.set_ylabel("Sample with k > Degree")
+ax2a.set_ylabel("ICDF")
 ax2a.set_yscale("log")
 ax2a.set_xscale("log") 
 
@@ -497,25 +417,22 @@ ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_
 
 #fig2b, ax2b = plt.subplots()
 
-hist_total.sort_index(ascending=False,inplace=True)
-deg_total=list(reversed(range(len(hist_total))))
-cs_total=np.cumsum(hist_total)
-slope_total,inter_total,x_total,y_total,logdeg_total,logp_total=get_tail_slope2(hist_total,deg_total,cs_total)
-
-
-print(f"Slope: T={slope_total},{inter_total}")
-
+# hist_total.sort_index(ascending=False,inplace=True)
+# deg_total=list(reversed(range(len(hist_total))))
+# cs_total=np.cumsum(hist_total)
 
 # hist_flat.reverse()
 # deg_flat=list(reversed(range(len(hist_flat))))
 # cs_flat=np.cumsum(hist_flat)
 
-#ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
-ax2b.plot(logdeg_total,logp_total,color="black",marker=".",linestyle="dashdot")
+# ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
+# ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
-ax2b.plot(x_total,y_total,color="black",marker="none",linestyle="dashed")
+deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=4)
 
-#ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
+ax2b.plot(deg_total,icdf_total,color="black",marker=".",linestyle="dashdot")
+ax2a.plot(tail_total,np.exp(intc_total)*(tail_total**slope_total),color="black",marker="none",linestyle="dashed")
+
 
 ax2b.set_xlabel("Degree")
 ax2b.set_yscale("log")
