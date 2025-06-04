@@ -407,49 +407,56 @@ def get_tail_slope2(hist_close,deg_close,cs_close):
 	log_fit_x = np.log(tail_degrees_fit)
 	log_fit_y = slope * log_fit_x + intercept
 
-	return slope, intercept, log_fit_x, log_fit_y
+	return slope, intercept, log_fit_x, log_fit_y, log_degrees, log_P_ge_k
 
 
 hist_close.sort_index(ascending=False,inplace=True)
 deg_close=list(reversed(range(len(hist_close))))
 cs_close=np.cumsum(hist_close)
-slope_close,inter_close,x_close,y_close=get_tail_slope2(hist_close,deg_close,cs_close)
+slope_close,inter_close,x_close,y_close,logdeg_close,logp_close=get_tail_slope2(hist_close,deg_close,cs_close)
 
 hist_ext.sort_index(ascending=False,inplace=True)
 deg_ext=list(reversed(range(len(hist_ext))))
 cs_ext=np.cumsum(hist_ext)
-slope_ext,inter_ext,x_ext,y_ext=get_tail_slope2(hist_ext,deg_ext,cs_ext)
+slope_ext,inter_ext,x_ext,y_ext,logdeg_ext,logp_ext=get_tail_slope2(hist_ext,deg_ext,cs_ext)
 
 hist_house.sort_index(ascending=False,inplace=True)
 deg_house=list(reversed(range(len(hist_house))))
 cs_house=np.cumsum(hist_house)
-slope_house,inter_house,x_house,y_house=get_tail_slope2(hist_house,deg_house,cs_house)
+slope_house,inter_house,x_house,y_house,logdeg_house,logp_house=get_tail_slope2(hist_house,deg_house,cs_house)
 
 hist_nbr.sort_index(ascending=False,inplace=True)
 deg_nbr=list(reversed(range(len(hist_nbr))))
 cs_nbr=np.cumsum(hist_nbr)
-slope_nbr,inter_nbr,x_nbr,y_nbr=get_tail_slope2(hist_nbr,deg_nbr,cs_nbr)
+slope_nbr,inter_nbr,x_nbr,y_nbr,logdeg_nbr,logp_nbr=get_tail_slope2(hist_nbr,deg_nbr,cs_nbr)
 
 hist_edu.sort_index(ascending=False,inplace=True)
 deg_edu=list(reversed(range(len(hist_edu))))
 cs_edu=np.cumsum(hist_edu)
-slope_edu,inter_edu,x_edu,y_edu=get_tail_slope2(hist_edu,deg_edu,cs_edu)
+slope_edu,inter_edu,x_edu,y_edu,logdeg_edu,logp_edu=get_tail_slope2(hist_edu,deg_edu,cs_edu)
 
 hist_work.sort_index(ascending=False,inplace=True)
 deg_work=list(reversed(range(len(hist_work))))
 cs_work=np.cumsum(hist_work)
-slope_work,inter_work,x_work,y_work=get_tail_slope2(hist_work,deg_work,cs_work)
+slope_work,inter_work,x_work,y_work,logdeg_work,logp_work=get_tail_slope2(hist_work,deg_work,cs_work)
 
 # Print slopes here
 print(f"Slopes: C={slope_close},{inter_close} E={slope_ext},{inter_ext} H={slope_house},{inter_house} \n N={slope_nbr},{inter_nbr} S={slope_edu},{inter_edu} W={slope_work},{inter_work}")
 
 
-ax2a.plot(deg_close,cs_close,color="darkslategrey",marker=".",linestyle="dashdot")
-ax2a.plot(deg_ext,cs_ext,color="steelblue",marker=".",linestyle="dashdot")
-ax2a.plot(deg_house,cs_house,color="crimson",marker=".",linestyle="dashdot")
-ax2a.plot(deg_edu,cs_edu,color="teal",marker=".",linestyle="dashdot")
-ax2a.plot(deg_nbr,cs_nbr,color="gold",marker=".",linestyle="dashdot")
-ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
+# ax2a.plot(deg_close,cs_close,color="darkslategrey",marker=".",linestyle="dashdot")
+# ax2a.plot(deg_ext,cs_ext,color="steelblue",marker=".",linestyle="dashdot")
+# ax2a.plot(deg_house,cs_house,color="crimson",marker=".",linestyle="dashdot")
+# ax2a.plot(deg_edu,cs_edu,color="teal",marker=".",linestyle="dashdot")
+# ax2a.plot(deg_nbr,cs_nbr,color="gold",marker=".",linestyle="dashdot")
+# ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
+
+ax2a.plot(logdeg_close,logp_close,color="darkslategrey",marker=".",linestyle="dashdot")
+ax2a.plot(logdeg_ext,logp_ext,color="steelblue",marker=".",linestyle="dashdot")
+ax2a.plot(logdeg_house,logp_house,color="crimson",marker=".",linestyle="dashdot")
+ax2a.plot(logdeg_edu,logp_edu,color="teal",marker=".",linestyle="dashdot")
+ax2a.plot(logdeg_nbr,logp_nbr,color="gold",marker=".",linestyle="dashdot")
+ax2a.plot(logdeg_work,logp_work,color="grey",marker=".",linestyle="dashdot")
 
 # Also plot slopes
 ax2a.plot(x_close,y_close,color="darkslategrey",marker="none",linestyle="dashed")
@@ -468,7 +475,7 @@ ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
 
-ax2a.legend(labels=[f"Close family ({slope_close})",f"Extended family ({slope_ext})",f"Household ({slope_house})",f"School ({slope_edu})",f"Neighbors ({slope_nbr})",f"Work ({slope_work})"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_house:.2f})",f"S ({slope_edu:.2f})",f"N ({slope_nbr:.2f})",f"W ({slope_work:.2f})"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 
 #fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
