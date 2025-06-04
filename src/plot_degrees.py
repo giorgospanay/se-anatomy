@@ -371,8 +371,8 @@ def get_tail_slope2(hist_close,deg_close,cs_close):
 	# Assume hist_close is already sorted in descending degree order
 	total_nodes = hist_close.sum()
 
-	# Find where cumulative sum exceeds 20% of total
-	cutoff_index = np.argmax(cs_close >= 0.2 * total_nodes)
+	# Find where cumulative sum exceeds 5% of total
+	cutoff_index = np.argmax(cs_close >= 0.05 * total_nodes)
 
 	# Extract tail portion
 	tail_degrees = np.array(deg_close[cutoff_index:])
