@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import ast
+from scipy.stats import pearsonr
 
 # Local imports
 from simplify_family import read_in_network, simplify_family_layer, make_entire_edge_list
@@ -319,30 +320,68 @@ fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 # cs_work=np.cumsum(hist_work)
 
 
+def get_tail_slope(hist_a,deg_a,cs_a):
+	total = cs_a[-1]  # total number of nodes
+	# Convert to CCDF values
+	ccdf_a = cs_a / total
+
+	# Convert to log-log space
+	log_deg = np.log10(deg_a)
+	log_ccdf = np.log10(ccdf_close)
+
+	# Remove -inf entries from log(0)
+	valid = np.isfinite(log_deg) & np.isfinite(log_ccdf)
+	log_deg = log_deg[valid]
+	log_ccdf = log_ccdf[valid]
+
+	# Select tail (e.g., last 10%)
+	tail_frac = 0.1
+	tail_start = int((1-tail_frac)*len(log_deg))
+	tail_log_deg = log_deg[tail_start:]
+	tail_log_ccdf = log_ccdf[tail_start:]
+
+	# Fit linear regression to tail
+	slope, intercept, r_value, _, _ = linregress(tail_log_deg, tail_log_ccdf)
+
+	# Get fit line in raw scale
+	x_fit=np.logspace(np.min(tail_log_deg),np.max(tail_log_deg),100)
+	y_fit=10**(intercept+slope*np.log10(x_fit))
+
+	return slope,intercept,x_fit,y_fit
+
+
 hist_close.sort_index(ascending=False,inplace=True)
 deg_close=list(reversed(range(len(hist_close))))
 cs_close=np.cumsum(hist_close)
+slope_close,inter_close,x_close,y_close=get_tail_slope(hist_close,deg_close,cs_close)
 
 hist_ext.sort_index(ascending=False,inplace=True)
 deg_ext=list(reversed(range(len(hist_ext))))
 cs_ext=np.cumsum(hist_ext)
+slope_ext,inter_ext,x_ext,y_ext=get_tail_slope(hist_ext,deg_ext,cs_ext)
 
 hist_house.sort_index(ascending=False,inplace=True)
 deg_house=list(reversed(range(len(hist_house))))
 cs_house=np.cumsum(hist_house)
+slope_house,inter_house,x_house,y_house=get_tail_slope(hist_house,deg_house,cs_house)
 
 hist_nbr.sort_index(ascending=False,inplace=True)
 deg_nbr=list(reversed(range(len(hist_nbr))))
 cs_nbr=np.cumsum(hist_nbr)
+slope_nbr,inter_nbr,x_nbr,y_nbr=get_tail_slope(hist_nbr,deg_nbr,cs_nbr)
 
 hist_edu.sort_index(ascending=False,inplace=True)
 deg_edu=list(reversed(range(len(hist_edu))))
 cs_edu=np.cumsum(hist_edu)
+slope_edu,inter_edu,x_edu,y_edu=get_tail_slope(hist_edu,deg_edu,cs_edu)
 
 hist_work.sort_index(ascending=False,inplace=True)
 deg_work=list(reversed(range(len(hist_work))))
 cs_work=np.cumsum(hist_work)
+slope_work,inter_work,x_work,y_work=get_tail_slope(hist_work,deg_work,cs_work)
 
+# Print slopes here
+print(f"Slopes: C={slope_close},{inter_close} E={slope_ext},{inter_ext} H={slope_house},{inter_house} \n N={slope_nbr},{inter_nbr} S={slope_edu},{inter_edu} W={slope_work},{inter_work}")
 
 
 ax2a.plot(deg_close,cs_close,color="darkslategrey",marker=".",linestyle="dashdot")
@@ -352,8 +391,13 @@ ax2a.plot(deg_edu,cs_edu,color="teal",marker=".",linestyle="dashdot")
 ax2a.plot(deg_nbr,cs_nbr,color="gold",marker=".",linestyle="dashdot")
 ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
 
-
-
+# Also plot slopes
+ax2a.plot(x_close,y_close,color="darkslategrey",marker="none",linestyle="dashed")
+ax2a.plot(x_ext,y_ext,color="steelblue",marker="none",linestyle="dashed")
+ax2a.plot(x_house,y_house,color="crimson",marker="none",linestyle="dashed")
+ax2a.plot(x_edu,y_edu,color="teal",marker="none",linestyle="dashed")
+ax2a.plot(x_nbr,y_nbr,color="gold",marker="none",linestyle="dashed")
+ax2a.plot(x_work,y_work,color="grey",marker="none",linestyle="dashed")
 
 ax2a.set_xlabel("Degree")
 ax2a.set_ylabel("Sample with k > Degree")
@@ -364,7 +408,7 @@ ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
 
-ax2a.legend(labels=["Close family","Extended family","Household","School","Neighbors","Work"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax2a.legend(labels=[f"Close family ({slope_close})",f"Extended family ({slope_ext})",f"Household ({slope_house})",f"School ({slope_edu})",f"Neighbors ({slope_nbr})",f"Work ({slope_work})"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 
 #fig2a.savefig(f"{plot_path}/fig2a.png",bbox_inches='tight',dpi=300)
 
@@ -377,12 +421,19 @@ ax2a.legend(labels=["Close family","Extended family","Household","School","Neigh
 hist_total.sort_index(ascending=False,inplace=True)
 deg_total=list(reversed(range(len(hist_total))))
 cs_total=np.cumsum(hist_total)
+slope_total,inter_total,x_total,y_total=get_tail_slope(hist_total,deg_total,cs_total)
+
+
+print(f"Slope: T={slope_total},{inter_total}")
+
 
 # hist_flat.reverse()
 # deg_flat=list(reversed(range(len(hist_flat))))
 # cs_flat=np.cumsum(hist_flat)
 
 ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
+ax2b.plot(x_total,y_total,color="black",marker="none",linestyle="dashed")
+
 #ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
 ax2b.set_xlabel("Degree")
@@ -392,7 +443,7 @@ ax2b.set_xscale("log")
 ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 ax2b.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
-ax2b.legend(labels=["Total degree"],loc="upper center",alignment="center",ncols=1,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax2b.legend(labels=[f"Total degree ({slope_total})"],loc="upper center",alignment="center",ncols=1,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 #fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 
 # Save
@@ -404,9 +455,38 @@ fig2.savefig(f"{plot_path}/fig2.png",bbox_inches='tight',dpi=300)
 
 # Table 1A: Pearson correlation between degree in layers
 print("Table 1A")
-table_1a=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work"]].corr(method="pearson")
+#table_1a=node_df[["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work"]].corr(method="pearson")
+
+
+cols=["deg_close","deg_ext","deg_house","deg_edu","deg_nbr","deg_work"]
+corr_df=node_df[cols]
+
+corr_matrix=pd.DataFrame(index=cols,columns=cols,dtype=float)
+pval_matrix=pd.DataFrame(index=cols,columns=cols,dtype=float)
+
+# Fill matrices
+for col1 in cols:
+    for col2 in cols:
+    	# If same column, ignore
+        if col1==col2:
+            corr_matrix.loc[col1,col2]=1.0
+            pval_matrix.loc[col1,col2]=0.0
+        # Otherwise calculate correlation
+        else:
+            x=corr_df[col1]
+            y=corr_df[col2]
+            mask=x.notna() & y.notna()
+            r,p=pearsonr(x[mask],y[mask])
+            corr_matrix.loc[col1,col2]=r
+            pval_matrix.loc[col1,col2]=p
+
+corr_matrix=corr_matrix.round(3)
+pval_matrix=pval_matrix.round(4)
+
+
 # Save correlation table to csv
-table_1a.to_csv(f"{plot_path}/table_1a.csv")
+corr_matrix.to_csv(f"{plot_path}/table_1a.csv")
+pval_matrix.to_csv(f"{plot_path}/table_1a_pval.csv")
 
 # # --------------------------------------------------------------------------
 
