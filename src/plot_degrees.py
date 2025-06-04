@@ -330,8 +330,11 @@ def get_tail_slope(hist_a,deg_a,cs_a):
 	ccdf_a=cs_a/total
 
 
+
 	print(len(deg_a))
 	print(deg_a[0])
+	print(len(cs_a))
+	print(cs_a[0])
 	print(len(ccdf_a))
 	print(ccdf_a[0])
 
@@ -364,36 +367,60 @@ def get_tail_slope(hist_a,deg_a,cs_a):
 
 	return slope,intercept,x_fit,y_fit
 
+def get_tail_slope2(hist_close,deg_close,cs_close):
+	# Assume hist_close is already sorted in descending degree order
+	total_nodes = hist_close.sum()
+
+	# Find where cumulative sum exceeds 10% of total
+	cutoff_index = np.argmax(cs_close >= 0.10 * total_nodes)
+
+	# Extract tail portion
+	tail_degrees = np.array(deg_close[cutoff_index:])
+	tail_counts = np.array(hist_close.iloc[cutoff_index:])
+
+	# Now calculate the tail slope using log-log linear regression
+	valid = (tail_degrees > 0) & (tail_counts > 0)  # avoid log(0)
+	log_k = np.log(tail_degrees[valid])
+	log_pk = np.log(tail_counts[valid])
+
+	# Fit linear regression: log P(k) = a * log k + b
+	slope, intercept = np.polyfit(log_k, log_pk, 1)
+
+	x_fit=np.logspace(np.min(log_k,np.max(log_k)),100)
+	y_fit=10**(intercept+slope*np.log10(x_fit))
+
+	return slope, intercept, x_fit, y_fit
+
 
 hist_close.sort_index(ascending=False,inplace=True)
 deg_close=list(reversed(range(len(hist_close))))
 cs_close=np.cumsum(hist_close)
-slope_close,inter_close,x_close,y_close=get_tail_slope(hist_close,deg_close,cs_close)
+slope_close,inter_close,x_close,y_close=get_tail_slope2(hist_close,deg_close,cs_close)
 
 hist_ext.sort_index(ascending=False,inplace=True)
 deg_ext=list(reversed(range(len(hist_ext))))
 cs_ext=np.cumsum(hist_ext)
-slope_ext,inter_ext,x_ext,y_ext=get_tail_slope(hist_ext,deg_ext,cs_ext)
+slope_ext,inter_ext,x_ext,y_ext=get_tail_slope2(hist_ext,deg_ext,cs_ext)
 
 hist_house.sort_index(ascending=False,inplace=True)
 deg_house=list(reversed(range(len(hist_house))))
 cs_house=np.cumsum(hist_house)
-slope_house,inter_house,x_house,y_house=get_tail_slope(hist_house,deg_house,cs_house)
+slope_house,inter_house,x_house,y_house=get_tail_slope2(hist_house,deg_house,cs_house)
 
 hist_nbr.sort_index(ascending=False,inplace=True)
 deg_nbr=list(reversed(range(len(hist_nbr))))
 cs_nbr=np.cumsum(hist_nbr)
-slope_nbr,inter_nbr,x_nbr,y_nbr=get_tail_slope(hist_nbr,deg_nbr,cs_nbr)
+slope_nbr,inter_nbr,x_nbr,y_nbr=get_tail_slope2(hist_nbr,deg_nbr,cs_nbr)
 
 hist_edu.sort_index(ascending=False,inplace=True)
 deg_edu=list(reversed(range(len(hist_edu))))
 cs_edu=np.cumsum(hist_edu)
-slope_edu,inter_edu,x_edu,y_edu=get_tail_slope(hist_edu,deg_edu,cs_edu)
+slope_edu,inter_edu,x_edu,y_edu=get_tail_slope2(hist_edu,deg_edu,cs_edu)
 
 hist_work.sort_index(ascending=False,inplace=True)
 deg_work=list(reversed(range(len(hist_work))))
 cs_work=np.cumsum(hist_work)
-slope_work,inter_work,x_work,y_work=get_tail_slope(hist_work,deg_work,cs_work)
+slope_work,inter_work,x_work,y_work=get_tail_slope2(hist_work,deg_work,cs_work)
 
 # Print slopes here
 print(f"Slopes: C={slope_close},{inter_close} E={slope_ext},{inter_ext} H={slope_house},{inter_house} \n N={slope_nbr},{inter_nbr} S={slope_edu},{inter_edu} W={slope_work},{inter_work}")
@@ -436,7 +463,7 @@ ax2a.legend(labels=[f"Close family ({slope_close})",f"Extended family ({slope_ex
 hist_total.sort_index(ascending=False,inplace=True)
 deg_total=list(reversed(range(len(hist_total))))
 cs_total=np.cumsum(hist_total)
-slope_total,inter_total,x_total,y_total=get_tail_slope(hist_total,deg_total,cs_total)
+slope_total,inter_total,x_total,y_total=get_tail_slope2(hist_total,deg_total,cs_total)
 
 
 print(f"Slope: T={slope_total},{inter_total}")
