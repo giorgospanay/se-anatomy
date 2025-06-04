@@ -384,7 +384,7 @@ def get_tail_slope2(hist_close,deg_close,cs_close):
 	log_pk = np.log(tail_counts[valid])
 
 	# Fit linear regression: log P(k) = a * log k + b
-	slope, intercept = np.polyfit(log_k, log_pk, 1)
+	slope, intercept, _ , _ , _ = linregress(log_k, log_pk)
 
 
 
