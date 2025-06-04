@@ -429,9 +429,10 @@ ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_
 # ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
 deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=4)
+fit_total=np.exp(intc_total)*(tail_total**slope_total)
 
 ax2b.plot(deg_total,icdf_total,color="black",marker=".",linestyle="dashdot")
-ax2b.plot(tail_total,np.exp(intc_total)*(tail_total**slope_total),color="black",marker="none",linestyle="dashed")
+ax2b.plot(tail_total,fit_total,color="black",marker="none",linestyle="dashed")
 
 
 ax2b.set_xlabel("Degree")
