@@ -471,8 +471,8 @@ ax2a.set_ylabel("Sample with k > Degree")
 ax2a.set_yscale("log")
 ax2a.set_xscale("log") 
 
-ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
-ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
+#ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+#ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
 
 ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_house:.2f})",f"S ({slope_edu:.2f})",f"N ({slope_nbr:.2f})",f"W ({slope_work:.2f})"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
@@ -509,7 +509,7 @@ ax2b.set_xlabel("Degree")
 ax2b.set_yscale("log")
 ax2b.set_xscale("log")
 
-ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
+#ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 # @TODO: revert if needed
 #ax2b.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
