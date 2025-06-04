@@ -510,9 +510,10 @@ ax2b.set_yscale("log")
 ax2b.set_xscale("log")
 
 ax2b.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
-ax2b.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
+# @TODO: revert if needed
+#ax2b.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
-ax2b.legend(labels=[f"Total degree ({slope_total})"],loc="upper center",alignment="center",ncols=1,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
+ax2b.legend(labels=[f"Total degree ({slope_total:.2f})"],loc="upper center",alignment="center",ncols=1,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 #fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 
 # Save
@@ -549,8 +550,7 @@ for col1 in cols:
 			corr_matrix.loc[col1,col2]=r
 			pval_matrix.loc[col1,col2]=p
 
-corr_matrix=corr_matrix.round(3)
-pval_matrix=pval_matrix.round(4)
+corr_matrix=corr_matrix.round(2)
 
 
 # Save correlation table to csv
