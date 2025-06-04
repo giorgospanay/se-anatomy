@@ -399,7 +399,7 @@ ax2a.plot(tail_nbr,np.exp(intc_nbr)*(tail_nbr**slope_nbr),color="gold",marker="n
 ax2a.plot(tail_work,np.exp(intc_work)*(tail_work**slope_work),color="grey",marker="none",linestyle="dashed")
 
 ax2a.set_xlabel("Degree")
-ax2a.set_ylabel("ICDF")
+ax2a.set_ylabel("Inverse cumulative probability")
 ax2a.set_yscale("log")
 ax2a.set_xscale("log") 
 
@@ -431,7 +431,7 @@ ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_
 deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=4)
 
 ax2b.plot(deg_total,icdf_total,color="black",marker=".",linestyle="dashdot")
-ax2a.plot(tail_total,np.exp(intc_total)*(tail_total**slope_total),color="black",marker="none",linestyle="dashed")
+ax2b.plot(tail_total,np.exp(intc_total)*(tail_total**slope_total),color="black",marker="none",linestyle="dashed")
 
 
 ax2b.set_xlabel("Degree")
