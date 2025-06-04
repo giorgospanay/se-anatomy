@@ -326,6 +326,11 @@ def get_tail_slope(hist_a,deg_a,cs_a):
 	deg_a=deg_a[deg_a>0]
 	cs_a=np.array(cs_a)
 	cs_a=cs_a[cs_a>0]
+
+	min_len = min(len(deg_a), len(ccdf_a))
+	deg_a = deg_a[:min_len]
+	ccdf_a = ccdf_a[:min_len]
+
 	ccdf_a=cs_a/total
 
 	# Convert to log-log space
@@ -469,19 +474,19 @@ pval_matrix=pd.DataFrame(index=cols,columns=cols,dtype=float)
 
 # Fill matrices
 for col1 in cols:
-    for col2 in cols:
-    	# If same column, ignore
-        if col1==col2:
-            corr_matrix.loc[col1,col2]=1.0
-            pval_matrix.loc[col1,col2]=0.0
-        # Otherwise calculate correlation
-        else:
-            x=corr_df[col1]
-            y=corr_df[col2]
-            mask=x.notna() & y.notna()
-            r,p=pearsonr(x[mask],y[mask])
-            corr_matrix.loc[col1,col2]=r
-            pval_matrix.loc[col1,col2]=p
+	for col2 in cols:
+		# If same column, ignore
+		if col1==col2:
+			corr_matrix.loc[col1,col2]=1.0
+			pval_matrix.loc[col1,col2]=0.0
+		# Otherwise calculate correlation
+		else:
+			x=corr_df[col1]
+			y=corr_df[col2]
+			mask=x.notna() & y.notna()
+			r,p=pearsonr(x[mask],y[mask])
+			corr_matrix.loc[col1,col2]=r
+			pval_matrix.loc[col1,col2]=p
 
 corr_matrix=corr_matrix.round(3)
 pval_matrix=pval_matrix.round(4)
