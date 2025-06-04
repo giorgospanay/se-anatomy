@@ -386,10 +386,28 @@ def get_tail_slope2(hist_close,deg_close,cs_close):
 	# Fit linear regression: log P(k) = a * log k + b
 	slope, intercept = np.polyfit(log_k, log_pk, 1)
 
-	x_fit=np.logspace(np.min(log_k,np.max(log_k)),100)
-	y_fit=10**(intercept+slope*np.log10(x_fit))
+	# Ensure hist_close is sorted in ascending degree order
+	hist_sorted = hist_close.sort_index()
+	degrees = hist_sorted.index.to_numpy()
+	counts = hist_sorted.to_numpy()
 
-	return slope, intercept, x_fit, y_fit
+	# Inverse cumulative: P_≥(k)
+	cum_counts = np.cumsum(counts[::-1])[::-1]
+	P_ge_k = cum_counts / cum_counts[0]  # Normalize
+
+	# Filter out zero entries (if any)
+	valid = (degrees > 0) & (P_ge_k > 0)
+	log_degrees = np.log(degrees[valid])
+	log_P_ge_k = np.log(P_ge_k[valid])
+
+	# Use the same degrees from the tail for fitting
+	tail_degrees_fit = degrees[valid][degrees[valid] >= tail_degrees[-1]]
+
+	# Compute fitted line in log-log space
+	log_fit_x = np.log(tail_degrees_fit)
+	log_fit_y = slope * log_fit_x + intercept
+
+	return slope, intercept, log_fit_x, log_fit_y
 
 
 hist_close.sort_index(ascending=False,inplace=True)
