@@ -327,7 +327,7 @@ def get_tail_slope(hist_a,deg_a,cs_a):
 
 	# Convert to log-log space
 	log_deg = np.log10(deg_a)
-	log_ccdf = np.log10(ccdf_close)
+	log_ccdf = np.log10(ccdf_a)
 
 	# Remove -inf entries from log(0)
 	valid = np.isfinite(log_deg) & np.isfinite(log_ccdf)
