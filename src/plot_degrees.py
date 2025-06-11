@@ -408,12 +408,12 @@ ax2a.plot(deg_nbr,icdf_nbr,color="gold",marker=".",linestyle="dashdot")
 ax2a.plot(deg_work,icdf_work,color="grey",marker=".",linestyle="dashdot")
 
 # Also plot slopes
-ax2a.plot(tail_close,fit_close,color="darkslategrey",marker="none",linestyle="dashed")
-ax2a.plot(tail_ext,fit_ext,color="steelblue",marker="none",linestyle="dashed")
-ax2a.plot(tail_house,fit_house,color="crimson",marker="none",linestyle="dashed")
-ax2a.plot(tail_edu,fit_edu,color="teal",marker="none",linestyle="dashed")
-ax2a.plot(tail_nbr,fit_nbr,color="gold",marker="none",linestyle="dashed")
-ax2a.plot(tail_work,fit_work,color="grey",marker="none",linestyle="dashed")
+ax2a.plot(tail_close,fit_close,color="lightslategrey",marker="none",linestyle="dashed")
+ax2a.plot(tail_ext,fit_ext,color="cadetblue",marker="none",linestyle="dashed")
+ax2a.plot(tail_house,fit_house,color="red",marker="none",linestyle="dashed")
+ax2a.plot(tail_edu,fit_edu,color="lightseagreen",marker="none",linestyle="dashed")
+ax2a.plot(tail_nbr,fit_nbr,color="goldenrod",marker="none",linestyle="dashed")
+ax2a.plot(tail_work,fit_work,color="darkgrey",marker="none",linestyle="dashed")
 
 ax2a.set_xlabel("Degree")
 ax2a.set_ylabel("Inverse cumulative probability")
@@ -423,7 +423,7 @@ ax2a.set_xscale("log")
 #ax2a.set_xticks([1,10,100,1000],labels=["1","10","100","1K"])
 #ax2a.set_yticks([1,10,100,1000,10000,100000,1000000,10000000],labels=["1","10","100","1K","10K","100K","1M","10M"])
 
-ax2a.set_ylim(9e-8,1.01)
+ax2a.set_ylim(9e-8,1.1)
 
 ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_house:.2f})",f"S ({slope_edu:.2f})",f"N ({slope_nbr:.2f})",f"W ({slope_work:.2f})"],loc="upper center",alignment="center",ncols=3,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 
@@ -451,7 +451,7 @@ fit_total=np.exp(intc_total)*(tail_total**slope_total)
 fit_total=np.minimum(fit_total,1.0)
 
 ax2b.plot(deg_total,icdf_total,color="black",marker=".",linestyle="dashdot")
-ax2b.plot(tail_total,fit_total,color="black",marker="none",linestyle="dashed")
+ax2b.plot(tail_total,fit_total,color="dimgrey",marker="none",linestyle="dashed")
 
 
 ax2b.set_xlabel("Degree")
@@ -466,7 +466,7 @@ ax2b.legend(labels=[f"Total degree ({slope_total:.2f})"],loc="upper center",alig
 #fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
 
 
-ax2b.set_ylim(9e-8,1.01)
+ax2b.set_ylim(9e-8,1.1)
 
 
 # Save
