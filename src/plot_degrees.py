@@ -320,7 +320,6 @@ fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 # cs_work=np.cumsum(hist_work)
 
 def get_inverse_cdf(df,tail_threshold=10):
-	full_len = len(df)
 
 	degrees = df.dropna().astype(int)
 	degree_counts = degrees.value_counts().sort_index()
@@ -328,8 +327,8 @@ def get_inverse_cdf(df,tail_threshold=10):
 
 	# Inverse cumulative distribution
 	icdf = np.cumsum(degree_counts[::-1])[::-1]
-	icdf = icdf / full_len  # Normalize
-	#icdf = icdf / icdf.iloc[0]  # Normalize
+	nz_deg = (df!=0).sum()
+	icdf = icdf / nz_deg  # Normalize
 
 
 	# Estimate tail slope (fit in log-log space)
