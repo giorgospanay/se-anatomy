@@ -320,13 +320,17 @@ fig2, (ax2a,ax2b) = plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 # cs_work=np.cumsum(hist_work)
 
 def get_inverse_cdf(df,tail_threshold=10):
+	full_len = len(df)
+
 	degrees = df.dropna().astype(int)
 	degree_counts = degrees.value_counts().sort_index()
 	sorted_degrees = degree_counts.index
 
 	# Inverse cumulative distribution
 	icdf = np.cumsum(degree_counts[::-1])[::-1]
-	icdf = icdf / icdf.iloc[0]  # Normalize
+	icdf = icdf / full_len  # Normalize
+	#icdf = icdf / icdf.iloc[0]  # Normalize
+
 
 	# Estimate tail slope (fit in log-log space)
 	tail = sorted_degrees[sorted_degrees >= tail_threshold]
@@ -384,13 +388,13 @@ fit_ext=np.minimum(fit_ext,1.0)
 deg_house,icdf_house,slope_house,intc_house,tail_house=get_inverse_cdf(node_df["deg_house"],tail_threshold=4)
 fit_house=np.exp(intc_house)*(tail_house**slope_house)
 fit_house=np.minimum(fit_house,1.0)
-deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=25)
+deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=30)
 fit_nbr=np.exp(intc_nbr)*(tail_nbr**slope_nbr)
 fit_nbr=np.minimum(fit_nbr,1.0)
-deg_edu,icdf_edu,slope_edu,intc_edu,tail_edu=get_inverse_cdf(node_df["deg_edu"],tail_threshold=25)
+deg_edu,icdf_edu,slope_edu,intc_edu,tail_edu=get_inverse_cdf(node_df["deg_edu"],tail_threshold=30)
 fit_edu=np.exp(intc_edu)*(tail_edu**slope_edu)
 fit_edu=np.minimum(fit_edu,1.0)
-deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=25)
+deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=30)
 fit_work=np.exp(intc_work)*(tail_work**slope_work)
 fit_work=np.minimum(fit_work,1.0)
 
