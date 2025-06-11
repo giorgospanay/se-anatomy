@@ -378,22 +378,23 @@ def get_inverse_cdf(df,tail_threshold=10):
 # ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
 
 
-deg_close,icdf_close,slope_close,intc_close,tail_close=get_inverse_cdf(node_df["deg_close"],tail_threshold=10)
+# Tail slope: set degree cutoff at roughly 20% of nodes cutoff (Pareto)
+deg_close,icdf_close,slope_close,intc_close,tail_close=get_inverse_cdf(node_df["deg_close"],tail_threshold=2)
 fit_close=np.exp(intc_close)*(tail_close**slope_close)
 fit_close=np.minimum(fit_close,1.0)
-deg_ext,icdf_ext,slope_ext,intc_ext,tail_ext=get_inverse_cdf(node_df["deg_ext"],tail_threshold=4)
+deg_ext,icdf_ext,slope_ext,intc_ext,tail_ext=get_inverse_cdf(node_df["deg_ext"],tail_threshold=2)
 fit_ext=np.exp(intc_ext)*(tail_ext**slope_ext)
 fit_ext=np.minimum(fit_ext,1.0)
-deg_house,icdf_house,slope_house,intc_house,tail_house=get_inverse_cdf(node_df["deg_house"],tail_threshold=4)
+deg_house,icdf_house,slope_house,intc_house,tail_house=get_inverse_cdf(node_df["deg_house"],tail_threshold=2)
 fit_house=np.exp(intc_house)*(tail_house**slope_house)
 fit_house=np.minimum(fit_house,1.0)
-deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=25)
+deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=2)
 fit_nbr=np.exp(intc_nbr)*(tail_nbr**slope_nbr)
 fit_nbr=np.minimum(fit_nbr,1.0)
 deg_edu,icdf_edu,slope_edu,intc_edu,tail_edu=get_inverse_cdf(node_df["deg_edu"],tail_threshold=25)
 fit_edu=np.exp(intc_edu)*(tail_edu**slope_edu)
 fit_edu=np.minimum(fit_edu,1.0)
-deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=25)
+deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=20)
 fit_work=np.exp(intc_work)*(tail_work**slope_work)
 fit_work=np.minimum(fit_work,1.0)
 
@@ -444,7 +445,7 @@ ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_
 # ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
 # ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
-deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=40)
+deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=35)
 fit_total=np.exp(intc_total)*(tail_total**slope_total)
 fit_total=np.minimum(fit_total,1.0)
 
@@ -462,6 +463,10 @@ ax2b.set_xscale("log")
 
 ax2b.legend(labels=[f"Total degree ({slope_total:.2f})"],loc="upper center",alignment="center",ncols=1,bbox_to_anchor=(0,1.05,1,0.2),mode="expand")
 #fig2b.legend(labels=["Total degree","Total degree (flat)"],loc="upper center",alignment="center",ncols=2)
+
+
+fig2.ylim(2e-7,1.01)
+
 
 # Save
 fig2.tight_layout()
