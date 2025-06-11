@@ -412,7 +412,7 @@ ax2a.plot(tail_close,fit_close,color="cadetblue",marker="none",linestyle="dashed
 ax2a.plot(tail_ext,fit_ext,color="dodgerblue",marker="none",linestyle="dashed")
 ax2a.plot(tail_house,fit_house,color="red",marker="none",linestyle="dashed")
 ax2a.plot(tail_edu,fit_edu,color="lightseagreen",marker="none",linestyle="dashed")
-ax2a.plot(tail_nbr,fit_nbr,color="lemonchiffon",marker="none",linestyle="dashed")
+ax2a.plot(tail_nbr,fit_nbr,color="orange",marker="none",linestyle="dashed")
 ax2a.plot(tail_work,fit_work,color="darkgrey",marker="none",linestyle="dashed")
 
 ax2a.set_xlabel("Degree")
