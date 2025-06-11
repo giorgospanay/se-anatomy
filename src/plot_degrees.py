@@ -375,13 +375,14 @@ def get_inverse_cdf(df,tail_threshold=10):
 # ax2a.plot(deg_work,cs_work,color="grey",marker=".",linestyle="dashdot")
 
 
-deg_close,icdf_close,slope_close,intc_close,tail_close=get_inverse_cdf(node_df["deg_close"],tail_threshold=4)
-deg_ext,icdf_ext,slope_ext,intc_ext,tail_ext=get_inverse_cdf(node_df["deg_ext"],tail_threshold=4)
-deg_house,icdf_house,slope_house,intc_house,tail_house=get_inverse_cdf(node_df["deg_house"],tail_threshold=4)
-deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=30)
-deg_edu,icdf_edu,slope_edu,intc_edu,tail_edu=get_inverse_cdf(node_df["deg_edu"],tail_threshold=30)
-deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=30)
+deg_close,icdf_close,slope_close,intc_close,tail_close=get_inverse_cdf(node_df["deg_close"],tail_threshold=1)
+deg_ext,icdf_ext,slope_ext,intc_ext,tail_ext=get_inverse_cdf(node_df["deg_ext"],tail_threshold=1)
+deg_house,icdf_house,slope_house,intc_house,tail_house=get_inverse_cdf(node_df["deg_house"],tail_threshold=1)
+deg_nbr,icdf_nbr,slope_nbr,intc_nbr,tail_nbr=get_inverse_cdf(node_df["deg_nbr"],tail_threshold=1)
+deg_edu,icdf_edu,slope_edu,intc_edu,tail_edu=get_inverse_cdf(node_df["deg_edu"],tail_threshold=1)
+deg_work,icdf_work,slope_work,intc_work,tail_work=get_inverse_cdf(node_df["deg_work"],tail_threshold=1)
 
+# 4, 30
 
 ax2a.plot(deg_close,icdf_close,color="darkslategrey",marker=".",linestyle="dashdot")
 ax2a.plot(deg_ext,icdf_ext,color="steelblue",marker=".",linestyle="dashdot")
@@ -428,7 +429,7 @@ ax2a.legend(labels=[f"C ({slope_close:.2f})",f"E ({slope_ext:.2f})",f"H ({slope_
 # ax2b.plot(deg_total,cs_total,color="black",marker=".",linestyle="dashdot")
 # ax2b.plot(deg_flat,cs_flat,color="gray",marker=",",linestyle="dashdot")
 
-deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=80)
+deg_total,icdf_total,slope_total,intc_total,tail_total=get_inverse_cdf(node_df["deg_total"],tail_threshold=40)
 fit_total=np.exp(intc_total)*(tail_total**slope_total)
 fit_total=np.minimum(fit_total,1.0)
 
